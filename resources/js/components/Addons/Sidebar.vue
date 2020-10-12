@@ -1,14 +1,14 @@
 <template>
     <v-app>
-        <div id="sidebar-wrapper">
+        <div id="sidebar-wrapper" class="border-right">
             <div class="sidebar-heading text-center">Salamat Shopee</div>
             <div class="list-group list-group-flush">
-                <router-link to="/admindashboard" class="list-group-item list-group-item-action">Dashboard</router-link>
-                <router-link to="/admin_profile" class="list-group-item list-group-item-action">Profile</router-link>
-                <router-link to="/admin_user_list" class="list-group-item list-group-item-action">Users</router-link>
-                <router-link to="/store_list" class="list-group-item list-group-item-action">Store</router-link>
-                <router-link to="/admin_requests" class="list-group-item list-group-item-action">Requests</router-link>
-                <router-link to="/admin_transaction_logs" class="list-group-item list-group-item-action">Transaction Logs</router-link>
+                <router-link to="/admindashboard" class="list-group-item">Dashboard</router-link>
+                <router-link to="/admin_profile" class="list-group-item">Profile</router-link>
+                <router-link to="/admin_user_list" class="list-group-item">Users</router-link>
+                <router-link to="/store_list" class="list-group-item">Store</router-link>
+                <router-link to="/admin_requests" class="list-group-item">Requests</router-link>
+                <router-link to="/admin_transaction_logs" class="list-group-item">Transaction Logs</router-link>
             </div>
         </div>
     </v-app>

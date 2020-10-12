@@ -7,13 +7,11 @@ export default function (Vue) {
         },
         getToken() { 
             var token = localStorage.getItem('token')
-            var usertype = localStorage.getItem('usertype')
-            var user = localStorage.getItem('user')
-            if (!token || !usertype || !user) {
-                if (user) { 
-                    this.destroyToken()
-                    return null
-                }
+            // var usertype = localStorage.getItem('usertype')
+            // var user = localStorage.getItem('user')
+            if (!token) {
+                this.destroyToken()
+                return null
             }
             else { 
                 return token

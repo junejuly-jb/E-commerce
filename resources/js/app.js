@@ -4,7 +4,7 @@ import vuetify from '../plugins/vuetify'
 import VueResource from 'vue-resource'
 import Router from './routes'
 import VueProgressBar from 'vue-progressbar'
-import Auth from './auth'
+import Auth from './auth.js'
 
 Vue.component('sidebar', require('./components/Addons/Sidebar.vue').default);
 Vue.component('navbar', require('./components/Addons/Navbar.vue').default);
@@ -16,6 +16,9 @@ Vue.use(VueProgressBar, {
     failedColor: 'red',
     height: '2px'
 })
+// // // Vue.auth.getToken()
+// var token = localStorage.getItem('token')
+// Vue.http.headers.common['Authorization'] = 'Bearer ' + token;
 
 const app = new Vue({
     vuetify,

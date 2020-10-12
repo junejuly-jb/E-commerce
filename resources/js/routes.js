@@ -7,6 +7,7 @@ import Login from './components/Login.vue'
 import Register from './components/Register.vue'
 import Admindashboard from './components/Admin/Admindashboard.vue'
 import AdminProfile from './components/Admin/AdminProfile.vue'
+import AdminUserList from './components/Admin/AdminUserList.vue'
 import Sellerdashboard from './components/Seller/Sellerdashboard.vue'
 import Userdashboard from './components/Users/Userdashboard.vue'
 
@@ -55,6 +56,13 @@ const router = new VueRouter({
         {
             path: '/admindashboard',
             component: Admindashboard,
+            meta: {
+                requiresAuth: true, adminAuth: true, userAuth: false, sellerAuth: false
+            }
+        },
+        {
+            path: '/admin_user_list',
+            component: AdminUserList,
             meta: {
                 requiresAuth: true, adminAuth: true, userAuth: false, sellerAuth: false
             }

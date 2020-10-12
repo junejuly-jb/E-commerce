@@ -46,4 +46,23 @@ class ApiController extends Controller
             ]);
         }
     }
+
+    public function updateMe(Request $request){
+        $user = User::find($request->id);
+
+        $user->name = $request->name;
+        $user->contact = $request->contact;
+        $user->address = $request->address;
+
+        $user->save();
+        return response()->json([
+            'message' => 'User updated successfully',
+            'data' => $user
+        ]);
+    }
+
+    public function getAllUsers(){
+        $user = User::where('usertype', '=', 'user')->get();
+        return response()->json($user);
+    }
 }
