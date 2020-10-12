@@ -62,7 +62,7 @@ class ApiController extends Controller
     }
 
     public function getAllUsers(){
-        $user = User::where('usertype', '=', 'user')->get();
+        $user = User::where('usertype', '=', 'user')->orWhere('usertype', '=', 'seller')->get();
         return response()->json($user);
     }
 }

@@ -518,9 +518,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      editedIndex: -1,
       search: '',
       headers: [{
         text: 'ID Number',
@@ -541,6 +559,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, {
         text: 'Usertype',
         value: 'usertype'
+      }, {
+        text: 'Status',
+        value: 'status'
       }, {
         text: 'Actions',
         value: 'actions'
@@ -563,7 +584,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     Authorization: 'Bearer ' + _this.$auth.getToken()
                   }
                 }).then(function (res) {
-                  // console.log(res.body)
                   _this.users = res.body;
                 })["catch"](function (err) {
                   console.error(err);
@@ -576,6 +596,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee);
       }))();
+    },
+    getColor: function getColor(status) {
+      if (status == 'active') return 'green';else return 'red';
     }
   },
   mounted: function mounted() {
@@ -3656,59 +3679,156 @@ var render = function() {
                             fn: function(ref) {
                               var item = ref.item
                               return [
-                                _c(
-                                  "v-btn",
-                                  { attrs: { color: "red lighten-1" } },
-                                  [
-                                    _c(
-                                      "svg",
+                                item.status == "inactive"
+                                  ? _c(
+                                      "v-btn",
                                       {
-                                        staticClass:
-                                          "icon icon-tabler icon-tabler-user-off",
-                                        attrs: {
-                                          xmlns: "http://www.w3.org/2000/svg",
-                                          width: "24",
-                                          height: "24",
-                                          viewBox: "0 0 24 24",
-                                          "stroke-width": "1.5",
-                                          stroke: "#FFFFFF",
-                                          fill: "none",
-                                          "stroke-linecap": "round",
-                                          "stroke-linejoin": "round"
+                                        attrs: { color: "green lighten-1" },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.modalIgnite(item)
+                                          }
                                         }
                                       },
                                       [
-                                        _c("path", {
-                                          attrs: {
-                                            stroke: "none",
-                                            d: "M0 0h24v24H0z",
-                                            fill: "none"
-                                          }
-                                        }),
-                                        _vm._v(" "),
-                                        _c("path", {
-                                          attrs: {
-                                            d:
-                                              "M14.274 10.291a4 4 0 1 0 -5.554 -5.58m-.548 3.453a4.01 4.01 0 0 0 2.62 2.65"
-                                          }
-                                        }),
-                                        _vm._v(" "),
-                                        _c("path", {
-                                          attrs: {
-                                            d:
-                                              "M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 1.147 .167m2.685 2.681a4 4 0 0 1 .168 1.152v2"
-                                          }
-                                        }),
-                                        _vm._v(" "),
-                                        _c("line", {
-                                          attrs: {
-                                            x1: "3",
-                                            y1: "3",
-                                            x2: "21",
-                                            y2: "21"
-                                          }
-                                        })
+                                        _c(
+                                          "svg",
+                                          {
+                                            staticClass:
+                                              "icon icon-tabler icon-tabler-user-check",
+                                            attrs: {
+                                              xmlns:
+                                                "http://www.w3.org/2000/svg",
+                                              width: "24",
+                                              height: "24",
+                                              viewBox: "0 0 24 24",
+                                              "stroke-width": "1.5",
+                                              stroke: "#FFFFFF",
+                                              fill: "none",
+                                              "stroke-linecap": "round",
+                                              "stroke-linejoin": "round"
+                                            }
+                                          },
+                                          [
+                                            _c("path", {
+                                              attrs: {
+                                                stroke: "none",
+                                                d: "M0 0h24v24H0z",
+                                                fill: "none"
+                                              }
+                                            }),
+                                            _vm._v(" "),
+                                            _c("circle", {
+                                              attrs: {
+                                                cx: "9",
+                                                cy: "7",
+                                                r: "4"
+                                              }
+                                            }),
+                                            _vm._v(" "),
+                                            _c("path", {
+                                              attrs: {
+                                                d:
+                                                  "M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"
+                                              }
+                                            }),
+                                            _vm._v(" "),
+                                            _c("path", {
+                                              attrs: { d: "M16 11l2 2l4 -4" }
+                                            })
+                                          ]
+                                        )
                                       ]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                item.status == "active"
+                                  ? _c(
+                                      "v-btn",
+                                      {
+                                        attrs: { color: "red lighten-1" },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.modalIgnite(item)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "svg",
+                                          {
+                                            staticClass:
+                                              "icon icon-tabler icon-tabler-user-off",
+                                            attrs: {
+                                              xmlns:
+                                                "http://www.w3.org/2000/svg",
+                                              width: "24",
+                                              height: "24",
+                                              viewBox: "0 0 24 24",
+                                              "stroke-width": "1.5",
+                                              stroke: "#FFFFFF",
+                                              fill: "none",
+                                              "stroke-linecap": "round",
+                                              "stroke-linejoin": "round"
+                                            }
+                                          },
+                                          [
+                                            _c("path", {
+                                              attrs: {
+                                                stroke: "none",
+                                                d: "M0 0h24v24H0z",
+                                                fill: "none"
+                                              }
+                                            }),
+                                            _vm._v(" "),
+                                            _c("path", {
+                                              attrs: {
+                                                d:
+                                                  "M14.274 10.291a4 4 0 1 0 -5.554 -5.58m-.548 3.453a4.01 4.01 0 0 0 2.62 2.65"
+                                              }
+                                            }),
+                                            _vm._v(" "),
+                                            _c("path", {
+                                              attrs: {
+                                                d:
+                                                  "M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 1.147 .167m2.685 2.681a4 4 0 0 1 .168 1.152v2"
+                                              }
+                                            }),
+                                            _vm._v(" "),
+                                            _c("line", {
+                                              attrs: {
+                                                x1: "3",
+                                                y1: "3",
+                                                x2: "21",
+                                                y2: "21"
+                                              }
+                                            })
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  : _vm._e()
+                              ]
+                            }
+                          },
+                          {
+                            key: "item.status",
+                            fn: function(ref) {
+                              var item = ref.item
+                              return [
+                                _c(
+                                  "v-chip",
+                                  {
+                                    attrs: {
+                                      color: _vm.getColor(item.status),
+                                      dark: ""
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                            " +
+                                        _vm._s(item.status) +
+                                        "\n                        "
                                     )
                                   ]
                                 )
