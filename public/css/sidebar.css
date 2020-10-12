@@ -2,7 +2,7 @@
   overflow-x: hidden;
 }
 .router-link-active{
-  background-color: #121212 !important;
+  background-color: #F2f2f2 !important;
 }
 #sidebar-wrapper {
   min-height: 100vh;
@@ -12,7 +12,13 @@
   -o-transition: margin .25s ease-out;
   transition: margin .25s ease-out;
 }
-
+.list-group-item{
+  color: grey !important;
+}
+.list-group-item:hover{
+  color: dodgerblue !important;
+  text-decoration: none;
+}
 #sidebar-wrapper .sidebar-heading {
 padding: 0.875rem 1.25rem;
 font-size: 1.2rem;

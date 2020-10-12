@@ -22,6 +22,7 @@
                                 <v-text-field
                                 v-model="form.email"
                                 label="Enter Email Address"
+                                prepend-icon="mdi-account"
                                 hint="Email must contains '@'" 
                                 :rules="[rules.email_val1, rules.email_val2]"
                                 clearable>
@@ -31,6 +32,7 @@
                                 v-model="form.password"
                                 :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                                 :rules="[rules.required, rules.min]"
+                                prepend-icon="mdi-lock"
                                 :type="show1 ? 'text' : 'password'"
                                 name="input-10-1"
                                 label="Enter Password"
@@ -42,7 +44,7 @@
                    
                     <v-divider></v-divider>
                     <v-container class="text-right">
-                        <v-btn color="light-blue lighten-1" @click="login">Login</v-btn>
+                        <v-btn color="primary" @click="login">Login</v-btn>
                     </v-container>
                 
                 <div class="py-2"></div>
@@ -96,8 +98,6 @@ export default {
         async login(){
             await this.$http.post('api/login', this.form)
             .then((res) => {
-                console.log(res.body.user)
-                // console.log(res.body.user['usertype'])
                 if(res.body.message == 'fail'){
                     this.$Progress.start()
                     this.message = 'Login failed'
