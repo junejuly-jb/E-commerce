@@ -74,14 +74,22 @@ class ApiController extends Controller
         return response()->json($user);
     }
 
-    public function deactivateUser(Request $request){
-        $user = User::find($request->id);
+    public function deactivateUser(Request $request, $id){
+        $user = User::find($id);
 
         $user->status = $request->status;
         $user->save();
         
         return response()->json([
             'message' => 'User deactivated'
+        ]);
+    }
+    public function activateUser(Request $request, $id){
+        $user = User::find($id);
+        $user->status = $request->status;
+        $user->save();
+        return response()->json([
+            'message' => 'User activated'
         ]);
     }
 }
