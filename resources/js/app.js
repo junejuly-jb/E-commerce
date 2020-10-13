@@ -14,7 +14,7 @@ Vue.use(Auth)
 Vue.use(VueProgressBar, {
     color: 'rgb(143, 255, 199)',
     failedColor: 'red',
-    height: '2px'
+    height: '10px'
 })
 // // // Vue.auth.getToken()
 // var token = localStorage.getItem('token')

@@ -535,9 +535,61 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      snackbar: false,
+      message: '',
+      multiLine: true,
+      disableDialog: false,
       editedIndex: -1,
       search: '',
       headers: [{
@@ -566,7 +618,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         text: 'Actions',
         value: 'actions'
       }],
-      users: []
+      users: [],
+      userStat: {
+        id: '',
+        status: ''
+      }
     };
   },
   methods: {
@@ -599,6 +655,40 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     getColor: function getColor(status) {
       if (status == 'active') return 'green';else return 'red';
+    },
+    deactivate: function deactivate(item) {
+      this.disableDialog = true;
+      this.editedIndex = this.users.indexOf(item);
+      this.userStat.id = item.id;
+      this.userStat.status = 'inactive';
+      console.log(this.userStat);
+    },
+    confirmDeactivate: function confirmDeactivate() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return _this2.$http.put('api/deactivateUser', _this2.userStat, {
+                  headers: {
+                    Authorization: 'Bearer ' + _this2.$auth.getToken()
+                  }
+                }).then(function (res) {
+                  _this2.disableDialog = false;
+                  _this2.snackbar = true, _this2.message = res.body.message;
+                  Object.assign(_this2.users[_this2.editedIndex], _this2.userStat);
+                });
+
+              case 2:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
     }
   },
   mounted: function mounted() {
@@ -777,7 +867,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -817,12 +906,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
+                _this.$Progress.start();
+
+                _context.next = 3;
                 return _this.$http.post('api/login', _this.form).then(function (res) {
                   if (res.body.message == 'fail') {
                     _this.$Progress.start();
 
                     _this.message = 'Login failed';
+                    _this.snack = true;
+
+                    _this.$Progress.fail();
+                  } else if (res.body.message == 'inactive') {
+                    _this.$Progress.start();
+
+                    _this.message = 'User is inactive, Please contact admin for more information';
                     _this.snack = true;
 
                     _this.$Progress.fail();
@@ -853,7 +951,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   }
                 });
 
-              case 2:
+              case 3:
               case "end":
                 return _context.stop();
             }
@@ -3623,236 +3721,340 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("v-app", [
-    _c(
-      "div",
-      { staticClass: "d-flex", attrs: { id: "wrapper" } },
-      [
-        _c("sidebar"),
-        _vm._v(" "),
-        _c(
-          "div",
-          { attrs: { id: "page-content-wrapper" } },
-          [
-            _c("navbar"),
-            _vm._v(" "),
-            _c(
-              "v-container",
-              [
-                _c("h1", { staticClass: "mt-4" }, [_vm._v("Users List")]),
-                _vm._v(" "),
-                _c(
-                  "v-card",
-                  [
-                    _c(
-                      "v-card-title",
-                      [
-                        _c("v-text-field", {
-                          attrs: {
-                            "append-icon": "mdi-magnify",
-                            label: "Search",
-                            "single-line": "",
-                            "hide-details": ""
-                          },
-                          model: {
-                            value: _vm.search,
-                            callback: function($$v) {
-                              _vm.search = $$v
-                            },
-                            expression: "search"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c("v-data-table", {
-                      attrs: {
-                        headers: _vm.headers,
-                        items: _vm.users,
-                        search: _vm.search
-                      },
-                      scopedSlots: _vm._u(
+  return _c(
+    "v-app",
+    [
+      _c(
+        "div",
+        { staticClass: "d-flex", attrs: { id: "wrapper" } },
+        [
+          _c("sidebar"),
+          _vm._v(" "),
+          _c(
+            "div",
+            { attrs: { id: "page-content-wrapper" } },
+            [
+              _c("navbar"),
+              _vm._v(" "),
+              _c(
+                "v-container",
+                [
+                  _c("h1", { staticClass: "mt-4" }, [_vm._v("Users List")]),
+                  _vm._v(" "),
+                  _c(
+                    "v-card",
+                    [
+                      _c(
+                        "v-card-title",
                         [
-                          {
-                            key: "item.actions",
-                            fn: function(ref) {
-                              var item = ref.item
-                              return [
-                                item.status == "inactive"
-                                  ? _c(
-                                      "v-btn",
-                                      {
-                                        attrs: { color: "green lighten-1" },
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.modalIgnite(item)
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _c(
-                                          "svg",
-                                          {
-                                            staticClass:
-                                              "icon icon-tabler icon-tabler-user-check",
-                                            attrs: {
-                                              xmlns:
-                                                "http://www.w3.org/2000/svg",
-                                              width: "24",
-                                              height: "24",
-                                              viewBox: "0 0 24 24",
-                                              "stroke-width": "1.5",
-                                              stroke: "#FFFFFF",
-                                              fill: "none",
-                                              "stroke-linecap": "round",
-                                              "stroke-linejoin": "round"
-                                            }
-                                          },
-                                          [
-                                            _c("path", {
-                                              attrs: {
-                                                stroke: "none",
-                                                d: "M0 0h24v24H0z",
-                                                fill: "none"
-                                              }
-                                            }),
-                                            _vm._v(" "),
-                                            _c("circle", {
-                                              attrs: {
-                                                cx: "9",
-                                                cy: "7",
-                                                r: "4"
-                                              }
-                                            }),
-                                            _vm._v(" "),
-                                            _c("path", {
-                                              attrs: {
-                                                d:
-                                                  "M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"
-                                              }
-                                            }),
-                                            _vm._v(" "),
-                                            _c("path", {
-                                              attrs: { d: "M16 11l2 2l4 -4" }
-                                            })
-                                          ]
-                                        )
-                                      ]
-                                    )
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                item.status == "active"
-                                  ? _c(
-                                      "v-btn",
-                                      {
-                                        attrs: { color: "red lighten-1" },
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.modalIgnite(item)
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _c(
-                                          "svg",
-                                          {
-                                            staticClass:
-                                              "icon icon-tabler icon-tabler-user-off",
-                                            attrs: {
-                                              xmlns:
-                                                "http://www.w3.org/2000/svg",
-                                              width: "24",
-                                              height: "24",
-                                              viewBox: "0 0 24 24",
-                                              "stroke-width": "1.5",
-                                              stroke: "#FFFFFF",
-                                              fill: "none",
-                                              "stroke-linecap": "round",
-                                              "stroke-linejoin": "round"
-                                            }
-                                          },
-                                          [
-                                            _c("path", {
-                                              attrs: {
-                                                stroke: "none",
-                                                d: "M0 0h24v24H0z",
-                                                fill: "none"
-                                              }
-                                            }),
-                                            _vm._v(" "),
-                                            _c("path", {
-                                              attrs: {
-                                                d:
-                                                  "M14.274 10.291a4 4 0 1 0 -5.554 -5.58m-.548 3.453a4.01 4.01 0 0 0 2.62 2.65"
-                                              }
-                                            }),
-                                            _vm._v(" "),
-                                            _c("path", {
-                                              attrs: {
-                                                d:
-                                                  "M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 1.147 .167m2.685 2.681a4 4 0 0 1 .168 1.152v2"
-                                              }
-                                            }),
-                                            _vm._v(" "),
-                                            _c("line", {
-                                              attrs: {
-                                                x1: "3",
-                                                y1: "3",
-                                                x2: "21",
-                                                y2: "21"
-                                              }
-                                            })
-                                          ]
-                                        )
-                                      ]
-                                    )
-                                  : _vm._e()
-                              ]
+                          _c("v-text-field", {
+                            attrs: {
+                              "append-icon": "mdi-magnify",
+                              label: "Search",
+                              "single-line": "",
+                              "hide-details": ""
+                            },
+                            model: {
+                              value: _vm.search,
+                              callback: function($$v) {
+                                _vm.search = $$v
+                              },
+                              expression: "search"
                             }
-                          },
-                          {
-                            key: "item.status",
-                            fn: function(ref) {
-                              var item = ref.item
-                              return [
-                                _c(
-                                  "v-chip",
-                                  {
-                                    attrs: {
-                                      color: _vm.getColor(item.status),
-                                      dark: ""
-                                    }
-                                  },
-                                  [
-                                    _vm._v(
-                                      "\n                            " +
-                                        _vm._s(item.status) +
-                                        "\n                        "
-                                    )
-                                  ]
-                                )
-                              ]
-                            }
-                          }
+                          })
                         ],
-                        null,
-                        true
-                      )
-                    })
-                  ],
-                  1
-                )
-              ],
-              1
-            )
-          ],
-          1
-        )
-      ],
-      1
-    )
-  ])
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("v-data-table", {
+                        attrs: {
+                          headers: _vm.headers,
+                          items: _vm.users,
+                          search: _vm.search
+                        },
+                        scopedSlots: _vm._u(
+                          [
+                            {
+                              key: "item.actions",
+                              fn: function(ref) {
+                                var item = ref.item
+                                return [
+                                  item.status == "inactive"
+                                    ? _c(
+                                        "v-btn",
+                                        {
+                                          attrs: { color: "green lighten-1" },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.modalIgnite(item)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "svg",
+                                            {
+                                              staticClass:
+                                                "icon icon-tabler icon-tabler-user-check",
+                                              attrs: {
+                                                xmlns:
+                                                  "http://www.w3.org/2000/svg",
+                                                width: "24",
+                                                height: "24",
+                                                viewBox: "0 0 24 24",
+                                                "stroke-width": "1.5",
+                                                stroke: "#FFFFFF",
+                                                fill: "none",
+                                                "stroke-linecap": "round",
+                                                "stroke-linejoin": "round"
+                                              }
+                                            },
+                                            [
+                                              _c("path", {
+                                                attrs: {
+                                                  stroke: "none",
+                                                  d: "M0 0h24v24H0z",
+                                                  fill: "none"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("circle", {
+                                                attrs: {
+                                                  cx: "9",
+                                                  cy: "7",
+                                                  r: "4"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: { d: "M16 11l2 2l4 -4" }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  item.status == "active"
+                                    ? _c(
+                                        "v-btn",
+                                        {
+                                          attrs: { color: "red lighten-1" },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.deactivate(item)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "svg",
+                                            {
+                                              staticClass:
+                                                "icon icon-tabler icon-tabler-user-off",
+                                              attrs: {
+                                                xmlns:
+                                                  "http://www.w3.org/2000/svg",
+                                                width: "24",
+                                                height: "24",
+                                                viewBox: "0 0 24 24",
+                                                "stroke-width": "1.5",
+                                                stroke: "#FFFFFF",
+                                                fill: "none",
+                                                "stroke-linecap": "round",
+                                                "stroke-linejoin": "round"
+                                              }
+                                            },
+                                            [
+                                              _c("path", {
+                                                attrs: {
+                                                  stroke: "none",
+                                                  d: "M0 0h24v24H0z",
+                                                  fill: "none"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M14.274 10.291a4 4 0 1 0 -5.554 -5.58m-.548 3.453a4.01 4.01 0 0 0 2.62 2.65"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 1.147 .167m2.685 2.681a4 4 0 0 1 .168 1.152v2"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("line", {
+                                                attrs: {
+                                                  x1: "3",
+                                                  y1: "3",
+                                                  x2: "21",
+                                                  y2: "21"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    : _vm._e()
+                                ]
+                              }
+                            },
+                            {
+                              key: "item.status",
+                              fn: function(ref) {
+                                var item = ref.item
+                                return [
+                                  _c(
+                                    "v-chip",
+                                    {
+                                      attrs: {
+                                        color: _vm.getColor(item.status),
+                                        dark: ""
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                            " +
+                                          _vm._s(item.status) +
+                                          "\n                        "
+                                      )
+                                    ]
+                                  )
+                                ]
+                              }
+                            }
+                          ],
+                          null,
+                          true
+                        )
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-dialog",
+        {
+          attrs: { persistent: "", "max-width": "290" },
+          model: {
+            value: _vm.disableDialog,
+            callback: function($$v) {
+              _vm.disableDialog = $$v
+            },
+            expression: "disableDialog"
+          }
+        },
+        [
+          _c(
+            "v-card",
+            [
+              _c("v-card-title", { staticClass: "headline" }, [
+                _vm._v("\n            Disable\n            ")
+              ]),
+              _vm._v(" "),
+              _c("v-card-text", [_vm._v("Do you want to disable this user?")]),
+              _vm._v(" "),
+              _c(
+                "v-card-actions",
+                [
+                  _c("v-spacer"),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { text: "" },
+                      on: {
+                        click: function($event) {
+                          _vm.disableDialog = false
+                        }
+                      }
+                    },
+                    [_vm._v("\n                Cancel\n            ")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { color: "info", text: "" },
+                      on: { click: _vm.confirmDeactivate }
+                    },
+                    [_vm._v("\n                Agree\n            ")]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-snackbar",
+        {
+          attrs: { "multi-line": _vm.multiLine },
+          scopedSlots: _vm._u([
+            {
+              key: "action",
+              fn: function(ref) {
+                var attrs = ref.attrs
+                return [
+                  _c(
+                    "v-btn",
+                    _vm._b(
+                      {
+                        attrs: { color: "red", text: "" },
+                        on: {
+                          click: function($event) {
+                            _vm.snackbar = false
+                          }
+                        }
+                      },
+                      "v-btn",
+                      attrs,
+                      false
+                    ),
+                    [_vm._v("\n        Close\n        ")]
+                  )
+                ]
+              }
+            }
+          ]),
+          model: {
+            value: _vm.snackbar,
+            callback: function($$v) {
+              _vm.snackbar = $$v
+            },
+            expression: "snackbar"
+          }
+        },
+        [_vm._v("\n    " + _vm._s(_vm.message) + "\n\n    ")]
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -65078,7 +65280,7 @@ Vue.use(_auth_js__WEBPACK_IMPORTED_MODULE_4__["default"]);
 Vue.use(vue_progressbar__WEBPACK_IMPORTED_MODULE_3___default.a, {
   color: 'rgb(143, 255, 199)',
   failedColor: 'red',
-  height: '2px'
+  height: '10px'
 }); // // // Vue.auth.getToken()
 // var token = localStorage.getItem('token')
 // Vue.http.headers.common['Authorization'] = 'Bearer ' + token;
@@ -65346,15 +65548,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************************************************!*\
   !*** ./resources/js/components/Admin/AdminUserList.vue ***!
   \*********************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AdminUserList_vue_vue_type_template_id_0a102306___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AdminUserList.vue?vue&type=template&id=0a102306& */ "./resources/js/components/Admin/AdminUserList.vue?vue&type=template&id=0a102306&");
 /* harmony import */ var _AdminUserList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AdminUserList.vue?vue&type=script&lang=js& */ "./resources/js/components/Admin/AdminUserList.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _AdminUserList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _AdminUserList_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -65384,7 +65585,7 @@ component.options.__file = "resources/js/components/Admin/AdminUserList.vue"
 /*!**********************************************************************************!*\
   !*** ./resources/js/components/Admin/AdminUserList.vue?vue&type=script&lang=js& ***!
   \**********************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
