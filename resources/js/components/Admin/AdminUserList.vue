@@ -22,7 +22,7 @@
                         :search="search"
                         >
                             <template v-slot:[`item.actions`]="{ item }">
-                                <v-btn v-if="item.status == 'inactive'" @click="modalIgnite(item)" color="green lighten-1">
+                                <v-btn v-if="item.status == 'inactive'" @click="activate(item)" color="green lighten-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FFFFFF" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                     <circle cx="9" cy="7" r="4" />
@@ -54,6 +54,7 @@
             </div>
         </div>
         
+        <!-- disable dialog  -->
         <v-dialog
         v-model="disableDialog"
         persistent
@@ -82,7 +83,38 @@
                 </v-card-actions>
             </v-card>
         </v-dialog> 
+        <!-- end disable dialog  -->
 
+        <!-- enable dialog  -->
+        <v-dialog
+        v-model="enableDialog"
+        persistent
+        max-width="290"
+        >
+            <v-card>
+                <v-card-title class="headline">
+                Disable
+                </v-card-title>
+                <v-card-text>Do you want to <span class="text-success">activate</span> this user?</v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    text
+                    @click="enableDialog = false"
+                >
+                    Cancel
+                </v-btn>
+                <v-btn
+                    color="info"
+                    text
+                    @click="confirmActivate"
+                >
+                    Agree
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog> 
+        <!-- end enable dialog  -->
 
         <v-snackbar
         v-model="snackbar"
@@ -107,6 +139,7 @@
   export default {
     data () {
       return {
+        enableDialog: false,
         snackbar: false,
         message: '',
         multiLine: true,
@@ -183,10 +216,30 @@
             console.log(this.userStat)
         },
         async confirmDeactivate(){
-            await this.$http.put('api/deactivateUser',  this.userStat, { headers: { Authorization: 'Bearer ' + this.$auth.getToken()}})
+            await this.$http.put('api/deactivateUser/' + this.userStat.id,  this.userStat, { headers: { Authorization: 'Bearer ' + this.$auth.getToken()}})
             .then((res) => {
                 this.disableDialog = false
                 this.snackbar = true,
+                this.message = res.body.message
+                Object.assign(this.users[this.editedIndex], this.userStat)
+            })
+        },
+        activate(item){
+            this.enableDialog = true
+            this.editedIndex = this.users.indexOf(item)
+            this.userStat.id = item.id;
+            this.userStat.status = 'active';
+        },
+        async confirmActivate(){
+            await this.$http.put('api/activateUser/' + this.userStat.id, this.userStat, 
+                { 
+                    headers: {
+                        Authorization: 'Bearer ' + this.$auth.getToken()
+                    }
+                })
+            .then((res) => {
+                this.enableDialog = false;
+                this.snackbar = true
                 this.message = res.body.message
                 Object.assign(this.users[this.editedIndex], this.userStat)
             })

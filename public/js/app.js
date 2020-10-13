@@ -597,9 +597,42 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      enableDialog: false,
       snackbar: false,
       message: '',
       multiLine: true,
@@ -714,7 +747,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return _this2.$http.put('api/deactivateUser', _this2.userStat, {
+                return _this2.$http.put('api/deactivateUser/' + _this2.userStat.id, _this2.userStat, {
                   headers: {
                     Authorization: 'Bearer ' + _this2.$auth.getToken()
                   }
@@ -730,6 +763,40 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             }
           }
         }, _callee2);
+      }))();
+    },
+    activate: function activate(item) {
+      this.enableDialog = true;
+      this.editedIndex = this.users.indexOf(item);
+      this.userStat.id = item.id;
+      this.userStat.status = 'active';
+    },
+    confirmActivate: function confirmActivate() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return _this3.$http.put('api/activateUser/' + _this3.userStat.id, _this3.userStat, {
+                  headers: {
+                    Authorization: 'Bearer ' + _this3.$auth.getToken()
+                  }
+                }).then(function (res) {
+                  _this3.enableDialog = false;
+                  _this3.snackbar = true;
+                  _this3.message = res.body.message;
+                  Object.assign(_this3.users[_this3.editedIndex], _this3.userStat);
+                });
+
+              case 2:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
       }))();
     }
   },
@@ -3889,7 +3956,7 @@ var render = function() {
                                           attrs: { color: "green lighten-1" },
                                           on: {
                                             click: function($event) {
-                                              return _vm.modalIgnite(item)
+                                              return _vm.activate(item)
                                             }
                                           }
                                         },
@@ -4101,6 +4168,70 @@ var render = function() {
                     {
                       attrs: { color: "info", text: "" },
                       on: { click: _vm.confirmDeactivate }
+                    },
+                    [_vm._v("\n                Agree\n            ")]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-dialog",
+        {
+          attrs: { persistent: "", "max-width": "290" },
+          model: {
+            value: _vm.enableDialog,
+            callback: function($$v) {
+              _vm.enableDialog = $$v
+            },
+            expression: "enableDialog"
+          }
+        },
+        [
+          _c(
+            "v-card",
+            [
+              _c("v-card-title", { staticClass: "headline" }, [
+                _vm._v("\n            Disable\n            ")
+              ]),
+              _vm._v(" "),
+              _c("v-card-text", [
+                _vm._v("Do you want to "),
+                _c("span", { staticClass: "text-success" }, [
+                  _vm._v("activate")
+                ]),
+                _vm._v(" this user?")
+              ]),
+              _vm._v(" "),
+              _c(
+                "v-card-actions",
+                [
+                  _c("v-spacer"),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { text: "" },
+                      on: {
+                        click: function($event) {
+                          _vm.enableDialog = false
+                        }
+                      }
+                    },
+                    [_vm._v("\n                Cancel\n            ")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { color: "info", text: "" },
+                      on: { click: _vm.confirmActivate }
                     },
                     [_vm._v("\n                Agree\n            ")]
                   )

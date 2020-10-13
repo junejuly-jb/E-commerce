@@ -21,7 +21,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::group(['middleware' => ['auth:api']], function(){
     Route::put('/updateMe', 'App\Http\Controllers\ApiController@updateMe');
     Route::get('/getAllUsers', 'App\Http\Controllers\ApiController@getAllUsers');
-    Route::put('/deactivateUser', 'App\Http\Controllers\ApiController@deactivateUser');
+    Route::put('/deactivateUser/{id}', 'App\Http\Controllers\ApiController@deactivateUser');
+    Route::put('/activateUser/{id}', 'App\Http\Controllers\ApiController@activateUser');
 });
 
 Route::post('/register', 'App\Http\Controllers\ApiController@register');
