@@ -147,6 +147,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['user'],
   data: function data() {
     return {};
   },
@@ -184,7 +185,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['user'],
   methods: {
     loadJS: function loadJS() {
       var plugin = document.createElement("script");
@@ -622,10 +636,38 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       userStat: {
         id: '',
         status: ''
+      },
+      user: {
+        default_profile: '',
+        name: '',
+        email: '',
+        address: '',
+        usertype: '',
+        contact: ''
       }
     };
   },
   methods: {
+    getUser: function getUser() {
+      var user = JSON.parse(localStorage.getItem('user'));
+      this.user = user;
+      var name = user.name;
+
+      var getInitials = function getInitials(name) {
+        var parts = name.split(' ');
+        var initials = '';
+
+        for (var i = 0; i < parts.length; i++) {
+          if (parts[i].length > 0 && parts[i] !== '') {
+            initials += parts[i][0];
+          }
+        }
+
+        return initials;
+      };
+
+      this.user.default_profile = getInitials(name);
+    },
     getUsers: function getUsers() {
       var _this = this;
 
@@ -693,6 +735,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   mounted: function mounted() {
     this.getUsers();
+    this.getUser();
   }
 });
 
@@ -722,7 +765,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    return {};
+    return {
+      user: {
+        default_profile: '',
+        name: '',
+        email: '',
+        address: '',
+        usertype: '',
+        contact: ''
+      }
+    };
+  },
+  methods: {
+    getUser: function getUser() {
+      var user = JSON.parse(localStorage.getItem('user'));
+      this.user = user;
+      var name = user.name;
+
+      var getInitials = function getInitials(name) {
+        var parts = name.split(' ');
+        var initials = '';
+
+        for (var i = 0; i < parts.length; i++) {
+          if (parts[i].length > 0 && parts[i] !== '') {
+            initials += parts[i][0];
+          }
+        }
+
+        return initials;
+      };
+
+      this.user.default_profile = getInitials(name);
+    }
+  },
+  mounted: function mounted() {
+    this.getUser();
   }
 });
 
@@ -3112,7 +3189,13 @@ var render = function() {
                   "aria-expanded": "false"
                 }
               },
-              [_vm._v("\n                Dropdown\n            ")]
+              [
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(_vm.user.name) +
+                    "\n                    "
+                )
+              ]
             ),
             _vm._v(" "),
             _c(
@@ -3196,6 +3279,25 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c(
+          "v-container",
+          { staticClass: "py-5 text-center" },
+          [
+            _c("v-avatar", { attrs: { color: "primary", size: "128" } }, [
+              _c("span", { staticClass: "white--text headline" }, [
+                _vm._v(_vm._s(_vm.user.default_profile))
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "pt-3" }, [
+              _c("h5", [_vm._v(_vm._s(_vm.user.name))]),
+              _vm._v(" "),
+              _c("small", [_vm._v(_vm._s(_vm.user.usertype))])
+            ])
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
           "div",
           { staticClass: "list-group list-group-flush" },
           [
@@ -3252,7 +3354,8 @@ var render = function() {
           ],
           1
         )
-      ]
+      ],
+      1
     )
   ])
 }
@@ -3285,13 +3388,13 @@ var render = function() {
         "div",
         { staticClass: "d-flex", attrs: { id: "wrapper" } },
         [
-          _c("sidebar"),
+          _c("sidebar", { attrs: { user: _vm.user } }),
           _vm._v(" "),
           _c(
             "div",
             { attrs: { id: "page-content-wrapper" } },
             [
-              _c("navbar"),
+              _c("navbar", { attrs: { user: _vm.user } }),
               _vm._v(" "),
               _c("div", { staticClass: "container" }, [
                 _c("h1", { staticClass: "mt-4" }, [_vm._v("Admin Profile")]),
@@ -3728,13 +3831,13 @@ var render = function() {
         "div",
         { staticClass: "d-flex", attrs: { id: "wrapper" } },
         [
-          _c("sidebar"),
+          _c("sidebar", { attrs: { user: _vm.user } }),
           _vm._v(" "),
           _c(
             "div",
             { attrs: { id: "page-content-wrapper" } },
             [
-              _c("navbar"),
+              _c("navbar", { attrs: { user: _vm.user } }),
               _vm._v(" "),
               _c(
                 "v-container",
@@ -4083,16 +4186,16 @@ var render = function() {
       "div",
       { staticClass: "d-flex", attrs: { id: "wrapper" } },
       [
-        _c("sidebar"),
+        _c("sidebar", { attrs: { user: _vm.user } }),
         _vm._v(" "),
         _c(
           "div",
           { attrs: { id: "page-content-wrapper" } },
           [
-            _c("navbar"),
+            _c("navbar", { attrs: { user: _vm.user } }),
             _vm._v(" "),
             _c("div", { staticClass: "container" }, [
-              _c("h1", { staticClass: "mt-4" }, [_vm._v("Admin Dashboard")])
+              _c("h1", { staticClass: "mt-4" }, [_vm._v("Dashboard")])
             ])
           ],
           1

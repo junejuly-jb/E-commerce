@@ -1,9 +1,9 @@
 <template>
     <v-app>
         <div class="d-flex" id="wrapper">
-            <sidebar></sidebar>
+            <sidebar v-bind:user="user"></sidebar>
             <div id="page-content-wrapper">
-                <navbar></navbar>
+                <navbar v-bind:user="user"></navbar>
                 <v-container>
                     <h1 class="mt-4">Users List</h1>
                     <v-card>
@@ -131,10 +131,37 @@
         userStat: {
             id: '',
             status: ''
+        },
+        user: {
+            default_profile: '',
+            name: '',
+            email: '',
+            address: '',
+            usertype: '',
+            contact: '',
         }
       }
     },
     methods:{
+        getUser(){
+            var user = JSON.parse(localStorage.getItem('user'))
+            this.user = user
+
+            var name = user.name
+
+            var getInitials = function (name) {
+            var parts = name.split(' ')
+            var initials = ''
+            for (var i = 0; i < parts.length; i++) {
+                if (parts[i].length > 0 && parts[i] !== '') {
+                    initials += parts[i][0]
+                }
+            }
+                return initials
+            }
+
+            this.user.default_profile = getInitials(name);
+        },
         async getUsers(){
             await this.$http.get('api/getAllUsers', { headers: { Authorization: 'Bearer ' + this.$auth.getToken()}})
             .then((res) => {
@@ -167,6 +194,7 @@
     },
     mounted(){
         this.getUsers()
+        this.getUser()
     }
   }
 </script>
