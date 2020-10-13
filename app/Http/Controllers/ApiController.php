@@ -31,14 +31,22 @@ class ApiController extends Controller
         $pass_phrase = "VirginiaFoodsIncorporated";
 
         if(auth()->attempt($request->all())){
-            $token = auth()->user()->createToken($pass_phrase);
-            $usertype = auth()->user()->usertype;
+            if(auth()->user()->status == 'active'){
+                $token = auth()->user()->createToken($pass_phrase);
+                $usertype = auth()->user()->usertype;
 
-            return response()->json([
-                'message' => 'User logged in!',
-                'token' => $token,
-                'user' => auth()->user()
-            ]);
+                return response()->json([
+                    'message' => 'User logged in!',
+                    'token' => $token,
+                    'user' => auth()->user()
+                ]);
+            }
+            else{
+                return response()->json([
+                    'message' => 'inactive'
+                ]);
+            }
+            
         }
         else{
             return response()->json([
@@ -64,5 +72,16 @@ class ApiController extends Controller
     public function getAllUsers(){
         $user = User::where('usertype', '=', 'user')->orWhere('usertype', '=', 'seller')->get();
         return response()->json($user);
+    }
+
+    public function deactivateUser(Request $request){
+        $user = User::find($request->id);
+
+        $user->status = $request->status;
+        $user->save();
+        
+        return response()->json([
+            'message' => 'User deactivated'
+        ]);
     }
 }

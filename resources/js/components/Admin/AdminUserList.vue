@@ -30,7 +30,7 @@
                                     <path d="M16 11l2 2l4 -4" />
                                     </svg>
                                 </v-btn>
-                                <v-btn v-if="item.status == 'active'" @click="modalIgnite(item)" color="red lighten-1">
+                                <v-btn v-if="item.status == 'active'" @click="deactivate(item)" color="red lighten-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-off" width="24" height="24" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FFFFFF" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                     <path d="M14.274 10.291a4 4 0 1 0 -5.554 -5.58m-.548 3.453a4.01 4.01 0 0 0 2.62 2.65" />
@@ -52,13 +52,65 @@
                     </v-card>
                 </v-container>
             </div>
-        </div>  
+        </div>
+        
+        <v-dialog
+        v-model="disableDialog"
+        persistent
+        max-width="290"
+        >
+            <v-card>
+                <v-card-title class="headline">
+                Disable
+                </v-card-title>
+                <v-card-text>Do you want to disable this user?</v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                    text
+                    @click="disableDialog = false"
+                >
+                    Cancel
+                </v-btn>
+                <v-btn
+                    color="info"
+                    text
+                    @click="confirmDeactivate"
+                >
+                    Agree
+                </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog> 
+
+
+        <v-snackbar
+        v-model="snackbar"
+        :multi-line="multiLine"
+        >
+        {{ message }}
+
+        <template v-slot:action="{ attrs }">
+            <v-btn
+            color="red"
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+            >
+            Close
+            </v-btn>
+        </template>
+        </v-snackbar> 
     </v-app>
 </template>
 <script>
   export default {
     data () {
       return {
+        snackbar: false,
+        message: '',
+        multiLine: true,
+        disableDialog: false,
         editedIndex: -1,
         search: '',
         headers: [
@@ -75,7 +127,11 @@
           { text: 'Status', value: 'status' },
           { text: 'Actions', value: 'actions' },
         ],
-        users: []
+        users: [],
+        userStat: {
+            id: '',
+            status: ''
+        }
       }
     },
     methods:{
@@ -91,6 +147,22 @@
         getColor(status){
             if(status == 'active') return 'green'
             else return 'red'
+        },
+        deactivate(item){
+            this.disableDialog = true
+            this.editedIndex = this.users.indexOf(item)
+            this.userStat.id = item.id
+            this.userStat.status = 'inactive'
+            console.log(this.userStat)
+        },
+        async confirmDeactivate(){
+            await this.$http.put('api/deactivateUser',  this.userStat, { headers: { Authorization: 'Bearer ' + this.$auth.getToken()}})
+            .then((res) => {
+                this.disableDialog = false
+                this.snackbar = true,
+                this.message = res.body.message
+                Object.assign(this.users[this.editedIndex], this.userStat)
+            })
         }
     },
     mounted(){

@@ -70,7 +70,6 @@
                 </template>
             </v-snackbar>
             <!-- end snackbar  -->
-
         </v-container>
     </v-app>    
 </template>
@@ -96,11 +95,18 @@ export default {
 
     methods: {
         async login(){
+            this.$Progress.start()
             await this.$http.post('api/login', this.form)
             .then((res) => {
                 if(res.body.message == 'fail'){
                     this.$Progress.start()
                     this.message = 'Login failed'
+                    this.snack = true
+                    this.$Progress.fail()
+                }
+                else if(res.body.message == 'inactive'){
+                    this.$Progress.start()
+                    this.message = 'User is inactive, Please contact admin for more information'
                     this.snack = true
                     this.$Progress.fail()
                 }
