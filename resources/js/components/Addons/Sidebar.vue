@@ -2,6 +2,18 @@
     <v-app>
         <div id="sidebar-wrapper" class="border-right">
             <div class="sidebar-heading text-center">Salamat Shopee</div>
+            <v-container class="py-5 text-center">
+                <v-avatar
+                color="primary"
+                size="128"
+                >
+                    <span class="white--text headline">{{user.default_profile}}</span>
+                </v-avatar>
+                <div class="pt-3">
+                    <h5>{{user.name}}</h5>
+                    <small>{{user.usertype}}</small>
+                </div>
+            </v-container>
             <div class="list-group list-group-flush">
                 <router-link to="/admindashboard" class="list-group-item">Dashboard</router-link>
                 <router-link to="/admin_profile" class="list-group-item">Profile</router-link>
@@ -15,6 +27,7 @@
 </template>
 <script>
 export default {
+    props: ['user'],
     methods:{
         loadJS(){
             const plugin = document.createElement("script");

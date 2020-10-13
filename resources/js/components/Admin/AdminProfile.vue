@@ -1,9 +1,9 @@
 <template>
     <v-app>
         <div class="d-flex" id="wrapper">
-            <sidebar></sidebar>
+            <sidebar v-bind:user="user"></sidebar>
             <div id="page-content-wrapper">
-                <navbar></navbar>
+                <navbar v-bind:user="user"></navbar>
                 <div class="container">
                     <h1 class="mt-4">Admin Profile</h1>
                     <div class="row">
@@ -144,6 +144,7 @@
 <script>
 export default {
     data: () => ({
+        
         multiLine: true,
         snackbar: false,
         message: '',
