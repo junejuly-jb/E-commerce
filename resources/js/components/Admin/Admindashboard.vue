@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <div class="d-flex" id="wrapper">
+        <div class="d-flex page" id="wrapper">
             <sidebar v-bind:user="user"></sidebar>
             <div id="page-content-wrapper">
                 <navbar v-bind:user="user"></navbar>

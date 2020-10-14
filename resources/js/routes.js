@@ -10,6 +10,7 @@ import AdminProfile from './components/Admin/AdminProfile.vue'
 import AdminUserList from './components/Admin/AdminUserList.vue'
 import Sellerdashboard from './components/Seller/Sellerdashboard.vue'
 import Userdashboard from './components/Users/Userdashboard.vue'
+import StoreRegistration from './components/Users/StoreRegistration.vue'
 
 Vue.use(VueRouter)
 
@@ -37,11 +38,17 @@ const router = new VueRouter({
             meta: {
                 forVisitors: true
             }
-        }
-        ,
+        },
         {
             path: '/userdashboard',
             component: Userdashboard,
+            meta: {
+                requiresAuth: true, adminAuth: false, userAuth: true, sellerAuth:false
+            }
+        },
+        {
+            path: '/store_registration',
+            component: StoreRegistration,
             meta: {
                 requiresAuth: true, adminAuth: false, userAuth: true, sellerAuth:false
             }
