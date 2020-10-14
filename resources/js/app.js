@@ -8,6 +8,7 @@ import Auth from './auth.js'
 
 Vue.component('sidebar', require('./components/Addons/Sidebar.vue').default);
 Vue.component('navbar', require('./components/Addons/Navbar.vue').default);
+Vue.component('usernav', require('./components/Addons/UserNav.vue').default);
 
 Vue.use(VueResource)
 Vue.use(Auth)

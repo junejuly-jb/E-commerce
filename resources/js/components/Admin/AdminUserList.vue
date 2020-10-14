@@ -16,6 +16,20 @@
                             hide-details
                         ></v-text-field>
                         </v-card-title>
+                        <v-btn
+                        class="ma-2"
+                        :loading="loading4"
+                        :disabled="loading4"
+                        color="info"
+                        @click="loader = 'loading4'"
+                        >
+                        Refresh
+                        <template v-slot:loader>
+                            <span class="custom-loader">
+                            <v-icon light>mdi-cached</v-icon>
+                            </span>
+                        </template>
+                        </v-btn>
                         <v-data-table
                         :headers="headers"
                         :items="users"
@@ -64,7 +78,7 @@
                 <v-card-title class="headline">
                 Disable
                 </v-card-title>
-                <v-card-text>Do you want to disable this user?</v-card-text>
+                <v-card-text>Do you want to <span class="text-danger">deactivate</span> this user?</v-card-text>
                 <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn
@@ -139,6 +153,8 @@
   export default {
     data () {
       return {
+        loader: null,
+        loading4: false,
         enableDialog: false,
         snackbar: false,
         message: '',
@@ -248,6 +264,55 @@
     mounted(){
         this.getUsers()
         this.getUser()
-    }
+    },
+    watch: {
+      loader () {
+        this.getUsers()
+        const l = this.loader
+        this[l] = !this[l]
+
+        setTimeout(() => (this[l] = false), 3000)
+
+        this.loader = null
+      },
+    },
   }
 </script>
+<style>
+  .custom-loader {
+    animation: loader 1s infinite;
+    display: flex;
+  }
+  @-moz-keyframes loader {
+    from {
+      transform: rotate(360deg);
+    }
+    to {
+      transform: rotate(0);
+    }
+  }
+  @-webkit-keyframes loader {
+    from {
+      transform: rotate(360deg);
+    }
+    to {
+      transform: rotate(0);
+    }
+  }
+  @-o-keyframes loader {
+    from {
+      transform: rotate(360deg);
+    }
+    to {
+      transform: rotate(0);
+    }
+  }
+  @keyframes loader {
+    from {
+      transform: rotate(360deg);
+    }
+    to {
+      transform: rotate(0);
+    }
+  }
+</style>

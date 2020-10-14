@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Store;
 
 class ApiController extends Controller
 {
@@ -91,5 +92,56 @@ class ApiController extends Controller
         return response()->json([
             'message' => 'User activated'
         ]);
+    }
+    public function profile(){
+        $user = auth()->user();
+        return response()->json($user);
+    }
+
+    public function storeRegistration(Request $request){
+        $user = User::find($request->id);
+        $user->contact = $request->contact;
+        $user->address = $request->address;
+        $user->gender = $request->gender;
+        $user->birthday = $request->birthday;
+        $user->save();
+
+        $store = new Store([
+            'store_name' => $request->storeName,
+            'store_owner' => $request->id,
+            'store_address' => $request->storeAddress,
+            'store_website' => $request->storeWebsite,
+            'store_description' => $request->storeDescription,
+            'store_status' => 'pending',
+        ]);
+        $store->save();
+        return response()->json([
+            'message' => 'Success!'
+        ], 200);
+    }
+
+    public function checkIfExists($id){
+        // $user = Store::where('store_owner', '=', $id)->get();
+
+        // if($user == null){
+        //     return response()->json([
+        //         'message' => 'not found',
+        //     ]);
+        // }
+        // else{
+        //     return response()->json([
+        //         'message' => 'exists',
+        //     ]);
+        // }
+        if(Store::where('store_owner', '=', $id)->exists()){
+            return response()->json([
+                'message' => 'exists',
+            ]);
+        }
+        else{
+            return response()->json([
+                'message' => 'not found',
+            ]);
+        }
     }
 }

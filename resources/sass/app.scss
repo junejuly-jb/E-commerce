@@ -11,6 +11,17 @@
 
 @import 'https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css';
 
+
 .point-me{
     cursor: pointer;
+}
+h1, h2, h3, h4, h5{
+    color: grey;
+}
+
+.card-notifier{
+    margin-top: 100px;
+}
+.emoji{
+    font-size: 150px;
 }

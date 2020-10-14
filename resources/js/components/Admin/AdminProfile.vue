@@ -4,7 +4,7 @@
             <sidebar v-bind:user="user"></sidebar>
             <div id="page-content-wrapper">
                 <navbar v-bind:user="user"></navbar>
-                <div class="container">
+                <div class="container page">
                     <h1 class="mt-4">Admin Profile</h1>
                     <div class="row">
                         <div class="col-lg">

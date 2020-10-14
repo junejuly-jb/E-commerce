@@ -1,7 +1,7 @@
 <template>
     <v-app>
-        <v-card elevation="2" tile>
-            <v-toolbar>
+        <v-card tile>
+            <v-toolbar flat>
                 <v-toolbar-title>
                     Login Page
                 </v-toolbar-title>
@@ -9,7 +9,7 @@
                 <v-btn icon :to="{path: '/'}">
                     <v-icon>mdi-reply</v-icon>
                 </v-btn>
-                <router-link to="/register" tag="v-btn" class="bg-primary">Register</router-link>
+                <router-link to="/register" tag="v-btn">Register</router-link>
             </v-toolbar>
         </v-card>
         <v-container>

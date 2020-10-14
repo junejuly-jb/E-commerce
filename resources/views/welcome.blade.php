@@ -12,7 +12,9 @@
     </head>
     <body> 
         <div id="app">
+            <!-- <transition name="router-anim" enter-active-class="animated fadeInDown" leave-active-class="animated fadeOutDown"> -->
             <router-view></router-view>
+            <!-- </transition> -->
             <vue-progress-bar></vue-progress-bar>
         </div>
     </body>
