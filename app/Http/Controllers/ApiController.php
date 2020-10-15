@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Store;
+use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
 {
@@ -143,5 +144,13 @@ class ApiController extends Controller
                 'message' => 'not found',
             ]);
         }
+    }
+
+    public function getAllStores(){
+        $sql = "SELECT * FROM stores JOIN users on stores.store_owner = users.id WHERE store_status = 'pending'";
+        $stores = DB::select($sql);
+        return response()->json([
+            'data' => $stores
+        ]);
     }
 }

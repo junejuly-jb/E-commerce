@@ -63,7 +63,15 @@
                    
                     <v-divider></v-divider>
                     <v-container class="text-right">
-                        <v-btn color="light-blue lighten-1" @click="register">Register</v-btn>
+                        <v-btn v-if="loading" color="light-blue lighten-1">
+                            <v-progress-circular
+                            :width="3"
+                            color="blue lighten-5"
+                            indeterminate
+                            ></v-progress-circular>
+                        </v-btn>
+                        
+                        <v-btn v-else color="light-blue lighten-1" @click="register">Register</v-btn>
                     </v-container>
                 
                 <div class="py-2"></div>
@@ -97,6 +105,7 @@
 export default {
     data: () => ({
         show1: false,
+        loading: false,
         snack: false,
         multiLine: true,
         message: '',
@@ -116,6 +125,7 @@ export default {
     }),
     methods:{
         async register(){
+            this.loading = true
             if(this.form.password != this.form.cPassword){
                 this.message = '❌ Password mismatch'
                 this.snack = true
@@ -132,6 +142,7 @@ export default {
                 .catch((err) => {
                     console.error(err);
                 })
+                .finally( () => (this.loading = false))
             }
         },
     }

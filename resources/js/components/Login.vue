@@ -44,7 +44,18 @@
                    
                     <v-divider></v-divider>
                     <v-container class="text-right">
-                        <v-btn color="primary" @click="login">Login</v-btn>
+                        <v-btn color="primary" @click="login">
+                            <span v-if="loading">
+                                <v-progress-circular
+                                :width="3"
+                                color="blue lighten-5"
+                                indeterminate
+                                ></v-progress-circular>
+                            </span>
+                            <span v-else>
+                                Login
+                            </span>
+                        </v-btn>
                     </v-container>
                 
                 <div class="py-2"></div>
@@ -76,6 +87,7 @@
 <script>
 export default {
     data: () => ({
+        loading: false,
         show1: false,
         snack: false,
         multiLine: true,
@@ -95,6 +107,7 @@ export default {
 
     methods: {
         async login(){
+            this.loading = true
             this.$Progress.start()
             await this.$http.post('api/login', this.form)
             .then((res) => {
@@ -129,6 +142,7 @@ export default {
                     this.$Progress.finish()
                 }
             })
+            .finally(() => (this.loading = false))
         }
     }
 }

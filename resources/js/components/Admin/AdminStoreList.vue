@@ -1,14 +1,32 @@
 <template>
     <v-app>
-        <div class="d-flex page" id="wrapper">
+        <div class="d-flex" id="wrapper">
             <sidebar v-bind:user="user"></sidebar>
             <div id="page-content-wrapper">
                 <navbar v-bind:user="user"></navbar>
-                <div class="container">
-                    <h1 class="mt-4">Store Lists</h1>
-                </div>
+                <v-container>
+                    <h1 class="mt-4">Stores List</h1>
+                    <v-card>
+                        <v-card-title>
+                        <v-text-field
+                            v-model="search"
+                            append-icon="mdi-magnify"
+                            label="Search"
+                            single-line
+                            hide-details
+                        ></v-text-field>
+                        </v-card-title>
+                        <v-data-table
+                        :headers="headers"
+                        :items="desserts"
+                        :search="search"
+                        ></v-data-table>
+                    </v-card>
+                </v-container>
             </div>
-        </div>     
+        </div>
+        
+       
     </v-app>
 </template>
 <script>
@@ -21,7 +39,21 @@ export default {
             address: '',
             usertype: '',
             contact: '',
-        }
+        },
+        search: '',
+        headers: [
+          {
+            text: 'Store ID',
+            align: 'start',
+            value: 'id',
+          },
+          { text: 'Owner', value: 'name' },
+          { text: 'Store Address', value: 'store_address' },
+          { text: 'Website', value: 'store_website' },
+          { text: 'Status', value: 'status' },
+          { text: 'Actions', value: 'actions' },
+        ],
+        stores: '',
     }),
     methods:{
         getUser(){
