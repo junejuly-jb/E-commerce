@@ -18,8 +18,7 @@
                 <router-link to="/admindashboard" class="list-group-item">Dashboard</router-link>
                 <router-link to="/admin_profile" class="list-group-item">Profile</router-link>
                 <router-link to="/admin_user_list" class="list-group-item">Users</router-link>
-                <router-link to="/store_list" class="list-group-item">Store</router-link>
-                <router-link to="/admin_requests" class="list-group-item">Requests</router-link>
+                <router-link to="/admin_store_list" class="list-group-item">Stores</router-link>
                 <router-link to="/admin_transaction_logs" class="list-group-item">Transaction Logs</router-link>
             </div>
         </div>
