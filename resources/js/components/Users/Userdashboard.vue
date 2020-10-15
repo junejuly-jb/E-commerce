@@ -101,6 +101,10 @@ export default {
                 this.$auth.destroyToken()
                 this.$router.push('/login')
             }
+            else if(res.body['usertype'] == 'seller'){
+                this.$auth.destroyToken()
+                this.$router.push('/login')
+            }
         })
     },
     methods: {

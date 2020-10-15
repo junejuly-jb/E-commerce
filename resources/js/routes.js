@@ -9,6 +9,7 @@ import Admindashboard from './components/Admin/Admindashboard.vue'
 import AdminProfile from './components/Admin/AdminProfile.vue'
 import AdminUserList from './components/Admin/AdminUserList.vue'
 import AdminStoreList from './components/Admin/AdminStoreList.vue'
+import AdminStoreRequests from './components/Admin/AdminStoreRequests.vue'
 import Sellerdashboard from './components/Seller/Sellerdashboard.vue'
 import Userdashboard from './components/Users/Userdashboard.vue'
 import StoreRegistration from './components/Users/StoreRegistration.vue'
@@ -78,6 +79,13 @@ const router = new VueRouter({
         {
             path: '/admin_store_list',
             component: AdminStoreList,
+            meta: {
+                requiresAuth: true, adminAuth: true, userAuth: false, sellerAuth: false
+            }
+        },
+        {
+            path: '/admin_store_requests',
+            component: AdminStoreRequests,
             meta: {
                 requiresAuth: true, adminAuth: true, userAuth: false, sellerAuth: false
             }
