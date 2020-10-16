@@ -13,9 +13,9 @@ Vue.component('usernav', require('./components/Addons/UserNav.vue').default);
 Vue.use(VueResource)
 Vue.use(Auth)
 Vue.use(VueProgressBar, {
-    color: 'rgb(143, 255, 199)',
+    color: 'rgb(30, 144, 255)',
     failedColor: 'red',
-    height: '10px'
+    height: '15px'
 })
 // // // Vue.auth.getToken()
 // var token = localStorage.getItem('token')
