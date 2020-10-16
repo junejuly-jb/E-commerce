@@ -17,6 +17,7 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::post('/storeRegistration', 'App\Http\Controllers\ApiController@storeRegistration');
     Route::get('/checkIfExists/{id}', 'App\Http\Controllers\ApiController@checkIfExists');
     Route::get('/getAllStores', 'App\Http\Controllers\ApiController@getAllStores');
+    Route::post('/grant', 'App\Http\Controllers\ApiController@grant');
 });
 
 Route::post('/register', 'App\Http\Controllers\ApiController@register');
