@@ -615,7 +615,7 @@ __webpack_require__.r(__webpack_exports__);
         text: 'Actions',
         value: 'actions'
       }],
-      stores: ''
+      stores: []
     };
   },
   methods: {
@@ -1373,6 +1373,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -5516,7 +5524,7 @@ var render = function() {
                     _c("v-data-table", {
                       attrs: {
                         headers: _vm.headers,
-                        items: _vm.desserts,
+                        items: _vm.stores,
                         search: _vm.search
                       }
                     })
@@ -6551,315 +6559,364 @@ var render = function() {
               _c("div", { staticClass: "row" }, [
                 _c("div", { staticClass: "col" }, [
                   _c("div", { staticClass: "row" }, [
-                    _c("div", { staticClass: "col" }, [
-                      _c("div", { staticClass: "container smol-cards" }, [
-                        _c("div", { staticClass: "row" }, [
-                          _c(
-                            "div",
-                            {
-                              staticClass:
-                                "col-4 d-flex align-items-center justify-content-center"
-                            },
-                            [
-                              _c(
-                                "svg",
-                                {
-                                  staticClass:
-                                    "icon icon-tabler icon-tabler-building-store",
-                                  attrs: {
-                                    xmlns: "http://www.w3.org/2000/svg",
-                                    width: "60",
-                                    height: "60",
-                                    viewBox: "0 0 24 24",
-                                    "stroke-width": "1.5",
-                                    stroke: "#FF5722",
-                                    fill: "none",
-                                    "stroke-linecap": "round",
-                                    "stroke-linejoin": "round"
-                                  }
-                                },
-                                [
-                                  _c("path", {
-                                    attrs: {
-                                      stroke: "none",
-                                      d: "M0 0h24v24H0z",
-                                      fill: "none"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("line", {
-                                    attrs: {
-                                      x1: "3",
-                                      y1: "21",
-                                      x2: "21",
-                                      y2: "21"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("path", {
-                                    attrs: {
-                                      d:
-                                        "M3 7v1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1h-18l2 -4h14l2 4"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("line", {
-                                    attrs: {
-                                      x1: "5",
-                                      y1: "21",
-                                      x2: "5",
-                                      y2: "10.85"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("line", {
-                                    attrs: {
-                                      x1: "19",
-                                      y1: "21",
-                                      x2: "19",
-                                      y2: "10.85"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("path", {
-                                    attrs: {
-                                      d:
-                                        "M9 21v-4a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v4"
-                                    }
-                                  })
-                                ]
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "col" }, [
-                            _c("div", [
-                              _c("div", { staticClass: "num-header" }, [
-                                _vm._v("40")
-                              ]),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "sub-header" }, [
-                                _vm._v("Shops")
+                    _c(
+                      "div",
+                      { staticClass: "col" },
+                      [
+                        _c(
+                          "router-link",
+                          { attrs: { to: "/admin_store_list" } },
+                          [
+                            _c("div", { staticClass: "container smol-cards" }, [
+                              _c("div", { staticClass: "row" }, [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "col-4 d-flex align-items-center justify-content-center"
+                                  },
+                                  [
+                                    _c(
+                                      "svg",
+                                      {
+                                        staticClass:
+                                          "icon icon-tabler icon-tabler-building-store",
+                                        attrs: {
+                                          xmlns: "http://www.w3.org/2000/svg",
+                                          width: "60",
+                                          height: "60",
+                                          viewBox: "0 0 24 24",
+                                          "stroke-width": "1.5",
+                                          stroke: "#FF5722",
+                                          fill: "none",
+                                          "stroke-linecap": "round",
+                                          "stroke-linejoin": "round"
+                                        }
+                                      },
+                                      [
+                                        _c("path", {
+                                          attrs: {
+                                            stroke: "none",
+                                            d: "M0 0h24v24H0z",
+                                            fill: "none"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("line", {
+                                          attrs: {
+                                            x1: "3",
+                                            y1: "21",
+                                            x2: "21",
+                                            y2: "21"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("path", {
+                                          attrs: {
+                                            d:
+                                              "M3 7v1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1h-18l2 -4h14l2 4"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("line", {
+                                          attrs: {
+                                            x1: "5",
+                                            y1: "21",
+                                            x2: "5",
+                                            y2: "10.85"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("line", {
+                                          attrs: {
+                                            x1: "19",
+                                            y1: "21",
+                                            x2: "19",
+                                            y2: "10.85"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("path", {
+                                          attrs: {
+                                            d:
+                                              "M9 21v-4a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v4"
+                                          }
+                                        })
+                                      ]
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "col" }, [
+                                  _c("div", [
+                                    _c("div", { staticClass: "num-header" }, [
+                                      _vm._v("40")
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("div", { staticClass: "sub-header" }, [
+                                      _vm._v("Shops")
+                                    ])
+                                  ])
+                                ])
                               ])
                             ])
-                          ])
-                        ])
-                      ])
-                    ]),
+                          ]
+                        )
+                      ],
+                      1
+                    ),
                     _vm._v(" "),
-                    _c("div", { staticClass: "col" }, [
-                      _c("div", { staticClass: "container smol-cards" }, [
-                        _c("div", { staticClass: "row" }, [
-                          _c(
-                            "div",
-                            {
-                              staticClass:
-                                "col-4 d-flex align-items-center justify-content-center"
-                            },
-                            [
-                              _c(
-                                "svg",
-                                {
-                                  staticClass:
-                                    "icon icon-tabler icon-tabler-users",
-                                  attrs: {
-                                    xmlns: "http://www.w3.org/2000/svg",
-                                    width: "60",
-                                    height: "60",
-                                    viewBox: "0 0 24 24",
-                                    "stroke-width": "1.5",
-                                    stroke: "#3F51B5",
-                                    fill: "none",
-                                    "stroke-linecap": "round",
-                                    "stroke-linejoin": "round"
-                                  }
-                                },
-                                [
-                                  _c("path", {
-                                    attrs: {
-                                      stroke: "none",
-                                      d: "M0 0h24v24H0z",
-                                      fill: "none"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("circle", {
-                                    attrs: { cx: "9", cy: "7", r: "4" }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("path", {
-                                    attrs: {
-                                      d:
-                                        "M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("path", {
-                                    attrs: { d: "M16 3.13a4 4 0 0 1 0 7.75" }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("path", {
-                                    attrs: { d: "M21 21v-2a4 4 0 0 0 -3 -3.85" }
-                                  })
-                                ]
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "col" }, [
-                            _c("div", [
-                              _c("div", { staticClass: "num-header" }, [
-                                _vm._v("100")
-                              ]),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "sub-header" }, [
-                                _vm._v("Users")
+                    _c(
+                      "div",
+                      { staticClass: "col" },
+                      [
+                        _c(
+                          "router-link",
+                          { attrs: { to: "/admin_user_list" } },
+                          [
+                            _c("div", { staticClass: "container smol-cards" }, [
+                              _c("div", { staticClass: "row" }, [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "col-4 d-flex align-items-center justify-content-center"
+                                  },
+                                  [
+                                    _c(
+                                      "svg",
+                                      {
+                                        staticClass:
+                                          "icon icon-tabler icon-tabler-users",
+                                        attrs: {
+                                          xmlns: "http://www.w3.org/2000/svg",
+                                          width: "60",
+                                          height: "60",
+                                          viewBox: "0 0 24 24",
+                                          "stroke-width": "1.5",
+                                          stroke: "#3F51B5",
+                                          fill: "none",
+                                          "stroke-linecap": "round",
+                                          "stroke-linejoin": "round"
+                                        }
+                                      },
+                                      [
+                                        _c("path", {
+                                          attrs: {
+                                            stroke: "none",
+                                            d: "M0 0h24v24H0z",
+                                            fill: "none"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("circle", {
+                                          attrs: { cx: "9", cy: "7", r: "4" }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("path", {
+                                          attrs: {
+                                            d:
+                                              "M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("path", {
+                                          attrs: {
+                                            d: "M16 3.13a4 4 0 0 1 0 7.75"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("path", {
+                                          attrs: {
+                                            d: "M21 21v-2a4 4 0 0 0 -3 -3.85"
+                                          }
+                                        })
+                                      ]
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "col" }, [
+                                  _c("div", [
+                                    _c("div", { staticClass: "num-header" }, [
+                                      _vm._v("100")
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("div", { staticClass: "sub-header" }, [
+                                      _vm._v("Users")
+                                    ])
+                                  ])
+                                ])
                               ])
                             ])
-                          ])
-                        ])
-                      ])
-                    ])
+                          ]
+                        )
+                      ],
+                      1
+                    )
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "row" }, [
-                    _c("div", { staticClass: "col" }, [
-                      _c("div", { staticClass: "container smol-cards" }, [
-                        _c("div", { staticClass: "row" }, [
-                          _c(
-                            "div",
-                            {
-                              staticClass:
-                                "col-4 d-flex align-items-center justify-content-center"
-                            },
-                            [
-                              _c(
-                                "svg",
-                                {
-                                  staticClass:
-                                    "icon icon-tabler icon-tabler-user-check",
-                                  attrs: {
-                                    xmlns: "http://www.w3.org/2000/svg",
-                                    width: "60",
-                                    height: "60",
-                                    viewBox: "0 0 24 24",
-                                    "stroke-width": "1.5",
-                                    stroke: "#FFC107",
-                                    fill: "none",
-                                    "stroke-linecap": "round",
-                                    "stroke-linejoin": "round"
-                                  }
-                                },
-                                [
-                                  _c("path", {
-                                    attrs: {
-                                      stroke: "none",
-                                      d: "M0 0h24v24H0z",
-                                      fill: "none"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("circle", {
-                                    attrs: { cx: "9", cy: "7", r: "4" }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("path", {
-                                    attrs: {
-                                      d:
-                                        "M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("path", {
-                                    attrs: { d: "M16 11l2 2l4 -4" }
-                                  })
-                                ]
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "col" }, [
-                            _c("div", [
-                              _c("div", { staticClass: "num-header" }, [
-                                _vm._v("50")
-                              ]),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "sub-header" }, [
-                                _vm._v("Trusted Sellers")
+                    _c(
+                      "div",
+                      { staticClass: "col" },
+                      [
+                        _c(
+                          "router-link",
+                          { attrs: { to: "/admin_user_list" } },
+                          [
+                            _c("div", { staticClass: "container smol-cards" }, [
+                              _c("div", { staticClass: "row" }, [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "col-4 d-flex align-items-center justify-content-center"
+                                  },
+                                  [
+                                    _c(
+                                      "svg",
+                                      {
+                                        staticClass:
+                                          "icon icon-tabler icon-tabler-user-check",
+                                        attrs: {
+                                          xmlns: "http://www.w3.org/2000/svg",
+                                          width: "60",
+                                          height: "60",
+                                          viewBox: "0 0 24 24",
+                                          "stroke-width": "1.5",
+                                          stroke: "#FFC107",
+                                          fill: "none",
+                                          "stroke-linecap": "round",
+                                          "stroke-linejoin": "round"
+                                        }
+                                      },
+                                      [
+                                        _c("path", {
+                                          attrs: {
+                                            stroke: "none",
+                                            d: "M0 0h24v24H0z",
+                                            fill: "none"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("circle", {
+                                          attrs: { cx: "9", cy: "7", r: "4" }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("path", {
+                                          attrs: {
+                                            d:
+                                              "M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("path", {
+                                          attrs: { d: "M16 11l2 2l4 -4" }
+                                        })
+                                      ]
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "col" }, [
+                                  _c("div", [
+                                    _c("div", { staticClass: "num-header" }, [
+                                      _vm._v("50")
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("div", { staticClass: "sub-header" }, [
+                                      _vm._v("Trusted Sellers")
+                                    ])
+                                  ])
+                                ])
                               ])
                             ])
-                          ])
-                        ])
-                      ])
-                    ]),
+                          ]
+                        )
+                      ],
+                      1
+                    ),
                     _vm._v(" "),
-                    _c("div", { staticClass: "col" }, [
-                      _c("div", { staticClass: "container smol-cards" }, [
-                        _c("div", { staticClass: "row" }, [
-                          _c(
-                            "div",
-                            {
-                              staticClass:
-                                "col-4 d-flex align-items-center justify-content-center"
-                            },
-                            [
-                              _c(
-                                "svg",
-                                {
-                                  staticClass:
-                                    "icon icon-tabler icon-tabler-refresh",
-                                  attrs: {
-                                    xmlns: "http://www.w3.org/2000/svg",
-                                    width: "60",
-                                    height: "60",
-                                    viewBox: "0 0 24 24",
-                                    "stroke-width": "1.5",
-                                    stroke: "#009688",
-                                    fill: "none",
-                                    "stroke-linecap": "round",
-                                    "stroke-linejoin": "round"
-                                  }
-                                },
-                                [
-                                  _c("path", {
-                                    attrs: {
-                                      stroke: "none",
-                                      d: "M0 0h24v24H0z",
-                                      fill: "none"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("path", {
-                                    attrs: {
-                                      d:
-                                        "M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("path", {
-                                    attrs: {
-                                      d: "M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"
-                                    }
-                                  })
-                                ]
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "col" }, [
-                            _c("div", [
-                              _c("div", { staticClass: "num-header" }, [
-                                _vm._v("1,208")
-                              ]),
-                              _vm._v(" "),
-                              _c("div", { staticClass: "sub-header" }, [
-                                _vm._v("Transactions")
+                    _c(
+                      "div",
+                      { staticClass: "col" },
+                      [
+                        _c(
+                          "router-link",
+                          { attrs: { to: "/admin_transaction_logs" } },
+                          [
+                            _c("div", { staticClass: "container smol-cards" }, [
+                              _c("div", { staticClass: "row" }, [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "col-4 d-flex align-items-center justify-content-center"
+                                  },
+                                  [
+                                    _c(
+                                      "svg",
+                                      {
+                                        staticClass:
+                                          "icon icon-tabler icon-tabler-refresh",
+                                        attrs: {
+                                          xmlns: "http://www.w3.org/2000/svg",
+                                          width: "60",
+                                          height: "60",
+                                          viewBox: "0 0 24 24",
+                                          "stroke-width": "1.5",
+                                          stroke: "#009688",
+                                          fill: "none",
+                                          "stroke-linecap": "round",
+                                          "stroke-linejoin": "round"
+                                        }
+                                      },
+                                      [
+                                        _c("path", {
+                                          attrs: {
+                                            stroke: "none",
+                                            d: "M0 0h24v24H0z",
+                                            fill: "none"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("path", {
+                                          attrs: {
+                                            d:
+                                              "M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("path", {
+                                          attrs: {
+                                            d:
+                                              "M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"
+                                          }
+                                        })
+                                      ]
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "col" }, [
+                                  _c("div", [
+                                    _c("div", { staticClass: "num-header" }, [
+                                      _vm._v("1,208")
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("div", { staticClass: "sub-header" }, [
+                                      _vm._v("Transactions")
+                                    ])
+                                  ])
+                                ])
                               ])
                             ])
-                          ])
-                        ])
-                      ])
-                    ])
+                          ]
+                        )
+                      ],
+                      1
+                    )
                   ])
                 ]),
                 _vm._v(" "),

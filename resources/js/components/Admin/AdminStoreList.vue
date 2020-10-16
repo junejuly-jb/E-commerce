@@ -18,7 +18,7 @@
                         </v-card-title>
                         <v-data-table
                         :headers="headers"
-                        :items="desserts"
+                        :items="stores"
                         :search="search"
                         ></v-data-table>
                     </v-card>
@@ -53,7 +53,7 @@ export default {
           { text: 'Status', value: 'status' },
           { text: 'Actions', value: 'actions' },
         ],
-        stores: '',
+        stores: [],
     }),
     methods:{
         getUser(){
