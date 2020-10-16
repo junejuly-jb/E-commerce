@@ -16,6 +16,20 @@
                             hide-details
                         ></v-text-field>
                         </v-card-title>
+                        <v-btn
+                        class="ma-2"
+                        :loading="loading4"
+                        :disabled="loading4"
+                        color="info"
+                        @click="loader = 'loading4'"
+                        >
+                        Refresh
+                        <template v-slot:loader>
+                            <span class="custom-loader">
+                            <v-icon light>mdi-cached</v-icon>
+                            </span>
+                        </template>
+                        </v-btn>
                         <v-data-table
                         :headers="headers"
                         :items="stores"
@@ -91,7 +105,7 @@
              <v-btn
                 color="orange lighten-2"
                 text
-                @click="dialog = false"
+                @click="grant"
             >
                 Grant
             </v-btn>
@@ -132,11 +146,35 @@
             </v-expand-transition>
         </v-card>
         </v-dialog>
+
+        <!-- snackbar  -->
+        <v-snackbar
+        v-model="snackbar"
+        >
+        {{ message }}
+
+        <template v-slot:action="{ attrs }">
+            <v-btn
+            color="pink"
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+            >
+            Close
+            </v-btn>
+        </template>
+        </v-snackbar>
+        <!-- snackbar  -->
+
     </v-app>
 </template>
 <script>
 export default {
     data: () => ({
+        loader: null,
+        loading4: false,
+        message: '',
+        snackbar: false,
         dialog: false,
         show: false,
         user: {
@@ -164,6 +202,8 @@ export default {
         stores: [],
         toShowInfo: '',
         sellerDefaultPP: '',
+        toUpdate: '',
+        editedIndex: -1
     }),
     methods:{
         async getAllStores(){
@@ -180,7 +220,8 @@ export default {
         showRequest(item){
             this.dialog = true
             this.toShowInfo = item
-
+            this.toUpdate = item
+            this.editedIndex = this.stores.indexOf(item)
             var name = item.name
             var getInitials = function (name) {
             var parts = name.split(' ')
@@ -214,10 +255,72 @@ export default {
 
             this.user.default_profile = getInitials(name);
         },
+        async grant(){
+            await this.$http.post('api/grant', this.toUpdate, {
+                headers: {
+                    Authorization: 'Bearer ' + this.$auth.getToken()
+                }
+            })
+            .then((res) => {
+                this.dialog = false
+                this.snackbar = true
+                this.message = res.body.message
+                this.stores.splice(this.editedIndex, 1)
+            })
+        }
     },
     mounted(){
         this.getUser()
         this.getAllStores()
-    }
+    },
+    watch: {
+      loader () {
+        this.getAllStores()
+        const l = this.loader
+        this[l] = !this[l]
+
+        setTimeout(() => (this[l] = false), 3000)
+
+        this.loader = null
+      },
+    },
 }
 </script>
+<style>
+  .custom-loader {
+    animation: loader 1s infinite;
+    display: flex;
+  }
+  @-moz-keyframes loader {
+    from {
+      transform: rotate(360deg);
+    }
+    to {
+      transform: rotate(0);
+    }
+  }
+  @-webkit-keyframes loader {
+    from {
+      transform: rotate(360deg);
+    }
+    to {
+      transform: rotate(0);
+    }
+  }
+  @-o-keyframes loader {
+    from {
+      transform: rotate(360deg);
+    }
+    to {
+      transform: rotate(0);
+    }
+  }
+  @keyframes loader {
+    from {
+      transform: rotate(360deg);
+    }
+    to {
+      transform: rotate(0);
+    }
+  }
+</style>

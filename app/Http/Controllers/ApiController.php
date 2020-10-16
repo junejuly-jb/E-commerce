@@ -153,4 +153,17 @@ class ApiController extends Controller
             'data' => $stores
         ]);
     }
+    public function grant(Request $request){
+        $store = Store::find($request->store_id);
+        $store->store_status = 'active';
+        $store->save();
+
+        $user = User::find($request->id);
+        $user->usertype = 'seller';
+        $user->save();
+
+        return response()->json([
+            'message' => 'Store granted successfully'
+        ], 200);
+    }
 }
