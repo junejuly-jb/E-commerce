@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Store;
+use App\Models\Todo;
 use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
@@ -165,5 +166,33 @@ class ApiController extends Controller
         return response()->json([
             'message' => 'Store granted successfully'
         ], 200);
+    }
+
+    public function getTotal(){
+        $users = User::where('usertype', '=', 'user')->count();
+        $sellers = User::where('usertype', '=', 'seller')->count();
+        $stores = Store::where('store_status', '=', 'active')->count();
+
+        return response()->json([
+            'users' => $users,
+            'sellers' => $sellers,
+            'stores' => $stores
+        ]);
+    }
+    public function getTodos(){
+        $todos = Todo::all();
+        return response()->json([
+            'data' => $todos
+        ]);
+    }
+
+    public function addTodo(Request $request){
+        $todo = new Todo([
+            'todo' => $request->todo 
+        ]);
+        $todo->save(); 
+        return response()->json([
+            'message' => 'Todo added ✔'
+        ]);
     }
 }

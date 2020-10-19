@@ -5,7 +5,9 @@
             <div id="page-content-wrapper">
                 <navbar v-bind:user="user"></navbar>
                 <div class="container">
-                    <h1>Admin Dashboard</h1>
+                    <div class="dashHeader">
+                        <span class="discover">Admin</span><span class="daily"> Dashboard</span>
+                    </div>
                     <div class="row">
                         <div class="col">
                             <div class="row">
@@ -25,7 +27,7 @@
                                                 </div>
                                                 <div class="col">
                                                     <div>
-                                                        <div class="num-header">40</div>
+                                                        <div class="num-header">{{totalStores}}</div>
                                                         <div class="sub-header">Shops</div>
                                                     </div>
                                                 </div>
@@ -48,7 +50,7 @@
                                                 </div>
                                                 <div class="col">
                                                     <div>
-                                                        <div class="num-header">100</div>
+                                                        <div class="num-header">{{totalUsers}}</div>
                                                         <div class="sub-header">Users</div>
                                                     </div>
                                                 </div>
@@ -72,7 +74,7 @@
                                                 </div>
                                                 <div class="col">
                                                     <div>
-                                                        <div class="num-header">50</div>
+                                                        <div class="num-header">{{totalSellers}}</div>
                                                         <div class="sub-header">Trusted Sellers</div>
                                                     </div>
                                                 </div>
@@ -93,7 +95,9 @@
                                                 </div>
                                                 <div class="col">
                                                     <div>
-                                                        <div class="num-header">1,208</div>
+                                                        <div class="num-header">
+                                                           1000
+                                                        </div>
                                                         <div class="sub-header">Transactions</div>
                                                     </div>
                                                 </div>
@@ -101,6 +105,65 @@
                                         </div>
                                     </router-link>
                                 </div>
+                            </div>
+                            <div>
+                                <v-container class="card-todo">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="d-flex align-items-center h-100">
+                                                <div class="header-todo">Todo List</div>
+                                            </div>
+                                        </div>
+                                        <div class="col text-right">
+                                            <v-btn
+                                            fab
+                                            @click="addButton"
+                                            color="blue lighten-1"
+                                            >
+                                            <v-icon color="white">
+                                                mdi-plus
+                                            </v-icon>
+                                            </v-btn>
+                                        </div>
+                                    </div>
+                                    <div class="py-2">
+                                        <div class="py-2"></div>
+                                        <div class="py-1" v-for="todos in todo">
+                                            <span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2196F3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                <circle cx="12" cy="12" r="9" />
+                                                </svg>
+                                            </span>
+                                            <span class="pl-2">{{todos.todo}}</span>
+                                            <div class="float-right">
+                                                <span class="mx-2">
+                                                    <svg @click="editButton" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#8BC34A" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                    <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
+                                                    <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
+                                                    </svg>
+                                                </span>
+                                                <span class="mx-2">
+                                                    <svg @click="deleteButton" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#F44336" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                    <line x1="4" y1="7" x2="20" y2="7" />
+                                                    <line x1="10" y1="11" x2="10" y2="17" />
+                                                    <line x1="14" y1="11" x2="14" y2="17" />
+                                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" />
+                                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" />
+                                                    </svg>
+                                                </span>
+                                            </div>
+                                            <!-- <v-btn icon color="red lighten-3" @click="deleteButton">
+                                                <v-icon>mdi-trash-can-outline</v-icon>
+                                            </v-btn>
+                                            <v-btn icon color="teal lighten-3" @click="editButton">
+                                                <v-icon>mdi-pencil-outline</v-icon>
+                                            </v-btn> -->
+                                        </div>
+                                    </div>
+                                </v-container>
                             </div>
                         </div>
                         <div class="col-5">
@@ -132,12 +195,99 @@
                     </div>
                 </div>
             </div>
-        </div>     
+        </div>
+
+        <!-- add dialog  -->
+        <v-dialog
+        v-model="dialog"
+        persistent
+        max-width="350"
+        >
+        <v-card>
+            <v-card-title class="headline">
+                <span v-if="edit_mode == 'add'"> Todo </span>
+                <span v-else-if="edit_mode == 'delete'"> Delete </span>
+                <span v-else> Edit Todo </span>
+            </v-card-title>
+            <v-container>
+                <v-text-field
+                    v-if="edit_mode == 'add'"
+                    v-model="form.todo"
+                    label="Add todo"
+                >
+                </v-text-field>
+                <v-card-text v-else-if="edit_mode == 'delete'">
+                    Do you want to delete this Todo?
+                </v-card-text>
+                <v-text-field
+                    v-else
+                    v-model="form.todo"
+                    label="Edit Todo"
+                >
+                </v-text-field>
+            </v-container>
+            <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                text
+                @click="dialog = false"
+            >
+                Cancel
+            </v-btn>
+            <v-btn
+                v-if="edit_mode == 'add'"
+                color="green darken-1"
+                text
+                @click="confirmAdd"
+            >
+                Save
+            </v-btn>
+            <v-btn
+                v-else-if="edit_mode == 'delete'"
+                color="red darken-3"
+                text
+                @click="confirmDelete"
+            >
+                Delete
+            </v-btn>
+            <v-btn
+                v-else
+                color="blue lighten-3"
+                text
+                @click="confirmUpdate"
+            >
+                Update
+            </v-btn>
+            </v-card-actions>
+        </v-card>
+        </v-dialog>
+        <!-- snackbar  -->
+            <div class="text-center">
+                <v-snackbar
+                v-model="snackbar"
+                >
+                {{ message }}
+
+                <template v-slot:action="{ attrs }">
+                    <v-btn
+                    color="blue"
+                    text
+                    v-bind="attrs"
+                    @click="snackbar = false"
+                    >
+                    Close
+                    </v-btn>
+                </template>
+                </v-snackbar>
+            </div>
+        <!-- end snackbar -->
     </v-app>
 </template>
 <script>
 export default {
     data: () => ({
+        snackbar: false,
+        message: '',
         user: {
             default_profile: '',
             name: '',
@@ -145,9 +295,68 @@ export default {
             address: '',
             usertype: '',
             contact: '',
-        }
+        },
+        form: {
+            todo: ''
+        },
+        todo: [],
+        savedTodo: {
+            todo: ''
+        },
+        totalStores: '',
+        totalUsers: '',
+        totalSellers: '',
+        dialog: false,
+        edit_mode: '',
     }),
     methods:{
+        async getTodos(){
+            await this.$http.get('api/getTodos', {
+                headers: {
+                    Authorization: 'Bearer ' + this.$auth.getToken()
+                }
+            })
+            .then((res) => {
+                this.todo = res.body.data
+            })
+            .catch((err) => {
+                console.err(err)
+            })
+        },
+        addButton(){
+            this.edit_mode = 'add'
+            this.dialog = true
+        },
+        async confirmAdd(){
+            this.savedTodo.todo = this.form.todo;
+            await this.$http.post('api/addTodo', this.savedTodo, {
+                headers: {
+                    Authorization: 'Bearer ' + this.$auth.getToken()
+                }
+            })
+            .then((res) => {
+                this.dialog = false
+                this.snackbar = true
+                this.message = res.body.message
+                this.todo.push(this.savedTodo)
+                this.form = ''
+                this.saveTodo = ''
+            })
+        },
+        editButton(){
+            this.edit_mode = 'edit'
+            this.dialog = true
+        },
+        confirmUpdate(){
+
+        },
+        deleteButton(){
+            this.edit_mode = 'delete'
+            this.dialog = true
+        },
+        saveTodo(){
+            console.log('clicked!')
+        },
         getUser(){
             var user = JSON.parse(localStorage.getItem('user'))
             this.user = user
@@ -164,12 +373,28 @@ export default {
             }
                 return initials
             }
-
             this.user.default_profile = getInitials(name);
         },
+        async getTotal(){
+            await this.$http.get('api/getTotal', {
+                headers: {
+                    Authorization: 'Bearer ' + this.$auth.getToken()
+                }
+            })
+            .then((res) => {
+                this.totalUsers = res.body.users
+                this.totalStores = res.body.stores
+                this.totalSellers = res.body.sellers
+            })
+            .catch((err) => {
+                console.err(err)
+            })
+        }
     },
     mounted(){
         this.getUser()
+        this.getTotal()
+        this.getTodos()
     }
 }
 </script>
@@ -182,6 +407,11 @@ export default {
     font-size: 30px;
     font-weight: bold;
     color: white;
+}
+.header-todo{
+    font-size: 30px;
+    font-weight: bold;
+
 }
 .body-notif{
     padding: 20px 0px;
@@ -209,5 +439,10 @@ export default {
     transition: 0.5s;
     background-color: dodgerblue;
     color: white;
+}
+.card-todo{
+    padding: 10px 30px !important;
+    border-radius: 20px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
 </style>

@@ -17,7 +17,10 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::post('/storeRegistration', 'App\Http\Controllers\ApiController@storeRegistration');
     Route::get('/checkIfExists/{id}', 'App\Http\Controllers\ApiController@checkIfExists');
     Route::get('/getAllStores', 'App\Http\Controllers\ApiController@getAllStores');
+    Route::get('/getTotal', 'App\Http\Controllers\ApiController@getTotal');
+    Route::get('/getTodos', 'App\Http\Controllers\ApiController@getTodos');
     Route::post('/grant', 'App\Http\Controllers\ApiController@grant');
+    Route::post('/addTodo', 'App\Http\Controllers\ApiController@addTodo');
 });
 
 Route::post('/register', 'App\Http\Controllers\ApiController@register');

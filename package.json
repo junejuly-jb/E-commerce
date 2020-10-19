@@ -24,6 +24,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "vue-number-animation": "^1.0.5",
         "vue-progressbar": "^0.7.5",
         "vue-resource": "^1.5.1",
         "vue-router": "^3.4.6",

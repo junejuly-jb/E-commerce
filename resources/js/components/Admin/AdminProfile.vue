@@ -174,7 +174,11 @@ export default {
     }),
     methods:{
         async save(){
-            await this.$http.put('api/updateMe', this.user, { headers : { Authorization: 'Bearer ' + this.$auth.getToken()}})
+            await this.$http.put('api/updateMe', this.user, { 
+                headers : { 
+                    Authorization: 'Bearer ' + this.$auth.getToken()
+                }
+            })
             .then((res) => {
                 localStorage.removeItem('user')
                 localStorage.setItem("user", JSON.stringify(res.body.data))
@@ -186,7 +190,6 @@ export default {
                 console.error(err)
             })
         },
-
         getUser(){
             var user = JSON.parse(localStorage.getItem('user'))
             this.user = user
@@ -196,14 +199,13 @@ export default {
             var getInitials = function (name) {
             var parts = name.split(' ')
             var initials = ''
-            for (var i = 0; i < parts.length; i++) {
-                if (parts[i].length > 0 && parts[i] !== '') {
-                    initials += parts[i][0]
+                for (var i = 0; i < parts.length; i++) {
+                    if (parts[i].length > 0 && parts[i] !== '') {
+                        initials += parts[i][0]
+                    }
                 }
-            }
                 return initials
             }
-
             this.user.default_profile = getInitials(name);
         }
     },
