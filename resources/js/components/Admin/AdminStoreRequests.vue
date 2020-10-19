@@ -252,7 +252,6 @@ export default {
             }
                 return initials
             }
-
             this.user.default_profile = getInitials(name);
         },
         async grant(){
@@ -274,15 +273,13 @@ export default {
         this.getAllStores()
     },
     watch: {
-      loader () {
+        loader () {
         this.getAllStores()
         const l = this.loader
         this[l] = !this[l]
-
         setTimeout(() => (this[l] = false), 3000)
-
         this.loader = null
-      },
+        },
     },
 }
 </script>
