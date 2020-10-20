@@ -23,6 +23,7 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::post('/addTodo', 'App\Http\Controllers\ApiController@addTodo');
     Route::delete('/deleteTodo/{id}', 'App\Http\Controllers\ApiController@deleteTodo');
     Route::put('/updateTodo/{id}', 'App\Http\Controllers\ApiController@updateTodo');
+    Route::put('/mark/{id}', 'App\Http\Controllers\ApiController@mark');
 });
 
 Route::post('/register', 'App\Http\Controllers\ApiController@register');

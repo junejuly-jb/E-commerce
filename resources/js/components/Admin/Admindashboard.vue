@@ -116,27 +116,65 @@
                                         </div>
                                         <div class="col text-right">
                                             <v-btn
-                                            fab
-                                            small
-                                            @click="addButton"
-                                            color="blue lighten-1"
-                                            >
-                                            <v-icon color="white">
-                                                mdi-plus
-                                            </v-icon>
+                                                fab
+                                                small
+                                                @click="getTodos"
+                                                color="blue lighten-1"
+                                                >
+                                                <span v-if="refreshTodo == true">
+                                                    <v-progress-circular
+                                                    :width="3"
+                                                    color="white"
+                                                    indeterminate
+                                                    ></v-progress-circular>
+                                                </span>
+                                                <v-icon v-else color="white">
+                                                    mdi-refresh
+                                                </v-icon>
+                                            </v-btn>
+                                            <v-btn
+                                                fab
+                                                small
+                                                @click="addButton"
+                                                color="blue lighten-1"
+                                                >
+                                                <v-icon color="white">
+                                                    mdi-plus
+                                                </v-icon>
                                             </v-btn>
                                         </div>
                                     </div>
-                                    <div class="py-2">
+                                    <div v-if="loadTodo == true" class="py-5 text-center">
+                                        <div class="py-5">Fetching your Todo's</div>
+                                        <v-progress-linear
+                                            color="deep-purple accent-4"
+                                            indeterminate
+                                            rounded
+                                            height="6"
+                                        ></v-progress-linear>
+                                    </div>
+                                    <div v-else class="py-2">
                                         <div class="py-2"></div>
                                         <div class="py-1" v-for="todos in mytodo">
-                                            <span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2196F3" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                <circle cx="12" cy="12" r="9" />
-                                                </svg>
-                                            </span>
-                                            <span class="pl-2">{{todos.todo}}</span>
+                                            <template v-if="todos.status == 'incomplete'">
+                                                <span @click="mark(todos)">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2196F3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                    <circle cx="12" cy="12" r="9" />
+                                                    </svg>
+                                                </span>
+                                                <span class="pl-2">{{todos.todo}}</span>
+                                            </template>
+                                            <template v-else>
+                                                <span v-if="todos.status == 'complete'" @click="mark(todos)">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FFC107" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                    <circle cx="12" cy="12" r="9" />
+                                                    <path d="M9 12l2 2l4 -4" />
+                                                    </svg>
+                                                </span>
+                                                <del v-if="todos.status == 'complete'" class="pl-2">{{todos.todo}}</del>
+                                            </template>
                                             <div class="float-right">
                                                 <span class="mx-2">
                                                     <svg @click="editButton(todos)" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#8BC34A" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -287,6 +325,8 @@
 <script>
 export default {
     data: () => ({
+        refreshTodo: false,
+        loadTodo: false,
         snackbar: false,
         message: '',
         user: {
@@ -320,7 +360,23 @@ export default {
         }
     }),
     methods:{
+        async mark(todos){
+            // console.log(todos.status)
+            this.selectedIndex = this.mytodo.indexOf(todos)
+            await this.$http.put('api/mark/' + todos.todo_id, todos, {
+                headers: {
+                    Authorization: 'Bearer ' + this.$auth.getToken()
+                }
+            })
+            .then((res) => {
+                this.snackbar = true
+                this.message = res.data.message
+                Object.assign(this.mytodo[this.selectedIndex], res.data.data)
+            })
+        },
         async getTodos(){
+            this.refreshTodo = true
+            this.loadTodo = true
             await this.$http.get('api/getTodos', {
                 headers: {
                     Authorization: 'Bearer ' + this.$auth.getToken()
@@ -331,6 +387,10 @@ export default {
             })
             .catch((err) => {
                 console.err(err)
+            })
+            .finally(() => { 
+                this.loadTodo = false
+                this.refreshTodo = false
             })
         },
         addButton(){
@@ -350,7 +410,7 @@ export default {
                 this.snackbar = true
                 this.message = res.body.message
                 this.mytodo.push(res.data.data)
-                console.log(this.savedTodo)
+                console.log(res.data.data)
             })
         },
         editButton(todos){

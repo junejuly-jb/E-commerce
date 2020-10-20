@@ -15,8 +15,9 @@ class CreateTodosTable extends Migration
     {
         Schema::create('todos', function (Blueprint $table) {
             $table->id('todo_id');
+            $table->string('admin_id');
             $table->string('todo');
-            $table->string('status')->default('incomplete');
+            $table->string('status');
             $table->timestamps();
         });
     }
