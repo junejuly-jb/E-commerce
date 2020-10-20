@@ -11,6 +11,6 @@ class Todo extends Model
 
     protected $table = 'todos';
     protected $primaryKey = 'todo_id';
-    protected $fillable = ['todo'];
+    protected $fillable = ['todo','admin_id','status'];
     
 }

@@ -1665,9 +1665,49 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      refreshTodo: false,
+      loadTodo: false,
       snackbar: false,
       message: '',
       user: {
@@ -1702,7 +1742,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   methods: {
-    getTodos: function getTodos() {
+    mark: function mark(todos) {
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
@@ -1710,23 +1750,57 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
-                return _this.$http.get('api/getTodos', {
+                // console.log(todos.status)
+                _this.selectedIndex = _this.mytodo.indexOf(todos);
+                _context.next = 3;
+                return _this.$http.put('api/mark/' + todos.todo_id, todos, {
                   headers: {
                     Authorization: 'Bearer ' + _this.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this.mytodo = res.body.data;
-                })["catch"](function (err) {
-                  console.err(err);
+                  _this.snackbar = true;
+                  _this.message = res.data.message;
+                  Object.assign(_this.mytodo[_this.selectedIndex], res.data.data);
                 });
 
-              case 2:
+              case 3:
               case "end":
                 return _context.stop();
             }
           }
         }, _callee);
+      }))();
+    },
+    getTodos: function getTodos() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _this2.refreshTodo = true;
+                _this2.loadTodo = true;
+                _context2.next = 4;
+                return _this2.$http.get('api/getTodos', {
+                  headers: {
+                    Authorization: 'Bearer ' + _this2.$auth.getToken()
+                  }
+                }).then(function (res) {
+                  _this2.mytodo = res.body.data;
+                })["catch"](function (err) {
+                  console.err(err);
+                })["finally"](function () {
+                  _this2.loadTodo = false;
+                  _this2.refreshTodo = false;
+                });
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
       }))();
     },
     addButton: function addButton() {
@@ -1735,35 +1809,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.dialog = true;
     },
     confirmAdd: function confirmAdd() {
-      var _this2 = this;
+      var _this3 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
-                _this2.savedTodo.todo = _this2.form.todo;
-                _context2.next = 3;
-                return _this2.$http.post('api/addTodo', _this2.savedTodo, {
+                _this3.savedTodo.todo = _this3.form.todo;
+                _context3.next = 3;
+                return _this3.$http.post('api/addTodo', _this3.savedTodo, {
                   headers: {
-                    Authorization: 'Bearer ' + _this2.$auth.getToken()
+                    Authorization: 'Bearer ' + _this3.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this2.dialog = false;
-                  _this2.snackbar = true;
-                  _this2.message = res.body.message;
+                  _this3.dialog = false;
+                  _this3.snackbar = true;
+                  _this3.message = res.body.message;
 
-                  _this2.mytodo.push(res.data.data);
+                  _this3.mytodo.push(res.data.data);
 
-                  console.log(_this2.savedTodo);
+                  console.log(res.data.data);
                 });
 
               case 3:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2);
+        }, _callee3);
       }))();
     },
     editButton: function editButton(todos) {
@@ -1774,35 +1848,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.form.todo = todos.todo; // console.log(this.selectedIndex)
     },
     confirmUpdate: function confirmUpdate() {
-      var _this3 = this;
+      var _this4 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
-                _this3.editedTodo.todo = _this3.form.todo;
-                _context3.next = 3;
-                return _this3.$http.put('api/updateTodo/' + _this3.editedTodo.id, _this3.editedTodo, {
+                _this4.editedTodo.todo = _this4.form.todo;
+                _context4.next = 3;
+                return _this4.$http.put('api/updateTodo/' + _this4.editedTodo.id, _this4.editedTodo, {
                   headers: {
-                    Authorization: 'Bearer ' + _this3.$auth.getToken()
+                    Authorization: 'Bearer ' + _this4.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this3.snackbar = true;
-                  _this3.message = res.data.message;
-                  Object.assign(_this3.mytodo[_this3.selectedIndex], res.data.data);
-                  _this3.dialog = false;
+                  _this4.snackbar = true;
+                  _this4.message = res.data.message;
+                  Object.assign(_this4.mytodo[_this4.selectedIndex], res.data.data);
+                  _this4.dialog = false;
                 });
 
               case 3:
-                console.log(_this3.editedTodo);
+                console.log(_this4.editedTodo);
 
               case 4:
               case "end":
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3);
+        }, _callee4);
       }))();
     },
     deleteButton: function deleteButton(todos) {
@@ -1812,32 +1886,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.selectedTodo.id = todos.todo_id; // console.log(todos.todo_id)
     },
     confirmDelete: function confirmDelete() {
-      var _this4 = this;
+      var _this5 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                _context4.next = 2;
-                return _this4.$http["delete"]('api/deleteTodo/' + _this4.selectedTodo.id, {
+                _context5.next = 2;
+                return _this5.$http["delete"]('api/deleteTodo/' + _this5.selectedTodo.id, {
                   headers: {
-                    Authorization: 'Bearer ' + _this4.$auth.getToken()
+                    Authorization: 'Bearer ' + _this5.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this4.mytodo.splice(_this4.selectedIndex, 1);
+                  _this5.mytodo.splice(_this5.selectedIndex, 1);
 
-                  _this4.snackbar = true;
-                  _this4.message = res.data.message;
-                  _this4.dialog = false;
+                  _this5.snackbar = true;
+                  _this5.message = res.data.message;
+                  _this5.dialog = false;
                 });
 
               case 2:
               case "end":
-                return _context4.stop();
+                return _context5.stop();
             }
           }
-        }, _callee4);
+        }, _callee5);
       }))();
     },
     saveTodo: function saveTodo() {
@@ -1864,32 +1938,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.user.default_profile = getInitials(name);
     },
     getTotal: function getTotal() {
-      var _this5 = this;
+      var _this6 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
-                _context5.next = 2;
-                return _this5.$http.get('api/getTotal', {
+                _context6.next = 2;
+                return _this6.$http.get('api/getTotal', {
                   headers: {
-                    Authorization: 'Bearer ' + _this5.$auth.getToken()
+                    Authorization: 'Bearer ' + _this6.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this5.totalUsers = res.body.users;
-                  _this5.totalStores = res.body.stores;
-                  _this5.totalSellers = res.body.sellers;
+                  _this6.totalUsers = res.body.users;
+                  _this6.totalStores = res.body.stores;
+                  _this6.totalSellers = res.body.sellers;
                 })["catch"](function (err) {
                   console.err(err);
                 });
 
               case 2:
               case "end":
-                return _context5.stop();
+                return _context6.stop();
             }
           }
-        }, _callee5);
+        }, _callee6);
       }))();
     },
     "default": function _default() {
@@ -16055,6 +16129,44 @@ var render = function() {
                                       small: "",
                                       color: "blue lighten-1"
                                     },
+                                    on: { click: _vm.getTodos }
+                                  },
+                                  [
+                                    _vm.refreshTodo == true
+                                      ? _c(
+                                          "span",
+                                          [
+                                            _c("v-progress-circular", {
+                                              attrs: {
+                                                width: 3,
+                                                color: "white",
+                                                indeterminate: ""
+                                              }
+                                            })
+                                          ],
+                                          1
+                                        )
+                                      : _c(
+                                          "v-icon",
+                                          { attrs: { color: "white" } },
+                                          [
+                                            _vm._v(
+                                              "\n                                                mdi-refresh\n                                            "
+                                            )
+                                          ]
+                                        )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    attrs: {
+                                      fab: "",
+                                      small: "",
+                                      color: "blue lighten-1"
+                                    },
                                     on: { click: _vm.addButton }
                                   },
                                   [
@@ -16063,7 +16175,7 @@ var render = function() {
                                       { attrs: { color: "white" } },
                                       [
                                         _vm._v(
-                                          "\n                                            mdi-plus\n                                        "
+                                          "\n                                                mdi-plus\n                                            "
                                         )
                                       ]
                                     )
@@ -16075,185 +16187,324 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _c(
-                            "div",
-                            { staticClass: "py-2" },
-                            [
-                              _c("div", { staticClass: "py-2" }),
-                              _vm._v(" "),
-                              _vm._l(_vm.mytodo, function(todos) {
-                                return _c("div", { staticClass: "py-1" }, [
-                                  _c("span", [
-                                    _c(
-                                      "svg",
-                                      {
-                                        staticClass:
-                                          "icon icon-tabler icon-tabler-circle",
-                                        attrs: {
-                                          xmlns: "http://www.w3.org/2000/svg",
-                                          width: "20",
-                                          height: "20",
-                                          viewBox: "0 0 24 24",
-                                          "stroke-width": "1.5",
-                                          stroke: "#2196F3",
-                                          fill: "none",
-                                          "stroke-linecap": "round",
-                                          "stroke-linejoin": "round"
-                                        }
-                                      },
+                          _vm.loadTodo == true
+                            ? _c(
+                                "div",
+                                { staticClass: "py-5 text-center" },
+                                [
+                                  _c("div", { staticClass: "py-5" }, [
+                                    _vm._v("Fetching your Todo's")
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("v-progress-linear", {
+                                    attrs: {
+                                      color: "deep-purple accent-4",
+                                      indeterminate: "",
+                                      rounded: "",
+                                      height: "6"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
+                            : _c(
+                                "div",
+                                { staticClass: "py-2" },
+                                [
+                                  _c("div", { staticClass: "py-2" }),
+                                  _vm._v(" "),
+                                  _vm._l(_vm.mytodo, function(todos) {
+                                    return _c(
+                                      "div",
+                                      { staticClass: "py-1" },
                                       [
-                                        _c("path", {
-                                          attrs: {
-                                            stroke: "none",
-                                            d: "M0 0h24v24H0z",
-                                            fill: "none"
-                                          }
-                                        }),
+                                        todos.status == "incomplete"
+                                          ? [
+                                              _c(
+                                                "span",
+                                                {
+                                                  on: {
+                                                    click: function($event) {
+                                                      return _vm.mark(todos)
+                                                    }
+                                                  }
+                                                },
+                                                [
+                                                  _c(
+                                                    "svg",
+                                                    {
+                                                      staticClass:
+                                                        "icon icon-tabler icon-tabler-circle",
+                                                      attrs: {
+                                                        xmlns:
+                                                          "http://www.w3.org/2000/svg",
+                                                        width: "20",
+                                                        height: "20",
+                                                        viewBox: "0 0 24 24",
+                                                        "stroke-width": "1.5",
+                                                        stroke: "#2196F3",
+                                                        fill: "none",
+                                                        "stroke-linecap":
+                                                          "round",
+                                                        "stroke-linejoin":
+                                                          "round"
+                                                      }
+                                                    },
+                                                    [
+                                                      _c("path", {
+                                                        attrs: {
+                                                          stroke: "none",
+                                                          d: "M0 0h24v24H0z",
+                                                          fill: "none"
+                                                        }
+                                                      }),
+                                                      _vm._v(" "),
+                                                      _c("circle", {
+                                                        attrs: {
+                                                          cx: "12",
+                                                          cy: "12",
+                                                          r: "9"
+                                                        }
+                                                      })
+                                                    ]
+                                                  )
+                                                ]
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "span",
+                                                { staticClass: "pl-2" },
+                                                [_vm._v(_vm._s(todos.todo))]
+                                              )
+                                            ]
+                                          : [
+                                              todos.status == "complete"
+                                                ? _c(
+                                                    "span",
+                                                    {
+                                                      on: {
+                                                        click: function(
+                                                          $event
+                                                        ) {
+                                                          return _vm.mark(todos)
+                                                        }
+                                                      }
+                                                    },
+                                                    [
+                                                      _c(
+                                                        "svg",
+                                                        {
+                                                          staticClass:
+                                                            "icon icon-tabler icon-tabler-circle-check",
+                                                          attrs: {
+                                                            xmlns:
+                                                              "http://www.w3.org/2000/svg",
+                                                            width: "20",
+                                                            height: "20",
+                                                            viewBox:
+                                                              "0 0 24 24",
+                                                            "stroke-width":
+                                                              "1.5",
+                                                            stroke: "#FFC107",
+                                                            fill: "none",
+                                                            "stroke-linecap":
+                                                              "round",
+                                                            "stroke-linejoin":
+                                                              "round"
+                                                          }
+                                                        },
+                                                        [
+                                                          _c("path", {
+                                                            attrs: {
+                                                              stroke: "none",
+                                                              d:
+                                                                "M0 0h24v24H0z",
+                                                              fill: "none"
+                                                            }
+                                                          }),
+                                                          _vm._v(" "),
+                                                          _c("circle", {
+                                                            attrs: {
+                                                              cx: "12",
+                                                              cy: "12",
+                                                              r: "9"
+                                                            }
+                                                          }),
+                                                          _vm._v(" "),
+                                                          _c("path", {
+                                                            attrs: {
+                                                              d:
+                                                                "M9 12l2 2l4 -4"
+                                                            }
+                                                          })
+                                                        ]
+                                                      )
+                                                    ]
+                                                  )
+                                                : _vm._e(),
+                                              _vm._v(" "),
+                                              todos.status == "complete"
+                                                ? _c(
+                                                    "del",
+                                                    { staticClass: "pl-2" },
+                                                    [_vm._v(_vm._s(todos.todo))]
+                                                  )
+                                                : _vm._e()
+                                            ],
                                         _vm._v(" "),
-                                        _c("circle", {
-                                          attrs: { cx: "12", cy: "12", r: "9" }
-                                        })
-                                      ]
+                                        _c(
+                                          "div",
+                                          { staticClass: "float-right" },
+                                          [
+                                            _c(
+                                              "span",
+                                              { staticClass: "mx-2" },
+                                              [
+                                                _c(
+                                                  "svg",
+                                                  {
+                                                    staticClass:
+                                                      "icon icon-tabler icon-tabler-pencil",
+                                                    attrs: {
+                                                      xmlns:
+                                                        "http://www.w3.org/2000/svg",
+                                                      width: "20",
+                                                      height: "20",
+                                                      viewBox: "0 0 24 24",
+                                                      "stroke-width": "1.5",
+                                                      stroke: "#8BC34A",
+                                                      fill: "none",
+                                                      "stroke-linecap": "round",
+                                                      "stroke-linejoin": "round"
+                                                    },
+                                                    on: {
+                                                      click: function($event) {
+                                                        return _vm.editButton(
+                                                          todos
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _c("path", {
+                                                      attrs: {
+                                                        stroke: "none",
+                                                        d: "M0 0h24v24H0z",
+                                                        fill: "none"
+                                                      }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c("path", {
+                                                      attrs: {
+                                                        d:
+                                                          "M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4"
+                                                      }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c("line", {
+                                                      attrs: {
+                                                        x1: "13.5",
+                                                        y1: "6.5",
+                                                        x2: "17.5",
+                                                        y2: "10.5"
+                                                      }
+                                                    })
+                                                  ]
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "span",
+                                              { staticClass: "mx-2" },
+                                              [
+                                                _c(
+                                                  "svg",
+                                                  {
+                                                    staticClass:
+                                                      "icon icon-tabler icon-tabler-trash",
+                                                    attrs: {
+                                                      xmlns:
+                                                        "http://www.w3.org/2000/svg",
+                                                      width: "20",
+                                                      height: "20",
+                                                      viewBox: "0 0 24 24",
+                                                      "stroke-width": "1.5",
+                                                      stroke: "#F44336",
+                                                      fill: "none",
+                                                      "stroke-linecap": "round",
+                                                      "stroke-linejoin": "round"
+                                                    },
+                                                    on: {
+                                                      click: function($event) {
+                                                        return _vm.deleteButton(
+                                                          todos
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _c("path", {
+                                                      attrs: {
+                                                        stroke: "none",
+                                                        d: "M0 0h24v24H0z",
+                                                        fill: "none"
+                                                      }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c("line", {
+                                                      attrs: {
+                                                        x1: "4",
+                                                        y1: "7",
+                                                        x2: "20",
+                                                        y2: "7"
+                                                      }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c("line", {
+                                                      attrs: {
+                                                        x1: "10",
+                                                        y1: "11",
+                                                        x2: "10",
+                                                        y2: "17"
+                                                      }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c("line", {
+                                                      attrs: {
+                                                        x1: "14",
+                                                        y1: "11",
+                                                        x2: "14",
+                                                        y2: "17"
+                                                      }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c("path", {
+                                                      attrs: {
+                                                        d:
+                                                          "M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"
+                                                      }
+                                                    }),
+                                                    _vm._v(" "),
+                                                    _c("path", {
+                                                      attrs: {
+                                                        d:
+                                                          "M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"
+                                                      }
+                                                    })
+                                                  ]
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        )
+                                      ],
+                                      2
                                     )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("span", { staticClass: "pl-2" }, [
-                                    _vm._v(_vm._s(todos.todo))
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "float-right" }, [
-                                    _c("span", { staticClass: "mx-2" }, [
-                                      _c(
-                                        "svg",
-                                        {
-                                          staticClass:
-                                            "icon icon-tabler icon-tabler-pencil",
-                                          attrs: {
-                                            xmlns: "http://www.w3.org/2000/svg",
-                                            width: "20",
-                                            height: "20",
-                                            viewBox: "0 0 24 24",
-                                            "stroke-width": "1.5",
-                                            stroke: "#8BC34A",
-                                            fill: "none",
-                                            "stroke-linecap": "round",
-                                            "stroke-linejoin": "round"
-                                          },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.editButton(todos)
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _c("path", {
-                                            attrs: {
-                                              stroke: "none",
-                                              d: "M0 0h24v24H0z",
-                                              fill: "none"
-                                            }
-                                          }),
-                                          _vm._v(" "),
-                                          _c("path", {
-                                            attrs: {
-                                              d:
-                                                "M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4"
-                                            }
-                                          }),
-                                          _vm._v(" "),
-                                          _c("line", {
-                                            attrs: {
-                                              x1: "13.5",
-                                              y1: "6.5",
-                                              x2: "17.5",
-                                              y2: "10.5"
-                                            }
-                                          })
-                                        ]
-                                      )
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("span", { staticClass: "mx-2" }, [
-                                      _c(
-                                        "svg",
-                                        {
-                                          staticClass:
-                                            "icon icon-tabler icon-tabler-trash",
-                                          attrs: {
-                                            xmlns: "http://www.w3.org/2000/svg",
-                                            width: "20",
-                                            height: "20",
-                                            viewBox: "0 0 24 24",
-                                            "stroke-width": "1.5",
-                                            stroke: "#F44336",
-                                            fill: "none",
-                                            "stroke-linecap": "round",
-                                            "stroke-linejoin": "round"
-                                          },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.deleteButton(todos)
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _c("path", {
-                                            attrs: {
-                                              stroke: "none",
-                                              d: "M0 0h24v24H0z",
-                                              fill: "none"
-                                            }
-                                          }),
-                                          _vm._v(" "),
-                                          _c("line", {
-                                            attrs: {
-                                              x1: "4",
-                                              y1: "7",
-                                              x2: "20",
-                                              y2: "7"
-                                            }
-                                          }),
-                                          _vm._v(" "),
-                                          _c("line", {
-                                            attrs: {
-                                              x1: "10",
-                                              y1: "11",
-                                              x2: "10",
-                                              y2: "17"
-                                            }
-                                          }),
-                                          _vm._v(" "),
-                                          _c("line", {
-                                            attrs: {
-                                              x1: "14",
-                                              y1: "11",
-                                              x2: "14",
-                                              y2: "17"
-                                            }
-                                          }),
-                                          _vm._v(" "),
-                                          _c("path", {
-                                            attrs: {
-                                              d:
-                                                "M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"
-                                            }
-                                          }),
-                                          _vm._v(" "),
-                                          _c("path", {
-                                            attrs: {
-                                              d:
-                                                "M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"
-                                            }
-                                          })
-                                        ]
-                                      )
-                                    ])
-                                  ])
-                                ])
-                              })
-                            ],
-                            2
-                          )
+                                  })
+                                ],
+                                2
+                              )
                         ])
                       ],
                       1

@@ -10899,6 +10899,10 @@ a.text-dark:focus {
   }
 }
 
+#app {
+  transition: 0.5s;
+}
+
 .point-me {
   cursor: pointer;
 }

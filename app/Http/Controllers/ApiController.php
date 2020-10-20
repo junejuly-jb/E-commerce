@@ -180,15 +180,19 @@ class ApiController extends Controller
         ]);
     }
     public function getTodos(){
-        $todos = Todo::all();
+        $userId = auth()->user()->id;
+        $todos = Todo::where('admin_id', '=', $userId)->get();
         return response()->json([
             'data' => $todos
         ]);
     }
 
     public function addTodo(Request $request){
+        $userId = auth()->user()->id;
         $todo = new Todo([
-            'todo' => $request->todo 
+            'todo' => $request->todo,
+            'status' => 'incomplete',
+            'admin_id' => $userId,
         ]);
         $todo->save(); 
         return response()->json([
@@ -214,5 +218,26 @@ class ApiController extends Controller
             'message' => 'Todo updated successfully',
             'data' => $todo
         ]);
+    }
+
+    public function mark(Request $request, $id){
+        $todo = Todo::find($id);
+
+        if($request->status == 'incomplete'){   
+            $todo->status = 'complete';
+            $todo->save();
+            return response()->json([
+                'message' => 'Marked as complete',
+                'data' => $todo
+            ]);
+        }
+        else{
+            $todo->status = 'incomplete';
+            $todo->save();
+            return response()->json([
+                'message' => 'Marked as incomplete',
+                'data' => $todo
+            ]);
+        }
     }
 }
