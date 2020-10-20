@@ -117,6 +117,7 @@
                                         <div class="col text-right">
                                             <v-btn
                                             fab
+                                            small
                                             @click="addButton"
                                             color="blue lighten-1"
                                             >
@@ -128,7 +129,7 @@
                                     </div>
                                     <div class="py-2">
                                         <div class="py-2"></div>
-                                        <div class="py-1" v-for="todos in todo">
+                                        <div class="py-1" v-for="todos in mytodo">
                                             <span>
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2196F3" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
@@ -138,14 +139,14 @@
                                             <span class="pl-2">{{todos.todo}}</span>
                                             <div class="float-right">
                                                 <span class="mx-2">
-                                                    <svg @click="editButton" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#8BC34A" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <svg @click="editButton(todos)" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-pencil" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#8BC34A" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                                     <path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4" />
                                                     <line x1="13.5" y1="6.5" x2="17.5" y2="10.5" />
                                                     </svg>
                                                 </span>
                                                 <span class="mx-2">
-                                                    <svg @click="deleteButton" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#F44336" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <svg @click="deleteButton(todos)" xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#F44336" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                                     <line x1="4" y1="7" x2="20" y2="7" />
                                                     <line x1="10" y1="11" x2="10" y2="17" />
@@ -299,8 +300,12 @@ export default {
         form: {
             todo: ''
         },
-        todo: [],
+        mytodo: [],
         savedTodo: {
+            todo: ''
+        },
+        editedTodo: {
+            id: '',
             todo: ''
         },
         totalStores: '',
@@ -308,6 +313,11 @@ export default {
         totalSellers: '',
         dialog: false,
         edit_mode: '',
+        selectedIndex: -1,
+        selectedTodo: {
+            id: '',
+            todo: ''
+        }
     }),
     methods:{
         async getTodos(){
@@ -317,13 +327,14 @@ export default {
                 }
             })
             .then((res) => {
-                this.todo = res.body.data
+                this.mytodo = res.body.data
             })
             .catch((err) => {
                 console.err(err)
             })
         },
         addButton(){
+            this.form.todo = ''
             this.edit_mode = 'add'
             this.dialog = true
         },
@@ -338,21 +349,52 @@ export default {
                 this.dialog = false
                 this.snackbar = true
                 this.message = res.body.message
-                this.todo.push(this.savedTodo)
-                this.form = ''
-                this.saveTodo = ''
+                this.mytodo.push(res.data.data)
+                console.log(this.savedTodo)
             })
         },
-        editButton(){
+        editButton(todos){
             this.edit_mode = 'edit'
             this.dialog = true
+            this.editedTodo.id = todos.todo_id
+            this.selectedIndex = this.mytodo.indexOf(todos)
+            this.form.todo = todos.todo
+            // console.log(this.selectedIndex)
         },
-        confirmUpdate(){
-
+        async confirmUpdate(){
+            this.editedTodo.todo = this.form.todo
+            await this.$http.put('api/updateTodo/' + this.editedTodo.id, this.editedTodo, {
+                headers: {
+                    Authorization: 'Bearer ' + this.$auth.getToken()
+                }
+            })
+            .then((res) => {
+                this.snackbar = true
+                this.message = res.data.message
+                Object.assign(this.mytodo[this.selectedIndex], res.data.data)
+                this.dialog = false
+            })
+            console.log(this.editedTodo)
         },
-        deleteButton(){
+        deleteButton(todos){
             this.edit_mode = 'delete'
             this.dialog = true
+            this.selectedIndex = this.mytodo.indexOf(todos)
+            this.selectedTodo.id = todos.todo_id
+            // console.log(todos.todo_id)
+        },
+        async confirmDelete(){
+            await this.$http.delete('api/deleteTodo/' + this.selectedTodo.id, {
+                headers: {
+                    Authorization: 'Bearer ' + this.$auth.getToken()
+                }
+            })
+            .then((res) => {
+                this.mytodo.splice(this.selectedIndex, 1)
+                this.snackbar = true
+                this.message = res.data.message
+                this.dialog = false
+            })
         },
         saveTodo(){
             console.log('clicked!')
@@ -389,6 +431,10 @@ export default {
             .catch((err) => {
                 console.err(err)
             })
+        },
+        default(){
+            this.selectedTodo = ''
+            this.selectedIndex = ''
         }
     },
     mounted(){

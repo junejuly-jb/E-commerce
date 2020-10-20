@@ -192,7 +192,27 @@ class ApiController extends Controller
         ]);
         $todo->save(); 
         return response()->json([
-            'message' => 'Todo added ✔'
+            'message' => 'Todo added ✔',
+            'data' => $todo
+        ]);
+    }
+
+    public function deleteTodo($id){
+        $todo = Todo::find($id);
+        $todo->delete();
+
+        return response()->json([
+            'message' => 'Todo deleted successfully'
+        ]);
+    }
+    
+    public function updateTodo($id, Request $request){
+        $todo = Todo::find($id);
+        $todo->todo = $request->todo;
+        $todo->save();
+        return response()->json([
+            'message' => 'Todo updated successfully',
+            'data' => $todo
         ]);
     }
 }
