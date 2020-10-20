@@ -13,7 +13,7 @@
                             <div class="row">
                                 <div class="col">
                                     <router-link to="/admin_store_list">
-                                        <div class="container smol-cards">
+                                        <div class="container smol-cards dark-accent">
                                             <div class="row">
                                                 <div class="col-4 d-flex align-items-center justify-content-center">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-building-store" width="60" height="60" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FF5722" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="col">
                                     <router-link to="/admin_user_list">
-                                        <div class="container smol-cards">
+                                        <div class="container smol-cards dark-accent">
                                             <div class="row">
                                                 <div class="col-4 d-flex align-items-center justify-content-center">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-users" width="60" height="60" viewBox="0 0 24 24" stroke-width="1.5" stroke="#3F51B5" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -62,7 +62,7 @@
                             <div class="row">
                                 <div class="col">
                                     <router-link to="/admin_user_list">
-                                        <div class="container smol-cards">
+                                        <div class="container smol-cards dark-accent">
                                             <div class="row">
                                                 <div class="col-4 d-flex align-items-center justify-content-center">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user-check" width="60" height="60" viewBox="0 0 24 24" stroke-width="1.5" stroke="#FFC107" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -84,7 +84,7 @@
                                 </div>
                                 <div class="col">
                                     <router-link to="/admin_transaction_logs">
-                                        <div class="container smol-cards">
+                                        <div class="container smol-cards dark-accent">
                                             <div class="row">
                                                 <div class="col-4 d-flex align-items-center justify-content-center">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-refresh" width="60" height="60" viewBox="0 0 24 24" stroke-width="1.5" stroke="#009688" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -107,7 +107,7 @@
                                 </div>
                             </div>
                             <div>
-                                <v-container class="card-todo">
+                                <v-container class="card-todo dark-accent mt-3">
                                     <div class="row">
                                         <div class="col">
                                             <div class="d-flex align-items-center h-100">

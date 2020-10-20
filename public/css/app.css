@@ -10899,6 +10899,10 @@ a.text-dark:focus {
   }
 }
 
+.dark-accent {
+  background-color: #1e1e1e;
+}
+
 #app {
   transition: 0.5s;
 }

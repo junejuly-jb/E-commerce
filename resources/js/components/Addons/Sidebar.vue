@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <div id="sidebar-wrapper" class="border-right">
+        <div id="sidebar-wrapper">
             <div class="sidebar-heading text-center">Salamat Shopee</div>
             <v-container class="py-5 text-center">
                 <v-avatar

@@ -13658,7 +13658,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("nav", { staticClass: "navbar navbar-expand-lg navbar-light" }, [
+  return _c("nav", { staticClass: "navbar navbar-expand-lg navbar-dark" }, [
     _c(
       "button",
       { staticClass: "btn btn-primary", attrs: { id: "menu-toggle" } },
@@ -13771,7 +13771,7 @@ var render = function() {
             _c(
               "div",
               {
-                staticClass: "dropdown-menu dropdown-menu-right",
+                staticClass: "dropdown-menu dropdown-menu-right dark-accent",
                 attrs: { "aria-labelledby": "navbarDropdown" }
               },
               [
@@ -13830,7 +13830,7 @@ var render = function() {
   return _c("v-app", [
     _c(
       "div",
-      { staticClass: "border-right", attrs: { id: "sidebar-wrapper" } },
+      { attrs: { id: "sidebar-wrapper" } },
       [
         _c("div", { staticClass: "sidebar-heading text-center" }, [
           _vm._v("Salamat Shopee")
@@ -15699,7 +15699,10 @@ var render = function() {
                             [
                               _c(
                                 "div",
-                                { staticClass: "container smol-cards" },
+                                {
+                                  staticClass:
+                                    "container smol-cards dark-accent"
+                                },
                                 [
                                   _c("div", { staticClass: "row" }, [
                                     _c(
@@ -15815,7 +15818,10 @@ var render = function() {
                             [
                               _c(
                                 "div",
-                                { staticClass: "container smol-cards" },
+                                {
+                                  staticClass:
+                                    "container smol-cards dark-accent"
+                                },
                                 [
                                   _c("div", { staticClass: "row" }, [
                                     _c(
@@ -15920,7 +15926,10 @@ var render = function() {
                             [
                               _c(
                                 "div",
-                                { staticClass: "container smol-cards" },
+                                {
+                                  staticClass:
+                                    "container smol-cards dark-accent"
+                                },
                                 [
                                   _c("div", { staticClass: "row" }, [
                                     _c(
@@ -16014,7 +16023,10 @@ var render = function() {
                             [
                               _c(
                                 "div",
-                                { staticClass: "container smol-cards" },
+                                {
+                                  staticClass:
+                                    "container smol-cards dark-accent"
+                                },
                                 [
                                   _c("div", { staticClass: "row" }, [
                                     _c(
@@ -16101,140 +16113,280 @@ var render = function() {
                     _c(
                       "div",
                       [
-                        _c("v-container", { staticClass: "card-todo" }, [
-                          _c("div", { staticClass: "row" }, [
-                            _c("div", { staticClass: "col" }, [
+                        _c(
+                          "v-container",
+                          { staticClass: "card-todo dark-accent mt-3" },
+                          [
+                            _c("div", { staticClass: "row" }, [
+                              _c("div", { staticClass: "col" }, [
+                                _c(
+                                  "div",
+                                  {
+                                    staticClass:
+                                      "d-flex align-items-center h-100"
+                                  },
+                                  [
+                                    _c("div", { staticClass: "header-todo" }, [
+                                      _vm._v("Todo List")
+                                    ])
+                                  ]
+                                )
+                              ]),
+                              _vm._v(" "),
                               _c(
                                 "div",
-                                {
-                                  staticClass: "d-flex align-items-center h-100"
-                                },
+                                { staticClass: "col text-right" },
                                 [
-                                  _c("div", { staticClass: "header-todo" }, [
-                                    _vm._v("Todo List")
-                                  ])
-                                ]
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "col text-right" },
-                              [
-                                _c(
-                                  "v-btn",
-                                  {
-                                    attrs: {
-                                      fab: "",
-                                      small: "",
-                                      color: "blue lighten-1"
+                                  _c(
+                                    "v-btn",
+                                    {
+                                      attrs: {
+                                        fab: "",
+                                        small: "",
+                                        color: "blue lighten-1"
+                                      },
+                                      on: { click: _vm.getTodos }
                                     },
-                                    on: { click: _vm.getTodos }
-                                  },
-                                  [
-                                    _vm.refreshTodo == true
-                                      ? _c(
-                                          "span",
-                                          [
-                                            _c("v-progress-circular", {
-                                              attrs: {
-                                                width: 3,
-                                                color: "white",
-                                                indeterminate: ""
-                                              }
-                                            })
-                                          ],
-                                          1
-                                        )
-                                      : _c(
-                                          "v-icon",
-                                          { attrs: { color: "white" } },
-                                          [
-                                            _vm._v(
-                                              "\n                                                mdi-refresh\n                                            "
-                                            )
-                                          ]
-                                        )
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "v-btn",
-                                  {
-                                    attrs: {
-                                      fab: "",
-                                      small: "",
-                                      color: "blue lighten-1"
-                                    },
-                                    on: { click: _vm.addButton }
-                                  },
-                                  [
-                                    _c(
-                                      "v-icon",
-                                      { attrs: { color: "white" } },
-                                      [
-                                        _vm._v(
-                                          "\n                                                mdi-plus\n                                            "
-                                        )
-                                      ]
-                                    )
-                                  ],
-                                  1
-                                )
-                              ],
-                              1
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _vm.loadTodo == true
-                            ? _c(
-                                "div",
-                                { staticClass: "py-5 text-center" },
-                                [
-                                  _c("div", { staticClass: "py-5" }, [
-                                    _vm._v("Fetching your Todo's")
-                                  ]),
+                                    [
+                                      _vm.refreshTodo == true
+                                        ? _c(
+                                            "span",
+                                            [
+                                              _c("v-progress-circular", {
+                                                attrs: {
+                                                  width: 3,
+                                                  color: "white",
+                                                  indeterminate: ""
+                                                }
+                                              })
+                                            ],
+                                            1
+                                          )
+                                        : _c(
+                                            "v-icon",
+                                            { attrs: { color: "white" } },
+                                            [
+                                              _vm._v(
+                                                "\n                                                mdi-refresh\n                                            "
+                                              )
+                                            ]
+                                          )
+                                    ],
+                                    1
+                                  ),
                                   _vm._v(" "),
-                                  _c("v-progress-linear", {
-                                    attrs: {
-                                      color: "deep-purple accent-4",
-                                      indeterminate: "",
-                                      rounded: "",
-                                      height: "6"
-                                    }
-                                  })
+                                  _c(
+                                    "v-btn",
+                                    {
+                                      attrs: {
+                                        fab: "",
+                                        small: "",
+                                        color: "blue lighten-1"
+                                      },
+                                      on: { click: _vm.addButton }
+                                    },
+                                    [
+                                      _c(
+                                        "v-icon",
+                                        { attrs: { color: "white" } },
+                                        [
+                                          _vm._v(
+                                            "\n                                                mdi-plus\n                                            "
+                                          )
+                                        ]
+                                      )
+                                    ],
+                                    1
+                                  )
                                 ],
                                 1
                               )
-                            : _c(
-                                "div",
-                                { staticClass: "py-2" },
-                                [
-                                  _c("div", { staticClass: "py-2" }),
-                                  _vm._v(" "),
-                                  _vm._l(_vm.mytodo, function(todos) {
-                                    return _c(
-                                      "div",
-                                      { staticClass: "py-1" },
-                                      [
-                                        todos.status == "incomplete"
-                                          ? [
+                            ]),
+                            _vm._v(" "),
+                            _vm.loadTodo == true
+                              ? _c(
+                                  "div",
+                                  { staticClass: "py-5 text-center" },
+                                  [
+                                    _c("div", { staticClass: "py-5" }, [
+                                      _vm._v("Fetching your Todo's")
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("v-progress-linear", {
+                                      attrs: {
+                                        color: "deep-purple accent-4",
+                                        indeterminate: "",
+                                        rounded: "",
+                                        height: "6"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                )
+                              : _c(
+                                  "div",
+                                  { staticClass: "py-2" },
+                                  [
+                                    _c("div", { staticClass: "py-2" }),
+                                    _vm._v(" "),
+                                    _vm._l(_vm.mytodo, function(todos) {
+                                      return _c(
+                                        "div",
+                                        { staticClass: "py-1" },
+                                        [
+                                          todos.status == "incomplete"
+                                            ? [
+                                                _c(
+                                                  "span",
+                                                  {
+                                                    on: {
+                                                      click: function($event) {
+                                                        return _vm.mark(todos)
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _c(
+                                                      "svg",
+                                                      {
+                                                        staticClass:
+                                                          "icon icon-tabler icon-tabler-circle",
+                                                        attrs: {
+                                                          xmlns:
+                                                            "http://www.w3.org/2000/svg",
+                                                          width: "20",
+                                                          height: "20",
+                                                          viewBox: "0 0 24 24",
+                                                          "stroke-width": "1.5",
+                                                          stroke: "#2196F3",
+                                                          fill: "none",
+                                                          "stroke-linecap":
+                                                            "round",
+                                                          "stroke-linejoin":
+                                                            "round"
+                                                        }
+                                                      },
+                                                      [
+                                                        _c("path", {
+                                                          attrs: {
+                                                            stroke: "none",
+                                                            d: "M0 0h24v24H0z",
+                                                            fill: "none"
+                                                          }
+                                                        }),
+                                                        _vm._v(" "),
+                                                        _c("circle", {
+                                                          attrs: {
+                                                            cx: "12",
+                                                            cy: "12",
+                                                            r: "9"
+                                                          }
+                                                        })
+                                                      ]
+                                                    )
+                                                  ]
+                                                ),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "span",
+                                                  { staticClass: "pl-2" },
+                                                  [_vm._v(_vm._s(todos.todo))]
+                                                )
+                                              ]
+                                            : [
+                                                todos.status == "complete"
+                                                  ? _c(
+                                                      "span",
+                                                      {
+                                                        on: {
+                                                          click: function(
+                                                            $event
+                                                          ) {
+                                                            return _vm.mark(
+                                                              todos
+                                                            )
+                                                          }
+                                                        }
+                                                      },
+                                                      [
+                                                        _c(
+                                                          "svg",
+                                                          {
+                                                            staticClass:
+                                                              "icon icon-tabler icon-tabler-circle-check",
+                                                            attrs: {
+                                                              xmlns:
+                                                                "http://www.w3.org/2000/svg",
+                                                              width: "20",
+                                                              height: "20",
+                                                              viewBox:
+                                                                "0 0 24 24",
+                                                              "stroke-width":
+                                                                "1.5",
+                                                              stroke: "#FFC107",
+                                                              fill: "none",
+                                                              "stroke-linecap":
+                                                                "round",
+                                                              "stroke-linejoin":
+                                                                "round"
+                                                            }
+                                                          },
+                                                          [
+                                                            _c("path", {
+                                                              attrs: {
+                                                                stroke: "none",
+                                                                d:
+                                                                  "M0 0h24v24H0z",
+                                                                fill: "none"
+                                                              }
+                                                            }),
+                                                            _vm._v(" "),
+                                                            _c("circle", {
+                                                              attrs: {
+                                                                cx: "12",
+                                                                cy: "12",
+                                                                r: "9"
+                                                              }
+                                                            }),
+                                                            _vm._v(" "),
+                                                            _c("path", {
+                                                              attrs: {
+                                                                d:
+                                                                  "M9 12l2 2l4 -4"
+                                                              }
+                                                            })
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  : _vm._e(),
+                                                _vm._v(" "),
+                                                todos.status == "complete"
+                                                  ? _c(
+                                                      "del",
+                                                      { staticClass: "pl-2" },
+                                                      [
+                                                        _vm._v(
+                                                          _vm._s(todos.todo)
+                                                        )
+                                                      ]
+                                                    )
+                                                  : _vm._e()
+                                              ],
+                                          _vm._v(" "),
+                                          _c(
+                                            "div",
+                                            { staticClass: "float-right" },
+                                            [
                                               _c(
                                                 "span",
-                                                {
-                                                  on: {
-                                                    click: function($event) {
-                                                      return _vm.mark(todos)
-                                                    }
-                                                  }
-                                                },
+                                                { staticClass: "mx-2" },
                                                 [
                                                   _c(
                                                     "svg",
                                                     {
                                                       staticClass:
-                                                        "icon icon-tabler icon-tabler-circle",
+                                                        "icon icon-tabler icon-tabler-pencil",
                                                       attrs: {
                                                         xmlns:
                                                           "http://www.w3.org/2000/svg",
@@ -16242,12 +16394,21 @@ var render = function() {
                                                         height: "20",
                                                         viewBox: "0 0 24 24",
                                                         "stroke-width": "1.5",
-                                                        stroke: "#2196F3",
+                                                        stroke: "#8BC34A",
                                                         fill: "none",
                                                         "stroke-linecap":
                                                           "round",
                                                         "stroke-linejoin":
                                                           "round"
+                                                      },
+                                                      on: {
+                                                        click: function(
+                                                          $event
+                                                        ) {
+                                                          return _vm.editButton(
+                                                            todos
+                                                          )
+                                                        }
                                                       }
                                                     },
                                                     [
@@ -16259,11 +16420,19 @@ var render = function() {
                                                         }
                                                       }),
                                                       _vm._v(" "),
-                                                      _c("circle", {
+                                                      _c("path", {
                                                         attrs: {
-                                                          cx: "12",
-                                                          cy: "12",
-                                                          r: "9"
+                                                          d:
+                                                            "M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4"
+                                                        }
+                                                      }),
+                                                      _vm._v(" "),
+                                                      _c("line", {
+                                                        attrs: {
+                                                          x1: "13.5",
+                                                          y1: "6.5",
+                                                          x2: "17.5",
+                                                          y2: "10.5"
                                                         }
                                                       })
                                                     ]
@@ -16273,239 +16442,101 @@ var render = function() {
                                               _vm._v(" "),
                                               _c(
                                                 "span",
-                                                { staticClass: "pl-2" },
-                                                [_vm._v(_vm._s(todos.todo))]
-                                              )
-                                            ]
-                                          : [
-                                              todos.status == "complete"
-                                                ? _c(
-                                                    "span",
+                                                { staticClass: "mx-2" },
+                                                [
+                                                  _c(
+                                                    "svg",
                                                     {
+                                                      staticClass:
+                                                        "icon icon-tabler icon-tabler-trash",
+                                                      attrs: {
+                                                        xmlns:
+                                                          "http://www.w3.org/2000/svg",
+                                                        width: "20",
+                                                        height: "20",
+                                                        viewBox: "0 0 24 24",
+                                                        "stroke-width": "1.5",
+                                                        stroke: "#F44336",
+                                                        fill: "none",
+                                                        "stroke-linecap":
+                                                          "round",
+                                                        "stroke-linejoin":
+                                                          "round"
+                                                      },
                                                       on: {
                                                         click: function(
                                                           $event
                                                         ) {
-                                                          return _vm.mark(todos)
+                                                          return _vm.deleteButton(
+                                                            todos
+                                                          )
                                                         }
                                                       }
                                                     },
                                                     [
-                                                      _c(
-                                                        "svg",
-                                                        {
-                                                          staticClass:
-                                                            "icon icon-tabler icon-tabler-circle-check",
-                                                          attrs: {
-                                                            xmlns:
-                                                              "http://www.w3.org/2000/svg",
-                                                            width: "20",
-                                                            height: "20",
-                                                            viewBox:
-                                                              "0 0 24 24",
-                                                            "stroke-width":
-                                                              "1.5",
-                                                            stroke: "#FFC107",
-                                                            fill: "none",
-                                                            "stroke-linecap":
-                                                              "round",
-                                                            "stroke-linejoin":
-                                                              "round"
-                                                          }
-                                                        },
-                                                        [
-                                                          _c("path", {
-                                                            attrs: {
-                                                              stroke: "none",
-                                                              d:
-                                                                "M0 0h24v24H0z",
-                                                              fill: "none"
-                                                            }
-                                                          }),
-                                                          _vm._v(" "),
-                                                          _c("circle", {
-                                                            attrs: {
-                                                              cx: "12",
-                                                              cy: "12",
-                                                              r: "9"
-                                                            }
-                                                          }),
-                                                          _vm._v(" "),
-                                                          _c("path", {
-                                                            attrs: {
-                                                              d:
-                                                                "M9 12l2 2l4 -4"
-                                                            }
-                                                          })
-                                                        ]
-                                                      )
+                                                      _c("path", {
+                                                        attrs: {
+                                                          stroke: "none",
+                                                          d: "M0 0h24v24H0z",
+                                                          fill: "none"
+                                                        }
+                                                      }),
+                                                      _vm._v(" "),
+                                                      _c("line", {
+                                                        attrs: {
+                                                          x1: "4",
+                                                          y1: "7",
+                                                          x2: "20",
+                                                          y2: "7"
+                                                        }
+                                                      }),
+                                                      _vm._v(" "),
+                                                      _c("line", {
+                                                        attrs: {
+                                                          x1: "10",
+                                                          y1: "11",
+                                                          x2: "10",
+                                                          y2: "17"
+                                                        }
+                                                      }),
+                                                      _vm._v(" "),
+                                                      _c("line", {
+                                                        attrs: {
+                                                          x1: "14",
+                                                          y1: "11",
+                                                          x2: "14",
+                                                          y2: "17"
+                                                        }
+                                                      }),
+                                                      _vm._v(" "),
+                                                      _c("path", {
+                                                        attrs: {
+                                                          d:
+                                                            "M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"
+                                                        }
+                                                      }),
+                                                      _vm._v(" "),
+                                                      _c("path", {
+                                                        attrs: {
+                                                          d:
+                                                            "M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"
+                                                        }
+                                                      })
                                                     ]
                                                   )
-                                                : _vm._e(),
-                                              _vm._v(" "),
-                                              todos.status == "complete"
-                                                ? _c(
-                                                    "del",
-                                                    { staticClass: "pl-2" },
-                                                    [_vm._v(_vm._s(todos.todo))]
-                                                  )
-                                                : _vm._e()
-                                            ],
-                                        _vm._v(" "),
-                                        _c(
-                                          "div",
-                                          { staticClass: "float-right" },
-                                          [
-                                            _c(
-                                              "span",
-                                              { staticClass: "mx-2" },
-                                              [
-                                                _c(
-                                                  "svg",
-                                                  {
-                                                    staticClass:
-                                                      "icon icon-tabler icon-tabler-pencil",
-                                                    attrs: {
-                                                      xmlns:
-                                                        "http://www.w3.org/2000/svg",
-                                                      width: "20",
-                                                      height: "20",
-                                                      viewBox: "0 0 24 24",
-                                                      "stroke-width": "1.5",
-                                                      stroke: "#8BC34A",
-                                                      fill: "none",
-                                                      "stroke-linecap": "round",
-                                                      "stroke-linejoin": "round"
-                                                    },
-                                                    on: {
-                                                      click: function($event) {
-                                                        return _vm.editButton(
-                                                          todos
-                                                        )
-                                                      }
-                                                    }
-                                                  },
-                                                  [
-                                                    _c("path", {
-                                                      attrs: {
-                                                        stroke: "none",
-                                                        d: "M0 0h24v24H0z",
-                                                        fill: "none"
-                                                      }
-                                                    }),
-                                                    _vm._v(" "),
-                                                    _c("path", {
-                                                      attrs: {
-                                                        d:
-                                                          "M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5v4"
-                                                      }
-                                                    }),
-                                                    _vm._v(" "),
-                                                    _c("line", {
-                                                      attrs: {
-                                                        x1: "13.5",
-                                                        y1: "6.5",
-                                                        x2: "17.5",
-                                                        y2: "10.5"
-                                                      }
-                                                    })
-                                                  ]
-                                                )
-                                              ]
-                                            ),
-                                            _vm._v(" "),
-                                            _c(
-                                              "span",
-                                              { staticClass: "mx-2" },
-                                              [
-                                                _c(
-                                                  "svg",
-                                                  {
-                                                    staticClass:
-                                                      "icon icon-tabler icon-tabler-trash",
-                                                    attrs: {
-                                                      xmlns:
-                                                        "http://www.w3.org/2000/svg",
-                                                      width: "20",
-                                                      height: "20",
-                                                      viewBox: "0 0 24 24",
-                                                      "stroke-width": "1.5",
-                                                      stroke: "#F44336",
-                                                      fill: "none",
-                                                      "stroke-linecap": "round",
-                                                      "stroke-linejoin": "round"
-                                                    },
-                                                    on: {
-                                                      click: function($event) {
-                                                        return _vm.deleteButton(
-                                                          todos
-                                                        )
-                                                      }
-                                                    }
-                                                  },
-                                                  [
-                                                    _c("path", {
-                                                      attrs: {
-                                                        stroke: "none",
-                                                        d: "M0 0h24v24H0z",
-                                                        fill: "none"
-                                                      }
-                                                    }),
-                                                    _vm._v(" "),
-                                                    _c("line", {
-                                                      attrs: {
-                                                        x1: "4",
-                                                        y1: "7",
-                                                        x2: "20",
-                                                        y2: "7"
-                                                      }
-                                                    }),
-                                                    _vm._v(" "),
-                                                    _c("line", {
-                                                      attrs: {
-                                                        x1: "10",
-                                                        y1: "11",
-                                                        x2: "10",
-                                                        y2: "17"
-                                                      }
-                                                    }),
-                                                    _vm._v(" "),
-                                                    _c("line", {
-                                                      attrs: {
-                                                        x1: "14",
-                                                        y1: "11",
-                                                        x2: "14",
-                                                        y2: "17"
-                                                      }
-                                                    }),
-                                                    _vm._v(" "),
-                                                    _c("path", {
-                                                      attrs: {
-                                                        d:
-                                                          "M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"
-                                                      }
-                                                    }),
-                                                    _vm._v(" "),
-                                                    _c("path", {
-                                                      attrs: {
-                                                        d:
-                                                          "M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"
-                                                      }
-                                                    })
-                                                  ]
-                                                )
-                                              ]
-                                            )
-                                          ]
-                                        )
-                                      ],
-                                      2
-                                    )
-                                  })
-                                ],
-                                2
-                              )
-                        ])
+                                                ]
+                                              )
+                                            ]
+                                          )
+                                        ],
+                                        2
+                                      )
+                                    })
+                                  ],
+                                  2
+                                )
+                          ]
+                        )
                       ],
                       1
                     )
@@ -80095,7 +80126,7 @@ __webpack_require__.r(__webpack_exports__);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuetify__WEBPACK_IMPORTED_MODULE_1___default.a);
 var opts = {
   theme: {
-    dark: false
+    dark: true
   }
 };
 /* harmony default export */ __webpack_exports__["default"] = (new vuetify__WEBPACK_IMPORTED_MODULE_1___default.a(opts));

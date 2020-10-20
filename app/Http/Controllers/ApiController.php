@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Store;
 use App\Models\Todo;
+use App\Models\Logs;
 use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
@@ -162,6 +163,12 @@ class ApiController extends Controller
         $user = User::find($request->id);
         $user->usertype = 'seller';
         $user->save();
+
+        $log = new Logs([
+            'admin_id' => auth()->user()->id,
+            'log' => "You accepted ".$user->name."`s Store"
+        ]);
+        $log->save();
 
         return response()->json([
             'message' => 'Store granted successfully'
