@@ -1664,6 +1664,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1680,15 +1681,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       form: {
         todo: ''
       },
-      todo: [],
+      mytodo: [],
       savedTodo: {
+        todo: ''
+      },
+      editedTodo: {
+        id: '',
         todo: ''
       },
       totalStores: '',
       totalUsers: '',
       totalSellers: '',
       dialog: false,
-      edit_mode: ''
+      edit_mode: '',
+      selectedIndex: -1,
+      selectedTodo: {
+        id: '',
+        todo: ''
+      }
     };
   },
   methods: {
@@ -1706,7 +1716,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     Authorization: 'Bearer ' + _this.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this.todo = res.body.data;
+                  _this.mytodo = res.body.data;
                 })["catch"](function (err) {
                   console.err(err);
                 });
@@ -1720,6 +1730,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     addButton: function addButton() {
+      this.form.todo = '';
       this.edit_mode = 'add';
       this.dialog = true;
     },
@@ -1742,10 +1753,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this2.snackbar = true;
                   _this2.message = res.body.message;
 
-                  _this2.todo.push(_this2.savedTodo);
+                  _this2.mytodo.push(res.data.data);
 
-                  _this2.form = '';
-                  _this2.saveTodo = '';
+                  console.log(_this2.savedTodo);
                 });
 
               case 3:
@@ -1756,14 +1766,79 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
-    editButton: function editButton() {
+    editButton: function editButton(todos) {
       this.edit_mode = 'edit';
       this.dialog = true;
+      this.editedTodo.id = todos.todo_id;
+      this.selectedIndex = this.mytodo.indexOf(todos);
+      this.form.todo = todos.todo; // console.log(this.selectedIndex)
     },
-    confirmUpdate: function confirmUpdate() {},
-    deleteButton: function deleteButton() {
+    confirmUpdate: function confirmUpdate() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _this3.editedTodo.todo = _this3.form.todo;
+                _context3.next = 3;
+                return _this3.$http.put('api/updateTodo/' + _this3.editedTodo.id, _this3.editedTodo, {
+                  headers: {
+                    Authorization: 'Bearer ' + _this3.$auth.getToken()
+                  }
+                }).then(function (res) {
+                  _this3.snackbar = true;
+                  _this3.message = res.data.message;
+                  Object.assign(_this3.mytodo[_this3.selectedIndex], res.data.data);
+                  _this3.dialog = false;
+                });
+
+              case 3:
+                console.log(_this3.editedTodo);
+
+              case 4:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
+    deleteButton: function deleteButton(todos) {
       this.edit_mode = 'delete';
       this.dialog = true;
+      this.selectedIndex = this.mytodo.indexOf(todos);
+      this.selectedTodo.id = todos.todo_id; // console.log(todos.todo_id)
+    },
+    confirmDelete: function confirmDelete() {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.next = 2;
+                return _this4.$http["delete"]('api/deleteTodo/' + _this4.selectedTodo.id, {
+                  headers: {
+                    Authorization: 'Bearer ' + _this4.$auth.getToken()
+                  }
+                }).then(function (res) {
+                  _this4.mytodo.splice(_this4.selectedIndex, 1);
+
+                  _this4.snackbar = true;
+                  _this4.message = res.data.message;
+                  _this4.dialog = false;
+                });
+
+              case 2:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
     },
     saveTodo: function saveTodo() {
       console.log('clicked!');
@@ -1789,33 +1864,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.user.default_profile = getInitials(name);
     },
     getTotal: function getTotal() {
-      var _this3 = this;
+      var _this5 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                _context3.next = 2;
-                return _this3.$http.get('api/getTotal', {
+                _context5.next = 2;
+                return _this5.$http.get('api/getTotal', {
                   headers: {
-                    Authorization: 'Bearer ' + _this3.$auth.getToken()
+                    Authorization: 'Bearer ' + _this5.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this3.totalUsers = res.body.users;
-                  _this3.totalStores = res.body.stores;
-                  _this3.totalSellers = res.body.sellers;
+                  _this5.totalUsers = res.body.users;
+                  _this5.totalStores = res.body.stores;
+                  _this5.totalSellers = res.body.sellers;
                 })["catch"](function (err) {
                   console.err(err);
                 });
 
               case 2:
               case "end":
-                return _context3.stop();
+                return _context5.stop();
             }
           }
-        }, _callee3);
+        }, _callee5);
       }))();
+    },
+    "default": function _default() {
+      this.selectedTodo = '';
+      this.selectedIndex = '';
     }
   },
   mounted: function mounted() {
@@ -15971,7 +16050,11 @@ var render = function() {
                                 _c(
                                   "v-btn",
                                   {
-                                    attrs: { fab: "", color: "blue lighten-1" },
+                                    attrs: {
+                                      fab: "",
+                                      small: "",
+                                      color: "blue lighten-1"
+                                    },
                                     on: { click: _vm.addButton }
                                   },
                                   [
@@ -15998,7 +16081,7 @@ var render = function() {
                             [
                               _c("div", { staticClass: "py-2" }),
                               _vm._v(" "),
-                              _vm._l(_vm.todo, function(todos) {
+                              _vm._l(_vm.mytodo, function(todos) {
                                 return _c("div", { staticClass: "py-1" }, [
                                   _c("span", [
                                     _c(
@@ -16056,7 +16139,11 @@ var render = function() {
                                             "stroke-linecap": "round",
                                             "stroke-linejoin": "round"
                                           },
-                                          on: { click: _vm.editButton }
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.editButton(todos)
+                                            }
+                                          }
                                         },
                                         [
                                           _c("path", {
@@ -16103,7 +16190,11 @@ var render = function() {
                                             "stroke-linecap": "round",
                                             "stroke-linejoin": "round"
                                           },
-                                          on: { click: _vm.deleteButton }
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.deleteButton(todos)
+                                            }
+                                          }
                                         },
                                         [
                                           _c("path", {
