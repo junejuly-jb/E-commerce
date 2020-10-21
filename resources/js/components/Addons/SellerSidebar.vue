@@ -21,6 +21,7 @@
                 <router-link to="/seller_transactions" class="list-group-item">Transactions</router-link>
                 <router-link to="/seller_announcements" class="list-group-item">Announcements</router-link>
                 <router-link to="/seller_transaction_logs" class="list-group-item">Transaction Logs</router-link>
+                <router-link to="/seller_product_reviews" class="list-group-item">Reviews</router-link>
             </div>
         </div>
     </v-app>
