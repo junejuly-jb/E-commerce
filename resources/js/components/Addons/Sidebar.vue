@@ -21,7 +21,6 @@
                 <router-link to="/admin_store_list" class="list-group-item">Stores</router-link>
                 <router-link to="/admin_store_requests" class="list-group-item">Store Requests</router-link>
                 <router-link to="/admin_transaction_logs" class="list-group-item">Transaction Logs</router-link>
-                
             </div>
         </div>
     </v-app>

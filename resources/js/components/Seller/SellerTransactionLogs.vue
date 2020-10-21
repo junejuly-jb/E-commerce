@@ -6,7 +6,7 @@
                 <sellernav v-bind:user="user"></sellernav>
                 <div class="container">
                     <div class="dashHeader">
-                        <span class="discover">Seller</span><span class="daily"> Dashboard</span>
+                        <span class="discover">Transaction</span><span class="daily"> Logs</span>
                     </div>
                 </div>
             </div>

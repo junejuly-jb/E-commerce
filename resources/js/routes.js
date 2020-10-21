@@ -11,6 +11,12 @@ import AdminUserList from './components/Admin/AdminUserList.vue'
 import AdminStoreList from './components/Admin/AdminStoreList.vue'
 import AdminStoreRequests from './components/Admin/AdminStoreRequests.vue'
 import Sellerdashboard from './components/Seller/Sellerdashboard.vue'
+import SellerInventory from './components/Seller/SellerInventory.vue'
+import SellerPurchaseRequest from './components/Seller/SellerPurchaseRequest.vue'
+import SellerTransactions from './components/Seller/SellerTransactions.vue'
+import SellerAnnouncements from './components/Seller/SellerAnnouncements.vue'
+import SellerTransactionLogs from './components/Seller/SellerTransactionLogs.vue'
+import SellerProductReviews from './components/Seller/SellerProductReviews.vue'
 import Userdashboard from './components/Users/Userdashboard.vue'
 import StoreRegistration from './components/Users/StoreRegistration.vue'
 
@@ -93,6 +99,48 @@ const router = new VueRouter({
         {
             path: '/sellerdashboard',
             component: Sellerdashboard,
+            meta: {
+                requiresAuth: true, adminAuth: false, userAuth: false, sellerAuth: true
+            }
+        },
+        {
+            path: '/seller_inventory',
+            component: SellerInventory,
+            meta: {
+                requiresAuth: true, adminAuth: false, userAuth: false, sellerAuth: true
+            }
+        },
+        {
+            path: '/seller_purchase_request',
+            component: SellerPurchaseRequest,
+            meta: {
+                requiresAuth: true, adminAuth: false, userAuth: false, sellerAuth: true
+            }
+        },
+        {
+            path: '/seller_transactions',
+            component: SellerTransactions,
+            meta: {
+                requiresAuth: true, adminAuth: false, userAuth: false, sellerAuth: true
+            }
+        },
+        {
+            path: '/seller_announcements',
+            component: SellerAnnouncements,
+            meta: {
+                requiresAuth: true, adminAuth: false, userAuth: false, sellerAuth: true
+            }
+        },
+        {
+            path: '/seller_transaction_logs',
+            component: SellerTransactionLogs,
+            meta: {
+                requiresAuth: true, adminAuth: false, userAuth: false, sellerAuth: true
+            }
+        },
+        {
+            path: '/seller_product_reviews',
+            component: SellerProductReviews,
             meta: {
                 requiresAuth: true, adminAuth: false, userAuth: false, sellerAuth: true
             }
