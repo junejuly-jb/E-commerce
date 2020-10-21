@@ -1,6 +1,6 @@
 <template>
     <v-app>
-        <v-card tile>
+        <!-- <v-card tile>
             <v-toolbar flat>
                 <v-toolbar-title>
                     Login Page
@@ -11,9 +11,9 @@
                 </v-btn>
                 <router-link to="/register" tag="v-btn">Register</router-link>
             </v-toolbar>
-        </v-card>
-        <v-container>
-            <v-card class="mx-auto mt-5" max-width="500" tile>
+        </v-card> -->
+        <v-container class="h-100 d-flex justify-content-center align-items-center">
+            <v-card class="mx-auto rounded-xl" width="450" tile>
                 <v-card-title class="headline">
                     <div class="text-primary"> Login </div>
                 </v-card-title>
@@ -40,9 +40,15 @@
                                 counter
                                 @click:append="show1 = !show1"
                             ></v-text-field>
+                            <div class="text-center">
+                                <v-card-text>
+                                    <span>Need account? &nbsp; |&nbsp;&nbsp; </span><router-link to="/register">Register</router-link>
+                                </v-card-text>
+                            </div>
                     </v-container>
-                   
-                    <v-divider></v-divider>
+                    <!-- <div class="container"> -->
+                        <v-divider></v-divider>
+                    <!-- </div> -->
                     <v-container class="text-right">
                         <v-btn color="primary" @click="login">
                             <span v-if="loading">

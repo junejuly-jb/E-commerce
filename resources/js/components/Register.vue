@@ -1,19 +1,7 @@
 <template>
     <v-app>
-        <v-card elevation="2" tile>
-            <v-toolbar>
-                <v-toolbar-title>
-                    Registration Page
-                </v-toolbar-title>
-                <v-spacer></v-spacer>
-                <v-btn icon :to="{path: '/'}">
-                    <v-icon>mdi-reply</v-icon>
-                </v-btn>
-                <router-link to="/login" tag="v-btn" class="bg-primary">Login</router-link>
-            </v-toolbar>
-        </v-card>
-        <v-container>
-            <v-card class="mx-auto mt-5" max-width="500" tile>
+        <v-container class="h-100 d-flex justify-content-center align-items-center">
+            <v-card class="mx-auto mt-5 rounded-xl" width="500" tile>
                 <v-card-title class="headline">
                     <div class="text-primary"> Register </div>
                 </v-card-title>
@@ -60,8 +48,10 @@
                                 @click:append="show1 = !show1"
                             ></v-text-field>
                     </v-container>
-                   
-                    <v-divider></v-divider>
+                    <div class="text-center">
+                        <span>Already have an account? &nbsp;&nbsp; |</span> <router-link to="/login">&nbsp;&nbsp; Login</router-link>
+                    </div>
+                    <v-divider class="mx-5"></v-divider>
                     <v-container class="text-right">
                         <v-btn v-if="loading" color="light-blue lighten-1">
                             <v-progress-circular
