@@ -10,6 +10,8 @@ import VueNumber from 'vue-number-animation'
 Vue.component('sidebar', require('./components/Addons/Sidebar.vue').default);
 Vue.component('navbar', require('./components/Addons/Navbar.vue').default);
 Vue.component('usernav', require('./components/Addons/UserNav.vue').default);
+Vue.component('sellersidebar', require('./components/Addons/SellerSidebar.vue').default);
+Vue.component('sellernav', require('./components/Addons/SellerNav.vue').default);
 
 Vue.use(VueNumber)
 Vue.use(VueResource)

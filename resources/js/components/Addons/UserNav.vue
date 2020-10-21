@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-expand-md fixed-top navbar-light shadow-sm" id="nav">
+    <nav class="navbar navbar-expand-md fixed-top navbar-dark shadow-sm" id="nav">
         <div class="container">
             <div class="navbar-brand">
                 <span>

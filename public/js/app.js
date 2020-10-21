@@ -161,6 +161,122 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Addons/SellerNav.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Addons/SellerNav.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['user'],
+  data: function data() {
+    return {};
+  },
+  methods: {
+    logout: function logout() {
+      this.$auth.destroyToken();
+      this.$router.push('/login');
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Addons/SellerSidebar.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Addons/SellerSidebar.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['user'],
+  methods: {
+    loadJS: function loadJS() {
+      var plugin = document.createElement("script");
+      plugin.setAttribute("src", "./js/sidebar.js");
+      plugin.async = true;
+      document.head.appendChild(plugin);
+    }
+  },
+  mounted: function mounted() {
+    this.loadJS();
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Addons/Sidebar.vue?vue&type=script&lang=js&":
 /*!*************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Addons/Sidebar.vue?vue&type=script&lang=js& ***!
@@ -552,6 +668,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -596,7 +732,10 @@ __webpack_require__.r(__webpack_exports__);
       headers: [{
         text: 'Store ID',
         align: 'start',
-        value: 'id'
+        value: 'store_id'
+      }, {
+        text: 'Store Name',
+        value: 'store_name'
       }, {
         text: 'Owner',
         value: 'name'
@@ -608,12 +747,13 @@ __webpack_require__.r(__webpack_exports__);
         value: 'store_website'
       }, {
         text: 'Status',
-        value: 'status'
+        value: 'store_status'
       }, {
         text: 'Actions',
         value: 'actions'
       }],
-      stores: []
+      stores: [],
+      loadStores: false
     };
   },
   methods: {
@@ -636,10 +776,40 @@ __webpack_require__.r(__webpack_exports__);
       };
 
       this.user.default_profile = getInitials(name);
+    },
+    getActiveStores: function getActiveStores() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this.loadStores = true;
+                _context.next = 3;
+                return _this.$http.get('api/getActiveStores', {
+                  headers: {
+                    Authorization: 'Bearer ' + _this.$auth.getToken()
+                  }
+                }).then(function (res) {
+                  _this.stores = res.data.data;
+                  console.log(_this.stores);
+                })["finally"](function () {
+                  _this.loadStores = false;
+                });
+
+              case 3:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
     }
   },
   mounted: function mounted() {
     this.getUser();
+    this.getActiveStores();
   }
 });
 
@@ -832,9 +1002,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      loadStoreRequests: false,
       loader: null,
       loading4: false,
       message: '',
@@ -889,7 +1072,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
+                _this.loadStoreRequests = true;
+                _context.next = 3;
                 return _this.$http.get('api/getAllStores', {
                   headers: {
                     Authorization: 'Bearer ' + _this.$auth.getToken()
@@ -897,9 +1081,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }).then(function (res) {
                   console.log(res.body.data);
                   _this.stores = res.body.data;
+                })["finally"](function () {
+                  _this.loadStoreRequests = false;
                 });
 
-              case 2:
+              case 3:
               case "end":
                 return _context.stop();
             }
@@ -1168,9 +1354,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      loadUsers: false,
       loader: null,
       loading4: false,
       enableDialog: false,
@@ -1250,7 +1449,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
+                _this.loadUsers = true;
+                _context.next = 3;
                 return _this.$http.get('api/getAllUsers', {
                   headers: {
                     Authorization: 'Bearer ' + _this.$auth.getToken()
@@ -1259,9 +1459,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this.users = res.body;
                 })["catch"](function (err) {
                   console.error(err);
+                })["finally"](function () {
+                  _this.loadUsers = false;
                 });
 
-              case 2:
+              case 3:
               case "end":
                 return _context.stop();
             }
@@ -2348,6 +2550,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2424,6 +2630,70 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee);
       }))();
     }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Seller/Sellerdashboard.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Seller/Sellerdashboard.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      user: {
+        default_profile: '',
+        name: '',
+        email: '',
+        address: '',
+        usertype: '',
+        contact: ''
+      }
+    };
+  },
+  methods: {
+    getUser: function getUser() {
+      var user = JSON.parse(localStorage.getItem('user'));
+      this.user = user;
+      var name = user.name;
+
+      var getInitials = function getInitials(name) {
+        var parts = name.split(' ');
+        var initials = '';
+
+        for (var i = 0; i < parts.length; i++) {
+          if (parts[i].length > 0 && parts[i] !== '') {
+            initials += parts[i][0];
+          }
+        }
+
+        return initials;
+      };
+
+      this.user.default_profile = getInitials(name);
+    }
+  },
+  mounted: function mounted() {
+    this.getUser();
   }
 });
 
@@ -13808,6 +14078,290 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Addons/SellerNav.vue?vue&type=template&id=ada03ada&":
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Addons/SellerNav.vue?vue&type=template&id=ada03ada& ***!
+  \*******************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("nav", { staticClass: "navbar navbar-expand-lg navbar-dark" }, [
+    _c(
+      "button",
+      { staticClass: "btn btn-primary", attrs: { id: "menu-toggle" } },
+      [
+        _c(
+          "svg",
+          {
+            staticClass: "icon icon-tabler icon-tabler-align-justified",
+            attrs: {
+              xmlns: "http://www.w3.org/2000/svg",
+              width: "24",
+              height: "24",
+              viewBox: "0 0 24 24",
+              "stroke-width": "1.5",
+              stroke: "#FFFFFF",
+              fill: "none",
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round"
+            }
+          },
+          [
+            _c("path", {
+              attrs: { stroke: "none", d: "M0 0h24v24H0z", fill: "none" }
+            }),
+            _vm._v(" "),
+            _c("line", { attrs: { x1: "4", y1: "6", x2: "20", y2: "6" } }),
+            _vm._v(" "),
+            _c("line", { attrs: { x1: "4", y1: "12", x2: "20", y2: "12" } }),
+            _vm._v(" "),
+            _c("line", { attrs: { x1: "4", y1: "18", x2: "16", y2: "18" } })
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "button",
+      {
+        staticClass: "navbar-toggler",
+        attrs: {
+          type: "button",
+          "data-toggle": "collapse",
+          "data-target": "#navbarSupportedContent",
+          "aria-controls": "navbarSupportedContent",
+          "aria-expanded": "false",
+          "aria-label": "Toggle navigation"
+        }
+      },
+      [
+        _c(
+          "svg",
+          {
+            staticClass: "icon icon-tabler icon-tabler-chevrons-down",
+            attrs: {
+              xmlns: "http://www.w3.org/2000/svg",
+              width: "24",
+              height: "24",
+              viewBox: "0 0 24 24",
+              "stroke-width": "1.5",
+              stroke: "#999999",
+              fill: "none",
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round"
+            }
+          },
+          [
+            _c("path", {
+              attrs: { stroke: "none", d: "M0 0h24v24H0z", fill: "none" }
+            }),
+            _vm._v(" "),
+            _c("polyline", { attrs: { points: "7 7 12 12 17 7" } }),
+            _vm._v(" "),
+            _c("polyline", { attrs: { points: "7 13 12 18 17 13" } })
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "collapse navbar-collapse",
+        attrs: { id: "navbarSupportedContent" }
+      },
+      [
+        _c("ul", { staticClass: "navbar-nav ml-auto mt-2 mt-lg-0" }, [
+          _c("li", { staticClass: "nav-item dropdown" }, [
+            _c(
+              "a",
+              {
+                staticClass: "nav-link dropdown-toggle",
+                attrs: {
+                  href: "#",
+                  id: "navbarDropdown",
+                  role: "button",
+                  "data-toggle": "dropdown",
+                  "aria-haspopup": "true",
+                  "aria-expanded": "false"
+                }
+              },
+              [
+                _vm._v(
+                  "\n                    " +
+                    _vm._s(_vm.user.name) +
+                    "\n                    "
+                )
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "dropdown-menu dropdown-menu-right dark-accent",
+                attrs: { "aria-labelledby": "navbarDropdown" }
+              },
+              [
+                _c(
+                  "a",
+                  { staticClass: "dropdown-item", attrs: { href: "#" } },
+                  [_vm._v("Action")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  { staticClass: "dropdown-item", attrs: { href: "#" } },
+                  [_vm._v("Another action")]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "dropdown-divider" }),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "dropdown-item text-danger point-me",
+                    on: { click: _vm.logout }
+                  },
+                  [_vm._v("Logout")]
+                )
+              ]
+            )
+          ])
+        ])
+      ]
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Addons/SellerSidebar.vue?vue&type=template&id=1e8a944c&":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Addons/SellerSidebar.vue?vue&type=template&id=1e8a944c& ***!
+  \***********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("v-app", [
+    _c(
+      "div",
+      { attrs: { id: "sidebar-wrapper" } },
+      [
+        _c("div", { staticClass: "sidebar-heading text-center" }, [
+          _vm._v("Salamat Shopee")
+        ]),
+        _vm._v(" "),
+        _c(
+          "v-container",
+          { staticClass: "py-5 text-center" },
+          [
+            _c("v-avatar", { attrs: { color: "primary", size: "128" } }, [
+              _c("span", { staticClass: "white--text headline" }, [
+                _vm._v(_vm._s(_vm.user.default_profile))
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "pt-3" }, [
+              _c("h5", [_vm._v(_vm._s(_vm.user.name))]),
+              _vm._v(" "),
+              _c("small", [_vm._v(_vm._s(_vm.user.usertype))])
+            ])
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "list-group list-group-flush" },
+          [
+            _c(
+              "router-link",
+              {
+                staticClass: "list-group-item",
+                attrs: { to: "/sellerdashboard" }
+              },
+              [_vm._v("Dashboard")]
+            ),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              {
+                staticClass: "list-group-item",
+                attrs: { to: "/seller_inventory" }
+              },
+              [_vm._v("Inventory")]
+            ),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              {
+                staticClass: "list-group-item",
+                attrs: { to: "/seller_purchase_request" }
+              },
+              [_vm._v("Purchase Request")]
+            ),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              {
+                staticClass: "list-group-item",
+                attrs: { to: "/seller_transactions" }
+              },
+              [_vm._v("Transactions")]
+            ),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              {
+                staticClass: "list-group-item",
+                attrs: { to: "/seller_announcements" }
+              },
+              [_vm._v("Announcements")]
+            ),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              {
+                staticClass: "list-group-item",
+                attrs: { to: "/seller_transaction_logs" }
+              },
+              [_vm._v("Transaction Logs")]
+            )
+          ],
+          1
+        )
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Addons/Sidebar.vue?vue&type=template&id=1e141e8b&":
 /*!*****************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Addons/Sidebar.vue?vue&type=template&id=1e141e8b& ***!
@@ -13941,7 +14495,7 @@ var render = function() {
   return _c(
     "nav",
     {
-      staticClass: "navbar navbar-expand-md fixed-top navbar-light shadow-sm",
+      staticClass: "navbar navbar-expand-md fixed-top navbar-dark shadow-sm",
       attrs: { id: "nav" }
     },
     [
@@ -14648,13 +15202,35 @@ var render = function() {
                       1
                     ),
                     _vm._v(" "),
-                    _c("v-data-table", {
-                      attrs: {
-                        headers: _vm.headers,
-                        items: _vm.stores,
-                        search: _vm.search
-                      }
-                    })
+                    _vm.loadStores == true
+                      ? _c("div", { staticClass: "container" }, [
+                          _c(
+                            "div",
+                            { staticClass: "py-5 text-center" },
+                            [
+                              _c("div", { staticClass: "py-5" }, [
+                                _vm._v("Fetching Stores...")
+                              ]),
+                              _vm._v(" "),
+                              _c("v-progress-linear", {
+                                attrs: {
+                                  color: "deep-purple accent-4",
+                                  indeterminate: "",
+                                  rounded: "",
+                                  height: "6"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ])
+                      : _c("v-data-table", {
+                          attrs: {
+                            headers: _vm.headers,
+                            items: _vm.stores,
+                            search: _vm.search
+                          }
+                        })
                   ],
                   1
                 )
@@ -14778,82 +15354,105 @@ var render = function() {
                         ]
                       ),
                       _vm._v(" "),
-                      _c("v-data-table", {
-                        attrs: {
-                          headers: _vm.headers,
-                          items: _vm.stores,
-                          search: _vm.search
-                        },
-                        scopedSlots: _vm._u(
-                          [
-                            {
-                              key: "item.actions",
-                              fn: function(ref) {
-                                var item = ref.item
-                                return [
-                                  _c(
-                                    "v-btn",
-                                    {
-                                      attrs: { color: "info" },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.showRequest(item)
-                                        }
-                                      }
-                                    },
-                                    [
+                      _vm.loadStoreRequests == true
+                        ? _c("div", { staticClass: "container" }, [
+                            _c(
+                              "div",
+                              { staticClass: "py-5 text-center" },
+                              [
+                                _c("div", { staticClass: "py-5" }, [
+                                  _vm._v("Fetching Users")
+                                ]),
+                                _vm._v(" "),
+                                _c("v-progress-linear", {
+                                  attrs: {
+                                    color: "deep-purple accent-4",
+                                    indeterminate: "",
+                                    rounded: "",
+                                    height: "6"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ])
+                        : _c("v-data-table", {
+                            attrs: {
+                              headers: _vm.headers,
+                              items: _vm.stores,
+                              search: _vm.search
+                            },
+                            scopedSlots: _vm._u(
+                              [
+                                {
+                                  key: "item.actions",
+                                  fn: function(ref) {
+                                    var item = ref.item
+                                    return [
                                       _c(
-                                        "svg",
+                                        "v-btn",
                                         {
-                                          staticClass:
-                                            "icon icon-tabler icon-tabler-eye",
-                                          attrs: {
-                                            xmlns: "http://www.w3.org/2000/svg",
-                                            width: "24",
-                                            height: "24",
-                                            viewBox: "0 0 24 24",
-                                            "stroke-width": "1.5",
-                                            stroke: "#FFFFFF",
-                                            fill: "none",
-                                            "stroke-linecap": "round",
-                                            "stroke-linejoin": "round"
+                                          attrs: { color: "info" },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.showRequest(item)
+                                            }
                                           }
                                         },
                                         [
-                                          _c("path", {
-                                            attrs: {
-                                              stroke: "none",
-                                              d: "M0 0h24v24H0z",
-                                              fill: "none"
-                                            }
-                                          }),
-                                          _vm._v(" "),
-                                          _c("circle", {
-                                            attrs: {
-                                              cx: "12",
-                                              cy: "12",
-                                              r: "2"
-                                            }
-                                          }),
-                                          _vm._v(" "),
-                                          _c("path", {
-                                            attrs: {
-                                              d:
-                                                "M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7"
-                                            }
-                                          })
+                                          _c(
+                                            "svg",
+                                            {
+                                              staticClass:
+                                                "icon icon-tabler icon-tabler-eye",
+                                              attrs: {
+                                                xmlns:
+                                                  "http://www.w3.org/2000/svg",
+                                                width: "24",
+                                                height: "24",
+                                                viewBox: "0 0 24 24",
+                                                "stroke-width": "1.5",
+                                                stroke: "#FFFFFF",
+                                                fill: "none",
+                                                "stroke-linecap": "round",
+                                                "stroke-linejoin": "round"
+                                              }
+                                            },
+                                            [
+                                              _c("path", {
+                                                attrs: {
+                                                  stroke: "none",
+                                                  d: "M0 0h24v24H0z",
+                                                  fill: "none"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("circle", {
+                                                attrs: {
+                                                  cx: "12",
+                                                  cy: "12",
+                                                  r: "2"
+                                                }
+                                              }),
+                                              _vm._v(" "),
+                                              _c("path", {
+                                                attrs: {
+                                                  d:
+                                                    "M22 12c-2.667 4.667 -6 7 -10 7s-7.333 -2.333 -10 -7c2.667 -4.667 6 -7 10 -7s7.333 2.333 10 7"
+                                                }
+                                              })
+                                            ]
+                                          )
                                         ]
                                       )
                                     ]
-                                  )
-                                ]
-                              }
-                            }
-                          ],
-                          null,
-                          true
-                        )
-                      })
+                                  }
+                                }
+                              ],
+                              null,
+                              true
+                            )
+                          })
                     ],
                     1
                   )
@@ -15285,180 +15884,206 @@ var render = function() {
                         ]
                       ),
                       _vm._v(" "),
-                      _c("v-data-table", {
-                        attrs: {
-                          headers: _vm.headers,
-                          items: _vm.users,
-                          search: _vm.search
-                        },
-                        scopedSlots: _vm._u(
-                          [
-                            {
-                              key: "item.actions",
-                              fn: function(ref) {
-                                var item = ref.item
-                                return [
-                                  item.status == "inactive"
-                                    ? _c(
-                                        "v-btn",
-                                        {
-                                          attrs: { color: "green lighten-1" },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.activate(item)
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _c(
-                                            "svg",
-                                            {
-                                              staticClass:
-                                                "icon icon-tabler icon-tabler-user-check",
-                                              attrs: {
-                                                xmlns:
-                                                  "http://www.w3.org/2000/svg",
-                                                width: "24",
-                                                height: "24",
-                                                viewBox: "0 0 24 24",
-                                                "stroke-width": "1.5",
-                                                stroke: "#FFFFFF",
-                                                fill: "none",
-                                                "stroke-linecap": "round",
-                                                "stroke-linejoin": "round"
-                                              }
-                                            },
-                                            [
-                                              _c("path", {
-                                                attrs: {
-                                                  stroke: "none",
-                                                  d: "M0 0h24v24H0z",
-                                                  fill: "none"
-                                                }
-                                              }),
-                                              _vm._v(" "),
-                                              _c("circle", {
-                                                attrs: {
-                                                  cx: "9",
-                                                  cy: "7",
-                                                  r: "4"
-                                                }
-                                              }),
-                                              _vm._v(" "),
-                                              _c("path", {
-                                                attrs: {
-                                                  d:
-                                                    "M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"
-                                                }
-                                              }),
-                                              _vm._v(" "),
-                                              _c("path", {
-                                                attrs: { d: "M16 11l2 2l4 -4" }
-                                              })
-                                            ]
-                                          )
-                                        ]
-                                      )
-                                    : _vm._e(),
-                                  _vm._v(" "),
-                                  item.status == "active"
-                                    ? _c(
-                                        "v-btn",
-                                        {
-                                          attrs: { color: "red lighten-1" },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.deactivate(item)
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _c(
-                                            "svg",
-                                            {
-                                              staticClass:
-                                                "icon icon-tabler icon-tabler-user-off",
-                                              attrs: {
-                                                xmlns:
-                                                  "http://www.w3.org/2000/svg",
-                                                width: "24",
-                                                height: "24",
-                                                viewBox: "0 0 24 24",
-                                                "stroke-width": "1.5",
-                                                stroke: "#FFFFFF",
-                                                fill: "none",
-                                                "stroke-linecap": "round",
-                                                "stroke-linejoin": "round"
-                                              }
-                                            },
-                                            [
-                                              _c("path", {
-                                                attrs: {
-                                                  stroke: "none",
-                                                  d: "M0 0h24v24H0z",
-                                                  fill: "none"
-                                                }
-                                              }),
-                                              _vm._v(" "),
-                                              _c("path", {
-                                                attrs: {
-                                                  d:
-                                                    "M14.274 10.291a4 4 0 1 0 -5.554 -5.58m-.548 3.453a4.01 4.01 0 0 0 2.62 2.65"
-                                                }
-                                              }),
-                                              _vm._v(" "),
-                                              _c("path", {
-                                                attrs: {
-                                                  d:
-                                                    "M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 1.147 .167m2.685 2.681a4 4 0 0 1 .168 1.152v2"
-                                                }
-                                              }),
-                                              _vm._v(" "),
-                                              _c("line", {
-                                                attrs: {
-                                                  x1: "3",
-                                                  y1: "3",
-                                                  x2: "21",
-                                                  y2: "21"
-                                                }
-                                              })
-                                            ]
-                                          )
-                                        ]
-                                      )
-                                    : _vm._e()
-                                ]
-                              }
+                      _vm.loadUsers == true
+                        ? _c("div", { staticClass: "container" }, [
+                            _c(
+                              "div",
+                              { staticClass: "py-5 text-center" },
+                              [
+                                _c("div", { staticClass: "py-5" }, [
+                                  _vm._v("Fetching Users")
+                                ]),
+                                _vm._v(" "),
+                                _c("v-progress-linear", {
+                                  attrs: {
+                                    color: "deep-purple accent-4",
+                                    indeterminate: "",
+                                    rounded: "",
+                                    height: "6"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ])
+                        : _c("v-data-table", {
+                            attrs: {
+                              headers: _vm.headers,
+                              items: _vm.users,
+                              search: _vm.search
                             },
-                            {
-                              key: "item.status",
-                              fn: function(ref) {
-                                var item = ref.item
-                                return [
-                                  _c(
-                                    "v-chip",
-                                    {
-                                      attrs: {
-                                        color: _vm.getColor(item.status),
-                                        dark: ""
-                                      }
-                                    },
-                                    [
-                                      _vm._v(
-                                        "\n                            " +
-                                          _vm._s(item.status) +
-                                          "\n                        "
+                            scopedSlots: _vm._u(
+                              [
+                                {
+                                  key: "item.actions",
+                                  fn: function(ref) {
+                                    var item = ref.item
+                                    return [
+                                      item.status == "inactive"
+                                        ? _c(
+                                            "v-btn",
+                                            {
+                                              attrs: {
+                                                color: "green lighten-1"
+                                              },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.activate(item)
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c(
+                                                "svg",
+                                                {
+                                                  staticClass:
+                                                    "icon icon-tabler icon-tabler-user-check",
+                                                  attrs: {
+                                                    xmlns:
+                                                      "http://www.w3.org/2000/svg",
+                                                    width: "24",
+                                                    height: "24",
+                                                    viewBox: "0 0 24 24",
+                                                    "stroke-width": "1.5",
+                                                    stroke: "#FFFFFF",
+                                                    fill: "none",
+                                                    "stroke-linecap": "round",
+                                                    "stroke-linejoin": "round"
+                                                  }
+                                                },
+                                                [
+                                                  _c("path", {
+                                                    attrs: {
+                                                      stroke: "none",
+                                                      d: "M0 0h24v24H0z",
+                                                      fill: "none"
+                                                    }
+                                                  }),
+                                                  _vm._v(" "),
+                                                  _c("circle", {
+                                                    attrs: {
+                                                      cx: "9",
+                                                      cy: "7",
+                                                      r: "4"
+                                                    }
+                                                  }),
+                                                  _vm._v(" "),
+                                                  _c("path", {
+                                                    attrs: {
+                                                      d:
+                                                        "M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"
+                                                    }
+                                                  }),
+                                                  _vm._v(" "),
+                                                  _c("path", {
+                                                    attrs: {
+                                                      d: "M16 11l2 2l4 -4"
+                                                    }
+                                                  })
+                                                ]
+                                              )
+                                            ]
+                                          )
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      item.status == "active"
+                                        ? _c(
+                                            "v-btn",
+                                            {
+                                              attrs: { color: "red lighten-1" },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.deactivate(item)
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c(
+                                                "svg",
+                                                {
+                                                  staticClass:
+                                                    "icon icon-tabler icon-tabler-user-off",
+                                                  attrs: {
+                                                    xmlns:
+                                                      "http://www.w3.org/2000/svg",
+                                                    width: "24",
+                                                    height: "24",
+                                                    viewBox: "0 0 24 24",
+                                                    "stroke-width": "1.5",
+                                                    stroke: "#FFFFFF",
+                                                    fill: "none",
+                                                    "stroke-linecap": "round",
+                                                    "stroke-linejoin": "round"
+                                                  }
+                                                },
+                                                [
+                                                  _c("path", {
+                                                    attrs: {
+                                                      stroke: "none",
+                                                      d: "M0 0h24v24H0z",
+                                                      fill: "none"
+                                                    }
+                                                  }),
+                                                  _vm._v(" "),
+                                                  _c("path", {
+                                                    attrs: {
+                                                      d:
+                                                        "M14.274 10.291a4 4 0 1 0 -5.554 -5.58m-.548 3.453a4.01 4.01 0 0 0 2.62 2.65"
+                                                    }
+                                                  }),
+                                                  _vm._v(" "),
+                                                  _c("path", {
+                                                    attrs: {
+                                                      d:
+                                                        "M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 1.147 .167m2.685 2.681a4 4 0 0 1 .168 1.152v2"
+                                                    }
+                                                  }),
+                                                  _vm._v(" "),
+                                                  _c("line", {
+                                                    attrs: {
+                                                      x1: "3",
+                                                      y1: "3",
+                                                      x2: "21",
+                                                      y2: "21"
+                                                    }
+                                                  })
+                                                ]
+                                              )
+                                            ]
+                                          )
+                                        : _vm._e()
+                                    ]
+                                  }
+                                },
+                                {
+                                  key: "item.status",
+                                  fn: function(ref) {
+                                    var item = ref.item
+                                    return [
+                                      _c(
+                                        "v-chip",
+                                        {
+                                          attrs: {
+                                            color: _vm.getColor(item.status),
+                                            dark: ""
+                                          }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                            " +
+                                              _vm._s(item.status) +
+                                              "\n                        "
+                                          )
+                                        ]
                                       )
                                     ]
-                                  )
-                                ]
-                              }
-                            }
-                          ],
-                          null,
-                          true
-                        )
-                      })
+                                  }
+                                }
+                              ],
+                              null,
+                              true
+                            )
+                          })
                     ],
                     1
                   )
@@ -16957,7 +17582,7 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
-              _c("v-divider"),
+              _c("v-divider", { staticClass: "mx-5" }),
               _vm._v(" "),
               _c(
                 "v-container",
@@ -17098,6 +17723,7 @@ var render = function() {
                     [
                       _c("v-text-field", {
                         attrs: {
+                          "prepend-icon": "mdi-account-outline",
                           hint: "Must be 3 characters and above",
                           label: "Enter Name",
                           rules: [_vm.rules.required, _vm.rules.validation_2]
@@ -17120,6 +17746,7 @@ var render = function() {
                     [
                       _c("v-text-field", {
                         attrs: {
+                          "prepend-icon": "mdi-email-outline",
                           label: "Enter Email Address",
                           hint: "Email must contains '@'",
                           rules: [_vm.rules.email_val1, _vm.rules.email_val2],
@@ -17139,6 +17766,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("v-text-field", {
                     attrs: {
+                      "prepend-icon": "mdi-lock-outline",
                       "append-icon": _vm.show1 ? "mdi-eye" : "mdi-eye-off",
                       rules: [_vm.rules.required, _vm.rules.min],
                       type: _vm.show1 ? "text" : "password",
@@ -17163,6 +17791,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("v-text-field", {
                     attrs: {
+                      "prepend-icon": "mdi-account-check",
                       "append-icon": _vm.show1 ? "mdi-eye" : "mdi-eye-off",
                       rules: [_vm.rules.required, _vm.rules.min],
                       type: _vm.show1 ? "text" : "password",
@@ -17309,7 +17938,27 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("v-container", [_vm._v("\n    this is Sellerdashboard\n")])
+  return _c("v-app", [
+    _c(
+      "div",
+      { staticClass: "d-flex page", attrs: { id: "wrapper" } },
+      [
+        _c("sellersidebar", { attrs: { user: _vm.user } }),
+        _vm._v(" "),
+        _c(
+          "div",
+          { attrs: { id: "page-content-wrapper" } },
+          [
+            _c("sellernav", { attrs: { user: _vm.user } }),
+            _vm._v(" "),
+            _c("div", { staticClass: "container" })
+          ],
+          1
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -78817,6 +79466,8 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 Vue.component('sidebar', __webpack_require__(/*! ./components/Addons/Sidebar.vue */ "./resources/js/components/Addons/Sidebar.vue")["default"]);
 Vue.component('navbar', __webpack_require__(/*! ./components/Addons/Navbar.vue */ "./resources/js/components/Addons/Navbar.vue")["default"]);
 Vue.component('usernav', __webpack_require__(/*! ./components/Addons/UserNav.vue */ "./resources/js/components/Addons/UserNav.vue")["default"]);
+Vue.component('sellersidebar', __webpack_require__(/*! ./components/Addons/SellerSidebar.vue */ "./resources/js/components/Addons/SellerSidebar.vue")["default"]);
+Vue.component('sellernav', __webpack_require__(/*! ./components/Addons/SellerNav.vue */ "./resources/js/components/Addons/SellerNav.vue")["default"]);
 Vue.use(vue_number_animation__WEBPACK_IMPORTED_MODULE_5__["default"]);
 Vue.use(vue_resource__WEBPACK_IMPORTED_MODULE_1__["default"]);
 Vue.use(_auth_js__WEBPACK_IMPORTED_MODULE_4__["default"]);
@@ -78944,6 +79595,144 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Navbar_vue_vue_type_template_id_58292931___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Navbar_vue_vue_type_template_id_58292931___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Addons/SellerNav.vue":
+/*!******************************************************!*\
+  !*** ./resources/js/components/Addons/SellerNav.vue ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _SellerNav_vue_vue_type_template_id_ada03ada___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SellerNav.vue?vue&type=template&id=ada03ada& */ "./resources/js/components/Addons/SellerNav.vue?vue&type=template&id=ada03ada&");
+/* harmony import */ var _SellerNav_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SellerNav.vue?vue&type=script&lang=js& */ "./resources/js/components/Addons/SellerNav.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _SellerNav_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SellerNav_vue_vue_type_template_id_ada03ada___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _SellerNav_vue_vue_type_template_id_ada03ada___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Addons/SellerNav.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Addons/SellerNav.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/Addons/SellerNav.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SellerNav_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./SellerNav.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Addons/SellerNav.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SellerNav_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Addons/SellerNav.vue?vue&type=template&id=ada03ada&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/Addons/SellerNav.vue?vue&type=template&id=ada03ada& ***!
+  \*************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SellerNav_vue_vue_type_template_id_ada03ada___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./SellerNav.vue?vue&type=template&id=ada03ada& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Addons/SellerNav.vue?vue&type=template&id=ada03ada&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SellerNav_vue_vue_type_template_id_ada03ada___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SellerNav_vue_vue_type_template_id_ada03ada___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/Addons/SellerSidebar.vue":
+/*!**********************************************************!*\
+  !*** ./resources/js/components/Addons/SellerSidebar.vue ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _SellerSidebar_vue_vue_type_template_id_1e8a944c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SellerSidebar.vue?vue&type=template&id=1e8a944c& */ "./resources/js/components/Addons/SellerSidebar.vue?vue&type=template&id=1e8a944c&");
+/* harmony import */ var _SellerSidebar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SellerSidebar.vue?vue&type=script&lang=js& */ "./resources/js/components/Addons/SellerSidebar.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _SellerSidebar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _SellerSidebar_vue_vue_type_template_id_1e8a944c___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _SellerSidebar_vue_vue_type_template_id_1e8a944c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/Addons/SellerSidebar.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Addons/SellerSidebar.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/Addons/SellerSidebar.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SellerSidebar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./SellerSidebar.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Addons/SellerSidebar.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SellerSidebar_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Addons/SellerSidebar.vue?vue&type=template&id=1e8a944c&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/Addons/SellerSidebar.vue?vue&type=template&id=1e8a944c& ***!
+  \*****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SellerSidebar_vue_vue_type_template_id_1e8a944c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./SellerSidebar.vue?vue&type=template&id=1e8a944c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Addons/SellerSidebar.vue?vue&type=template&id=1e8a944c&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SellerSidebar_vue_vue_type_template_id_1e8a944c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SellerSidebar_vue_vue_type_template_id_1e8a944c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -79703,15 +80492,17 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Sellerdashboard_vue_vue_type_template_id_53357cf0___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Sellerdashboard.vue?vue&type=template&id=53357cf0& */ "./resources/js/components/Seller/Sellerdashboard.vue?vue&type=template&id=53357cf0&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _Sellerdashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Sellerdashboard.vue?vue&type=script&lang=js& */ "./resources/js/components/Seller/Sellerdashboard.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
-var script = {}
+
+
 
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_1__["default"])(
-  script,
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Sellerdashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _Sellerdashboard_vue_vue_type_template_id_53357cf0___WEBPACK_IMPORTED_MODULE_0__["render"],
   _Sellerdashboard_vue_vue_type_template_id_53357cf0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
@@ -79725,6 +80516,20 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 if (false) { var api; }
 component.options.__file = "resources/js/components/Seller/Sellerdashboard.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Seller/Sellerdashboard.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/Seller/Sellerdashboard.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Sellerdashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Sellerdashboard.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Seller/Sellerdashboard.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Sellerdashboard_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
