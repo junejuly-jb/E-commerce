@@ -2130,6 +2130,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2249,16 +2255,6 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -14188,7 +14184,10 @@ var render = function() {
                         [
                           _c(
                             "v-card",
-                            { attrs: { elevation: "2", tile: "" } },
+                            {
+                              staticClass: "rounded-xl",
+                              attrs: { elevation: "2", tile: "" }
+                            },
                             [
                               _c("v-card-title", { staticClass: "headline" }, [
                                 _vm._v(
@@ -14422,7 +14421,10 @@ var render = function() {
                         [
                           _c(
                             "v-card",
-                            { attrs: { elevation: "2", tile: "" } },
+                            {
+                              staticClass: "rounded-xl",
+                              attrs: { elevation: "2", tile: "" }
+                            },
                             [
                               _c("v-card-title", { staticClass: "headline" }, [
                                 _vm._v(
@@ -16866,44 +16868,16 @@ var render = function() {
     "v-app",
     [
       _c(
-        "v-card",
-        { attrs: { tile: "" } },
-        [
-          _c(
-            "v-toolbar",
-            { attrs: { flat: "" } },
-            [
-              _c("v-toolbar-title", [
-                _vm._v("\n                Login Page\n            ")
-              ]),
-              _vm._v(" "),
-              _c("v-spacer"),
-              _vm._v(" "),
-              _c(
-                "v-btn",
-                { attrs: { icon: "", to: { path: "/" } } },
-                [_c("v-icon", [_vm._v("mdi-reply")])],
-                1
-              ),
-              _vm._v(" "),
-              _c("router-link", { attrs: { to: "/register", tag: "v-btn" } }, [
-                _vm._v("Register")
-              ])
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
         "v-container",
+        {
+          staticClass: "h-100 d-flex justify-content-center align-items-center"
+        },
         [
           _c(
             "v-card",
             {
-              staticClass: "mx-auto mt-5",
-              attrs: { "max-width": "500", tile: "" }
+              staticClass: "mx-auto rounded-xl",
+              attrs: { width: "450", tile: "" }
             },
             [
               _c("v-card-title", { staticClass: "headline" }, [
@@ -16960,7 +16934,25 @@ var render = function() {
                       },
                       expression: "form.password"
                     }
-                  })
+                  }),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "text-center" },
+                    [
+                      _c(
+                        "v-card-text",
+                        [
+                          _c("span", [_vm._v("Need account?   |   ")]),
+                          _c("router-link", { attrs: { to: "/register" } }, [
+                            _vm._v("Register")
+                          ])
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
                 ],
                 1
               ),
@@ -17079,48 +17071,16 @@ var render = function() {
     "v-app",
     [
       _c(
-        "v-card",
-        { attrs: { elevation: "2", tile: "" } },
-        [
-          _c(
-            "v-toolbar",
-            [
-              _c("v-toolbar-title", [
-                _vm._v("\n                Registration Page\n            ")
-              ]),
-              _vm._v(" "),
-              _c("v-spacer"),
-              _vm._v(" "),
-              _c(
-                "v-btn",
-                { attrs: { icon: "", to: { path: "/" } } },
-                [_c("v-icon", [_vm._v("mdi-reply")])],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "router-link",
-                {
-                  staticClass: "bg-primary",
-                  attrs: { to: "/login", tag: "v-btn" }
-                },
-                [_vm._v("Login")]
-              )
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
         "v-container",
+        {
+          staticClass: "h-100 d-flex justify-content-center align-items-center"
+        },
         [
           _c(
             "v-card",
             {
-              staticClass: "mx-auto mt-5",
-              attrs: { "max-width": "500", tile: "" }
+              staticClass: "mx-auto mt-5 rounded-xl",
+              attrs: { width: "500", tile: "" }
             },
             [
               _c("v-card-title", { staticClass: "headline" }, [
@@ -17228,7 +17188,20 @@ var render = function() {
                 1
               ),
               _vm._v(" "),
-              _c("v-divider"),
+              _c(
+                "div",
+                { staticClass: "text-center" },
+                [
+                  _c("span", [_vm._v("Already have an account?    |")]),
+                  _vm._v(" "),
+                  _c("router-link", { attrs: { to: "/login" } }, [
+                    _vm._v("   Login")
+                  ])
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("v-divider", { staticClass: "mx-5" }),
               _vm._v(" "),
               _c(
                 "v-container",

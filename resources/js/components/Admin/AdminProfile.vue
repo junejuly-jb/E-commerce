@@ -9,7 +9,7 @@
                     <div class="row">
                         <div class="col-lg">
                             <v-container>
-                                <v-card elevation="2" tile>
+                                <v-card elevation="2" tile class="rounded-xl">
                                     <v-card-title class="headline">
                                         User Info
                                     </v-card-title>
@@ -70,7 +70,7 @@
                         </div>
                         <div class="col-lg">
                             <v-container>
-                                <v-card elevation="2" tile>
+                                <v-card elevation="2" tile class="rounded-xl">
                                     <v-card-title class="headline">
                                         Edit Information
                                     </v-card-title>
