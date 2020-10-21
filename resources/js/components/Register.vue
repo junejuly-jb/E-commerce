@@ -9,6 +9,7 @@
                     <v-container>
                             <div class="">
                                 <v-text-field
+                                prepend-icon="mdi-account-outline"
                                 v-model="form.name"
                                 hint="Must be 3 characters and above" 
                                 label="Enter Name"
@@ -18,6 +19,7 @@
                             </div>
                             <div class="">
                                 <v-text-field
+                                prepend-icon="mdi-email-outline"
                                 v-model="form.email"
                                 label="Enter Email Address"
                                 hint="Email must contains '@'" 
@@ -27,6 +29,7 @@
                             </div>
                             <v-text-field
                                 v-model="form.password"
+                                prepend-icon="mdi-lock-outline"
                                 :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                                 :rules="[rules.required, rules.min]"
                                 :type="show1 ? 'text' : 'password'"
@@ -37,6 +40,7 @@
                                 @click:append="show1 = !show1"
                             ></v-text-field>
                             <v-text-field
+                                prepend-icon="mdi-account-check"
                                 v-model="form.cPassword"
                                 :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                                 :rules="[rules.required, rules.min]"

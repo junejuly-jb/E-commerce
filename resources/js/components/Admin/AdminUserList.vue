@@ -30,7 +30,19 @@
                             </span>
                         </template>
                         </v-btn>
+                        <div v-if="loadUsers == true" class="container">
+                            <div class="py-5 text-center">
+                                <div class="py-5">Fetching Users</div>
+                                <v-progress-linear
+                                    color="deep-purple accent-4"
+                                    indeterminate
+                                    rounded
+                                    height="6"
+                                ></v-progress-linear>
+                            </div>
+                        </div>
                         <v-data-table
+                        v-else
                         :headers="headers"
                         :items="users"
                         :search="search"
@@ -153,6 +165,7 @@
   export default {
     data () {
       return {
+        loadUsers: false,
         loader: null,
         loading4: false,
         enableDialog: false,
@@ -212,12 +225,16 @@
             this.user.default_profile = getInitials(name);
         },
         async getUsers(){
+            this.loadUsers = true 
             await this.$http.get('api/getAllUsers', { headers: { Authorization: 'Bearer ' + this.$auth.getToken()}})
             .then((res) => {
                 this.users = res.body
             })
             .catch((err) => {
                 console.error(err)
+            })
+            .finally(() => {
+                this.loadUsers = false
             })
         },
         getColor(status){

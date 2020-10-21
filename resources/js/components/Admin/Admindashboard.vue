@@ -462,9 +462,7 @@ export default {
         getUser(){
             var user = JSON.parse(localStorage.getItem('user'))
             this.user = user
-
             var name = user.name
-
             var getInitials = function (name) {
             var parts = name.split(' ')
             var initials = ''
@@ -517,7 +515,6 @@ export default {
 .header-todo{
     font-size: 30px;
     font-weight: bold;
-
 }
 .body-notif{
     padding: 20px 0px;

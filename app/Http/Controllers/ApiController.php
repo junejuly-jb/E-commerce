@@ -247,4 +247,11 @@ class ApiController extends Controller
             ]);
         }
     }
+    public function getActiveStores(){
+        $sql = "SELECT * FROM stores JOIN users ON stores.store_owner = users.id WHERE store_status = 'active' OR store_status = 'banned'";
+        $stores = DB::select($sql);
+        return response()->json([
+            'data' => $stores
+        ]);
+    }
 }

@@ -30,7 +30,19 @@
                             </span>
                         </template>
                         </v-btn>
+                        <div v-if="loadStoreRequests == true" class="container">
+                            <div class="py-5 text-center">
+                                <div class="py-5">Fetching Users</div>
+                                <v-progress-linear
+                                    color="deep-purple accent-4"
+                                    indeterminate
+                                    rounded
+                                    height="6"
+                                ></v-progress-linear>
+                            </div>
+                        </div>
                         <v-data-table
+                        v-else
                         :headers="headers"
                         :items="stores"
                         :search="search"
@@ -171,6 +183,7 @@
 <script>
 export default {
     data: () => ({
+        loadStoreRequests: false,
         loader: null,
         loading4: false,
         message: '',
@@ -207,6 +220,7 @@ export default {
     }),
     methods:{
         async getAllStores(){
+            this.loadStoreRequests = true
             await this.$http.get('api/getAllStores', {
                 headers: {
                     Authorization: 'Bearer ' + this.$auth.getToken()
@@ -216,6 +230,7 @@ export default {
                 console.log(res.body.data)
                 this.stores = res.body.data
             })
+            .finally(() => { this.loadStoreRequests = false})
         },
         showRequest(item){
             this.dialog = true

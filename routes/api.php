@@ -24,6 +24,7 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::delete('/deleteTodo/{id}', 'App\Http\Controllers\ApiController@deleteTodo');
     Route::put('/updateTodo/{id}', 'App\Http\Controllers\ApiController@updateTodo');
     Route::put('/mark/{id}', 'App\Http\Controllers\ApiController@mark');
+    Route::get('/getActiveStores', 'App\Http\Controllers\ApiController@getActiveStores');
 });
 
 Route::post('/register', 'App\Http\Controllers\ApiController@register');

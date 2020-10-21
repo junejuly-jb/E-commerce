@@ -47,7 +47,7 @@
                             </div>
                     </v-container>
                     <!-- <div class="container"> -->
-                        <v-divider></v-divider>
+                        <v-divider class="mx-5"></v-divider>
                     <!-- </div> -->
                     <v-container class="text-right">
                         <v-btn color="primary" @click="login">
