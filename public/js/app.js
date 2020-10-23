@@ -2776,9 +2776,175 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      menu: false,
+      editmode: '',
+      search: '',
+      dialog: false,
+      categories: ['Motherboards', 'Mouse', 'Keyboards', 'Monitor', 'RAM', 'HDD', 'SSD'],
       user: {
         default_profile: '',
         name: '',
@@ -2786,10 +2952,58 @@ __webpack_require__.r(__webpack_exports__);
         address: '',
         usertype: '',
         contact: ''
-      }
+      },
+      headers: [{
+        text: 'Item (ID Number)',
+        align: 'start',
+        value: 'item_id'
+      }, {
+        text: 'Name',
+        value: 'item_name'
+      }, {
+        text: 'Category',
+        value: 'category'
+      }, {
+        text: 'Price',
+        value: 'item_price'
+      }, {
+        text: 'Quantity',
+        value: 'item_quantity'
+      }, {
+        text: 'Status',
+        value: 'item_status'
+      }, {
+        text: 'Actions',
+        value: 'actions',
+        align: 'center'
+      }],
+      inventoryItems: [{
+        item_id: 1,
+        item_name: 'Mouse',
+        category: 'Accessories',
+        item_price: 1219,
+        item_quantity: 40,
+        item_status: 'in stock'
+      }]
     };
   },
   methods: {
+    btnAddItem: function btnAddItem() {
+      this.editmode = 'add';
+      this.dialog = true;
+    },
+    btnDelete: function btnDelete() {
+      this.editmode = 'delete';
+      this.dialog = true;
+    },
+    btnShow: function btnShow() {
+      this.editmode = 'show';
+      this.dialog = true;
+    },
+    btnEdit: function btnEdit() {
+      this.editmode = 'edit';
+      this.dialog = true;
+    },
     getUser: function getUser() {
       var user = JSON.parse(localStorage.getItem('user'));
       this.user = user;
@@ -18489,32 +18703,407 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("v-app", [
-    _c(
-      "div",
-      { staticClass: "d-flex page", attrs: { id: "wrapper" } },
-      [
-        _c("sellersidebar", { attrs: { user: _vm.user } }),
-        _vm._v(" "),
-        _c(
-          "div",
-          { attrs: { id: "page-content-wrapper" } },
-          [
-            _c("sellernav", { attrs: { user: _vm.user } }),
-            _vm._v(" "),
-            _c("div", { staticClass: "container" }, [
-              _c("div", { staticClass: "dashHeader" }, [
-                _c("span", { staticClass: "discover" }, [_vm._v("Inventory")]),
-                _c("span", { staticClass: "daily" }, [_vm._v(" Details")])
-              ])
-            ])
-          ],
-          1
-        )
-      ],
-      1
-    )
-  ])
+  return _c(
+    "v-app",
+    [
+      _c(
+        "div",
+        { staticClass: "d-flex page", attrs: { id: "wrapper" } },
+        [
+          _c("sellersidebar", { attrs: { user: _vm.user } }),
+          _vm._v(" "),
+          _c(
+            "div",
+            { attrs: { id: "page-content-wrapper" } },
+            [
+              _c("sellernav", { attrs: { user: _vm.user } }),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "container" },
+                [
+                  _c("div", { staticClass: "dashHeader" }, [
+                    _c("span", { staticClass: "discover" }, [
+                      _vm._v("Inventory")
+                    ]),
+                    _c("span", { staticClass: "daily" }, [_vm._v(" Details")])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "v-card",
+                    [
+                      _c(
+                        "v-card-title",
+                        [
+                          _c("v-text-field", {
+                            attrs: {
+                              "append-icon": "mdi-magnify",
+                              label: "Search",
+                              "single-line": "",
+                              "hide-details": ""
+                            },
+                            model: {
+                              value: _vm.search,
+                              callback: function($$v) {
+                                _vm.search = $$v
+                              },
+                              expression: "search"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "v-btn",
+                            {
+                              staticClass: "mx-4",
+                              attrs: {
+                                small: "",
+                                fab: "",
+                                color: "blue darken-1"
+                              },
+                              on: { click: _vm.btnAddItem }
+                            },
+                            [
+                              _c("v-icon", [
+                                _vm._v(
+                                  "\n                            mdi-plus\n                        "
+                                )
+                              ])
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("v-data-table", {
+                        attrs: {
+                          headers: _vm.headers,
+                          items: _vm.inventoryItems,
+                          search: _vm.search
+                        },
+                        scopedSlots: _vm._u(
+                          [
+                            {
+                              key: "item.actions",
+                              fn: function(ref) {
+                                var item = ref.item
+                                return [
+                                  _c(
+                                    "v-btn",
+                                    {
+                                      attrs: {
+                                        icon: "",
+                                        color: "blue lighten-2"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.btnShow(item)
+                                        }
+                                      }
+                                    },
+                                    [_c("v-icon", [_vm._v("mdi-eye-outline")])],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-btn",
+                                    {
+                                      attrs: {
+                                        icon: "",
+                                        color: "green lighten-2"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.btnEdit(item)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("v-icon", [
+                                        _vm._v("mdi-pencil-outline")
+                                      ])
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-btn",
+                                    {
+                                      attrs: {
+                                        icon: "",
+                                        color: "red lighten-2"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.btnDelete(item)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _c("v-icon", [
+                                        _vm._v("mdi-trash-can-outline")
+                                      ])
+                                    ],
+                                    1
+                                  )
+                                ]
+                              }
+                            }
+                          ],
+                          null,
+                          true
+                        )
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-dialog",
+        {
+          attrs: { persistent: "", "max-width": "600" },
+          model: {
+            value: _vm.dialog,
+            callback: function($$v) {
+              _vm.dialog = $$v
+            },
+            expression: "dialog"
+          }
+        },
+        [
+          _c(
+            "v-card",
+            [
+              _vm.editmode == "add"
+                ? _c("v-card-title", { staticClass: "headline" }, [
+                    _c("span", { staticClass: "text-primary" }, [
+                      _vm._v("\n                Add item\n            ")
+                    ])
+                  ])
+                : _vm.editmode == "delete"
+                ? _c("v-card-title", { staticClass: "headline" }, [
+                    _c("span", { staticClass: "text-danger" }, [
+                      _vm._v("\n                Delete\n            ")
+                    ])
+                  ])
+                : _vm.editmode == "show"
+                ? _c("v-card-title", { staticClass: "headline" }, [
+                    _vm._v("\n            Item Details\n        ")
+                  ])
+                : _c("v-card-title", { staticClass: "headline" }, [
+                    _vm._v("\n            Edit\n        ")
+                  ]),
+              _vm._v(" "),
+              _vm.editmode == "add"
+                ? _c(
+                    "v-container",
+                    [
+                      _c(
+                        "v-row",
+                        [
+                          _c(
+                            "v-col",
+                            [
+                              _c("v-text-field", {
+                                attrs: {
+                                  "prepend-icon": "mdi-dropbox",
+                                  label: "Item name"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-col",
+                            [
+                              _c("v-autocomplete", {
+                                attrs: {
+                                  items: _vm.categories,
+                                  label: "Gender",
+                                  placeholder: "Select...",
+                                  "prepend-icon": "mdi-format-list-bulleted"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-row",
+                        [
+                          _c(
+                            "v-col",
+                            [
+                              _c("v-text-field", {
+                                attrs: {
+                                  "prepend-icon": "mdi-currency-php",
+                                  label: "Price",
+                                  suffix: ".00",
+                                  type: "number"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-col",
+                            [
+                              _c("v-text-field", {
+                                attrs: {
+                                  "prepend-icon": "mdi-file-table-box",
+                                  label: "Quantity",
+                                  type: "number"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c("v-textarea", {
+                        attrs: {
+                          label: "Description",
+                          "prepend-icon": "mdi-comment-quote-outline"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                : _vm.editmode == "delete"
+                ? _c(
+                    "v-container",
+                    [
+                      _c("v-card-text", [
+                        _vm._v(
+                          "\n                do you want to delete this item?\n            "
+                        )
+                      ])
+                    ],
+                    1
+                  )
+                : _vm.editmode == "show"
+                ? _c(
+                    "v-container",
+                    [
+                      _c("v-card-text", [
+                        _vm._v("\n                Show\n            ")
+                      ])
+                    ],
+                    1
+                  )
+                : _c(
+                    "v-container",
+                    [
+                      _c(
+                        "v-row",
+                        [
+                          _c("v-col", [_c("v-text-field")], 1),
+                          _vm._v(" "),
+                          _c("v-col", [_c("v-text-field")], 1)
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  ),
+              _vm._v(" "),
+              _c(
+                "v-card-actions",
+                [
+                  _c("v-spacer"),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { text: "" },
+                      on: {
+                        click: function($event) {
+                          _vm.dialog = false
+                        }
+                      }
+                    },
+                    [_vm._v("\n            Cancel\n        ")]
+                  ),
+                  _vm._v(" "),
+                  _vm.editmode == "add"
+                    ? _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "green darken-1", text: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.dialog = false
+                            }
+                          }
+                        },
+                        [_vm._v("\n            Save\n        ")]
+                      )
+                    : _vm.editmode == "delete"
+                    ? _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "red darken-1", text: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.dialog = false
+                            }
+                          }
+                        },
+                        [_vm._v("\n            Delete\n        ")]
+                      )
+                    : _vm.editmode == "edit"
+                    ? _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "green darken-1", text: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.dialog = false
+                            }
+                          }
+                        },
+                        [_vm._v("\n            Update\n        ")]
+                      )
+                    : _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "green darken-1", text: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.dialog = false
+                            }
+                          }
+                        },
+                        [_vm._v("\n            Okay\n        ")]
+                      )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
