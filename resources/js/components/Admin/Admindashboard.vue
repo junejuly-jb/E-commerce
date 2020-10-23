@@ -155,7 +155,7 @@
                                     </div>
                                     <div v-else class="py-2">
                                         <div class="py-2"></div>
-                                        <div class="py-1" v-for="todos in mytodo">
+                                        <div class="py-1" v-for="todos in mytodo" v-bind:key="todos.id">
                                             <template v-if="todos.status == 'incomplete'">
                                                 <span @click="mark(todos)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2196F3" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -323,6 +323,8 @@
     </v-app>
 </template>
 <script>
+import { bus } from '../../app';
+
 export default {
     data: () => ({
         refreshTodo: false,
@@ -433,6 +435,8 @@ export default {
                 this.message = res.data.message
                 Object.assign(this.mytodo[this.selectedIndex], res.data.data)
                 this.dialog = false
+                bus.$emit('updated', 'todo updated')
+                console.log(bus)
             })
             console.log(this.editedTodo)
         },
@@ -490,15 +494,22 @@ export default {
                 console.err(err)
             })
         },
+        
         default(){
             this.selectedTodo = ''
             this.selectedIndex = ''
         }
     },
+    // created(){
+    //     bus.$on('registered', (data) => {
+    //         this.snackbar = true
+    //         this.message = data
+    //     })
+    // },
     mounted(){
+        this.getTodos()
         this.getUser()
         this.getTotal()
-        this.getTodos()
     }
 }
 </script>

@@ -68,11 +68,11 @@
        <v-dialog
         v-model="dialog"
         persistent
-        max-width="450"
+        max-width="550"
         >
         <v-card
             class="mx-auto"
-            max-width="450"
+            max-width="550"
         >
             <v-card-title>
                 <v-icon>mdi-store</v-icon><span class="pl-3"> Store Details</span>
@@ -114,6 +114,13 @@
                 >
                 Close
             </v-btn>
+            <v-btn
+                color="red lighten-2"
+                text
+                @click="discard"
+            >
+                Discard
+            </v-btn>
              <v-btn
                 color="orange lighten-2"
                 text
@@ -129,7 +136,7 @@
 
                 <div class="container">
                     <div class="row">
-                        <div class="col text-center d-flex justify-content-center align-items-center">
+                        <div class="col-4 text-center d-flex justify-content-center align-items-center">
                             <v-avatar
                             color="primary"
                             size="120"
@@ -203,7 +210,7 @@ export default {
           {
             text: 'Store ID',
             align: 'start',
-            value: 'id',
+            value: 'store_id',
           },
           { text: 'Store', value: 'store_name' },
           { text: 'Owner', value: 'name' },
@@ -219,6 +226,21 @@ export default {
         editedIndex: -1
     }),
     methods:{
+        async discard(){
+            // console.log(this.toUpdate.store_id)
+            console.log(this.editedIndex)
+            await this.$http.delete('api/discard/' + this.toUpdate.store_id , {
+                headers: {
+                    Authorization: 'Bearer ' + this.$auth.getToken()
+                }
+            })
+            .then((res) => {
+                this.snackbar = true
+                this.message = res.data.message
+                this.dialog = false
+                this.stores.splice(this.editedIndex, 1)
+            })
+        },
         async getAllStores(){
             this.loadStoreRequests = true
             await this.$http.get('api/getAllStores', {
