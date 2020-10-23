@@ -276,4 +276,18 @@ class ApiController extends Controller
             'message' => 'Store discarded'
         ]);
     }
+
+    public function addItem(Request $req){
+        $item = new Item([
+            'seller_id' => $req->id,
+            'item_name' => $req->item_name,
+            'category' => $req->category,
+            'item_price' => $req->item_price,
+            'item_quantity' => $req->item_quantity,
+            'item_desc' => $req->item_desc,
+            'status' => 'in-stock'
+        ]);
+
+        $item->save();
+    }
 }
