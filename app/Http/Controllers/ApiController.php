@@ -103,21 +103,36 @@ class ApiController extends Controller
 
     public function storeRegistration(Request $request){
         $user = User::find($request->id);
-        $user->contact = $request->contact;
-        $user->address = $request->address;
-        $user->gender = $request->gender;
-        $user->birthday = $request->birthday;
-        $user->save();
 
-        $store = new Store([
-            'store_name' => $request->storeName,
-            'store_owner' => $request->id,
-            'store_address' => $request->storeAddress,
-            'store_website' => $request->storeWebsite,
-            'store_description' => $request->storeDescription,
-            'store_status' => 'pending',
-        ]);
-        $store->save();
+        if($user->address != null && $user->contact != null && $user->gender != null && $user->birthday != null){
+            $store = new Store([
+                'store_name' => $request->storeName,
+                'store_owner' => $request->id,
+                'store_address' => $request->storeAddress,
+                'store_website' => $request->storeWebsite,
+                'store_description' => $request->storeDescription,
+                'store_status' => 'pending',
+            ]);
+            $store->save();
+        }
+        else{   
+            $user->contact = $request->contact;
+            $user->address = $request->address;
+            $user->gender = $request->gender;
+            $user->birthday = $request->birthday;
+            $user->save();
+
+            $store = new Store([
+                'store_name' => $request->storeName,
+                'store_owner' => $request->id,
+                'store_address' => $request->storeAddress,
+                'store_website' => $request->storeWebsite,
+                'store_description' => $request->storeDescription,
+                'store_status' => 'pending',
+            ]);
+            $store->save();
+        }   
+       
         return response()->json([
             'message' => 'Success!'
         ], 200);
@@ -252,6 +267,13 @@ class ApiController extends Controller
         $stores = DB::select($sql);
         return response()->json([
             'data' => $stores
+        ]);
+    }
+    public function discard($id){
+        $store = Store::find($id);
+        $store->delete();
+        return response()->json([
+            'message' => 'Store discarded'
         ]);
     }
 }

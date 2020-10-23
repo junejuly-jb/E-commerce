@@ -82,6 +82,7 @@
     </v-app>
 </template>
 <script>
+import { bus } from '../../app';
 export default {
     data: () => ({
         user: {
@@ -105,6 +106,10 @@ export default {
                 this.$auth.destroyToken()
                 this.$router.push('/login')
             }
+        })
+
+        bus.$on('updated', (data) => {
+            console.log(data)
         })
     },
     methods: {

@@ -246,7 +246,7 @@ export default {
             contact: '',
         },
         dialog: false,
-        e1: 1,
+        e1: '',
         gender: ['male', 'female'],
         date: null,
         rules: {
@@ -269,6 +269,17 @@ export default {
         },
     }),
     methods: {
+        async checkIfHaveCreds(){
+            await this.$http.get('api/user', { headers: { Authorization: 'Bearer ' + this.$auth.getToken()}})
+            .then((res) => {
+                if(res.body.address != null && res.body.contact != null && res.body.gender != null && res.body.birthday != null){
+                    this.e1 = 2
+                }
+                else{
+                    this.e1 = 1
+                }
+            })
+        },
         getUser(){
             var user = JSON.parse(localStorage.getItem('user'))
             this.user = user
@@ -337,6 +348,7 @@ export default {
     mounted(){
         this.getUser()
         this.checkIfExists()
+        this.checkIfHaveCreds()
     }
 }
 </script>

@@ -1014,6 +1014,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1036,7 +1043,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       headers: [{
         text: 'Store ID',
         align: 'start',
-        value: 'id'
+        value: 'store_id'
       }, {
         text: 'Store',
         value: 'store_name'
@@ -1064,7 +1071,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   methods: {
-    getAllStores: function getAllStores() {
+    discard: function discard() {
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
@@ -1072,17 +1079,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _this.loadStoreRequests = true;
+                // console.log(this.toUpdate.store_id)
+                console.log(_this.editedIndex);
                 _context.next = 3;
-                return _this.$http.get('api/getAllStores', {
+                return _this.$http["delete"]('api/discard/' + _this.toUpdate.store_id, {
                   headers: {
                     Authorization: 'Bearer ' + _this.$auth.getToken()
                   }
                 }).then(function (res) {
-                  console.log(res.body.data);
-                  _this.stores = res.body.data;
-                })["finally"](function () {
-                  _this.loadStoreRequests = false;
+                  _this.snackbar = true;
+                  _this.message = res.data.message;
+                  _this.dialog = false;
+
+                  _this.stores.splice(_this.editedIndex, 1);
                 });
 
               case 3:
@@ -1091,6 +1100,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             }
           }
         }, _callee);
+      }))();
+    },
+    getAllStores: function getAllStores() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _this2.loadStoreRequests = true;
+                _context2.next = 3;
+                return _this2.$http.get('api/getAllStores', {
+                  headers: {
+                    Authorization: 'Bearer ' + _this2.$auth.getToken()
+                  }
+                }).then(function (res) {
+                  console.log(res.body.data);
+                  _this2.stores = res.body.data;
+                })["finally"](function () {
+                  _this2.loadStoreRequests = false;
+                });
+
+              case 3:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
       }))();
     },
     showRequest: function showRequest(item) {
@@ -1136,32 +1174,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.user.default_profile = getInitials(name);
     },
     grant: function grant() {
-      var _this2 = this;
+      var _this3 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
-                _context2.next = 2;
-                return _this2.$http.post('api/grant', _this2.toUpdate, {
+                _context3.next = 2;
+                return _this3.$http.post('api/grant', _this3.toUpdate, {
                   headers: {
-                    Authorization: 'Bearer ' + _this2.$auth.getToken()
+                    Authorization: 'Bearer ' + _this3.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this2.dialog = false;
-                  _this2.snackbar = true;
-                  _this2.message = res.body.message;
+                  _this3.dialog = false;
+                  _this3.snackbar = true;
+                  _this3.message = res.body.message;
 
-                  _this2.stores.splice(_this2.editedIndex, 1);
+                  _this3.stores.splice(_this3.editedIndex, 1);
                 });
 
               case 2:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2);
+        }, _callee3);
       }))();
     }
   },
@@ -1171,13 +1209,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   watch: {
     loader: function loader() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.getAllStores();
       var l = this.loader;
       this[l] = !this[l];
       setTimeout(function () {
-        return _this3[l] = false;
+        return _this4[l] = false;
       }, 3000);
       this.loader = null;
     }
@@ -1575,6 +1613,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../app */ "./resources/js/app.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -1905,6 +1944,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2068,6 +2108,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this4.message = res.data.message;
                   Object.assign(_this4.mytodo[_this4.selectedIndex], res.data.data);
                   _this4.dialog = false;
+                  _app__WEBPACK_IMPORTED_MODULE_1__["bus"].$emit('updated', 'todo updated');
+                  console.log(_app__WEBPACK_IMPORTED_MODULE_1__["bus"]);
                 });
 
               case 3:
@@ -2173,10 +2215,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.selectedIndex = '';
     }
   },
+  // created(){
+  //     bus.$on('registered', (data) => {
+  //         this.snackbar = true
+  //         this.message = data
+  //     })
+  // },
   mounted: function mounted() {
+    this.getTodos();
     this.getUser();
     this.getTotal();
-    this.getTodos();
   }
 });
 
@@ -2554,6 +2602,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+// import { bus } from '../app';
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2584,7 +2633,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         email: '',
         password: '',
         cPassword: ''
-      }
+      } // busMessage: 'Logged in'
+
     };
   },
   methods: {
@@ -2611,6 +2661,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 6:
                 _context.next = 8;
                 return _this.$http.post('api/register', _this.form).then(function (res) {
+                  // bus.$emit('registered', this.busMessage)
                   _this.message = res.data.message + ' Redirecting ...';
                   _this.snack = true;
                   setTimeout(function () {
@@ -3362,7 +3413,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         contact: ''
       },
       dialog: false,
-      e1: 1,
+      e1: '',
       gender: ['male', 'female'],
       date: null,
       rules: {
@@ -3390,6 +3441,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   methods: {
+    checkIfHaveCreds: function checkIfHaveCreds() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return _this.$http.get('api/user', {
+                  headers: {
+                    Authorization: 'Bearer ' + _this.$auth.getToken()
+                  }
+                }).then(function (res) {
+                  if (res.body.address != null && res.body.contact != null && res.body.gender != null && res.body.birthday != null) {
+                    _this.e1 = 2;
+                  } else {
+                    _this.e1 = 1;
+                  }
+                });
+
+              case 2:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
     getUser: function getUser() {
       var user = JSON.parse(localStorage.getItem('user'));
       this.user = user;
@@ -3409,50 +3489,50 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     secondButton: function secondButton() {
-      var _this = this;
+      var _this2 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
         var user;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                if (!(_this.userForm.storeName == '' || _this.userForm.storeAddress == '' || _this.userForm.storeWebsite == '' || _this.userForm.storeDescription == '')) {
-                  _context.next = 6;
+                if (!(_this2.userForm.storeName == '' || _this2.userForm.storeAddress == '' || _this2.userForm.storeWebsite == '' || _this2.userForm.storeDescription == '')) {
+                  _context2.next = 6;
                   break;
                 }
 
-                _this.snackbar = true;
-                _this.message = 'Please fill up the form correctly';
-                console.log(_this.userForm);
-                _context.next = 10;
+                _this2.snackbar = true;
+                _this2.message = 'Please fill up the form correctly';
+                console.log(_this2.userForm);
+                _context2.next = 10;
                 break;
 
               case 6:
                 user = JSON.parse(localStorage.getItem('user'));
-                _this.userForm.id = user.id;
-                _context.next = 10;
-                return _this.$http.post('api/storeRegistration', _this.userForm, {
+                _this2.userForm.id = user.id;
+                _context2.next = 10;
+                return _this2.$http.post('api/storeRegistration', _this2.userForm, {
                   headers: {
-                    Authorization: 'Bearer ' + _this.$auth.getToken()
+                    Authorization: 'Bearer ' + _this2.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this.e1 = 3;
-                  _this.snackbar = true;
-                  _this.message = res.body.message;
-                  console.log(_this.userForm);
+                  _this2.e1 = 3;
+                  _this2.snackbar = true;
+                  _this2.message = res.body.message;
+                  console.log(_this2.userForm);
                 });
 
               case 10:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee);
+        }, _callee2);
       }))();
     },
     checkIfExists: function checkIfExists() {
-      var _this2 = this;
+      var _this3 = this;
 
       var user = JSON.parse(localStorage.getItem("user"));
       this.$http.get('api/checkIfExists/' + user.id, {
@@ -3461,23 +3541,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       }).then(function (res) {
         if (res.body.message == 'exists') {
-          _this2.dialog = true;
+          _this3.dialog = true;
         }
       });
     }
   },
   watch: {
     menu: function menu(val) {
-      var _this3 = this;
+      var _this4 = this;
 
       val && setTimeout(function () {
-        return _this3.$refs.picker.activePicker = 'YEAR';
+        return _this4.$refs.picker.activePicker = 'YEAR';
       });
     }
   },
   mounted: function mounted() {
     this.getUser();
     this.checkIfExists();
+    this.checkIfHaveCreds();
   }
 });
 
@@ -3492,6 +3573,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../app */ "./resources/js/app.js");
 //
 //
 //
@@ -3575,6 +3657,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3606,6 +3689,9 @@ __webpack_require__.r(__webpack_exports__);
 
         _this.$router.push('/login');
       }
+    });
+    _app__WEBPACK_IMPORTED_MODULE_0__["bus"].$on('updated', function (data) {
+      console.log(data);
     });
   },
   methods: {
@@ -15876,7 +15962,7 @@ var render = function() {
       _c(
         "v-dialog",
         {
-          attrs: { persistent: "", "max-width": "450" },
+          attrs: { persistent: "", "max-width": "550" },
           model: {
             value: _vm.dialog,
             callback: function($$v) {
@@ -15888,7 +15974,7 @@ var render = function() {
         [
           _c(
             "v-card",
-            { staticClass: "mx-auto", attrs: { "max-width": "450" } },
+            { staticClass: "mx-auto", attrs: { "max-width": "550" } },
             [
               _c(
                 "v-card-title",
@@ -16016,6 +16102,15 @@ var render = function() {
                   _c(
                     "v-btn",
                     {
+                      attrs: { color: "red lighten-2", text: "" },
+                      on: { click: _vm.discard }
+                    },
+                    [_vm._v("\n            Discard\n        ")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
                       attrs: { color: "orange lighten-2", text: "" },
                       on: { click: _vm.grant }
                     },
@@ -16047,7 +16142,7 @@ var render = function() {
                           "div",
                           {
                             staticClass:
-                              "col text-center d-flex justify-content-center align-items-center"
+                              "col-4 text-center d-flex justify-content-center align-items-center"
                           },
                           [
                             _c(
@@ -17266,7 +17361,7 @@ var render = function() {
                                     _vm._l(_vm.mytodo, function(todos) {
                                       return _c(
                                         "div",
-                                        { staticClass: "py-1" },
+                                        { key: todos.id, staticClass: "py-1" },
                                         [
                                           todos.status == "incomplete"
                                             ? [
@@ -80152,11 +80247,12 @@ module.exports = function(originalModule) {
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
   \*****************************/
-/*! no exports provided */
+/*! exports provided: bus */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bus", function() { return bus; });
 /* harmony import */ var _plugins_vuetify__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../plugins/vuetify */ "./resources/plugins/vuetify.js");
 /* harmony import */ var vue_resource__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-resource */ "./node_modules/vue-resource/dist/vue-resource.esm.js");
 /* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
@@ -80171,6 +80267,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 
 
+var bus = new Vue();
 Vue.component('sidebar', __webpack_require__(/*! ./components/Addons/Sidebar.vue */ "./resources/js/components/Addons/Sidebar.vue")["default"]);
 Vue.component('navbar', __webpack_require__(/*! ./components/Addons/Navbar.vue */ "./resources/js/components/Addons/Navbar.vue")["default"]);
 Vue.component('usernav', __webpack_require__(/*! ./components/Addons/UserNav.vue */ "./resources/js/components/Addons/UserNav.vue")["default"]);

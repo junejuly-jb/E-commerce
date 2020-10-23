@@ -7,6 +7,8 @@ import VueProgressBar from 'vue-progressbar'
 import Auth from './auth.js'
 import VueNumber from 'vue-number-animation'
 
+export const bus = new Vue();
+
 Vue.component('sidebar', require('./components/Addons/Sidebar.vue').default);
 Vue.component('navbar', require('./components/Addons/Navbar.vue').default);
 Vue.component('usernav', require('./components/Addons/UserNav.vue').default);

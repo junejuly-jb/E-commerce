@@ -96,6 +96,8 @@
     </v-app>    
 </template>
 <script>
+// import { bus } from '../app';
+
 export default {
     data: () => ({
         show1: false,
@@ -115,7 +117,8 @@ export default {
             email: '',
             password: '',
             cPassword: '',
-        }
+        },
+        // busMessage: 'Logged in'
     }),
     methods:{
         async register(){
@@ -127,6 +130,7 @@ export default {
             else{
                 await this.$http.post('api/register', this.form)
                 .then((res) => {
+                    // bus.$emit('registered', this.busMessage)
                     this.message = res.data.message + ' Redirecting ...'
                     this.snack = true
                     setTimeout(() => {
