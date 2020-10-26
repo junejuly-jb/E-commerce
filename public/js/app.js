@@ -2761,6 +2761,44 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2940,6 +2978,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      valid: false,
       menu: false,
       editmode: '',
       search: '',
@@ -2984,11 +3023,61 @@ __webpack_require__.r(__webpack_exports__);
         item_price: 1219,
         item_quantity: 40,
         item_status: 'in stock'
-      }]
+      }],
+      items: [],
+      addForm: {
+        item_name: '',
+        category: '',
+        item_price: '',
+        item_quantity: '',
+        item_desc: ''
+      },
+      // rules: {
+      //     required: value => !!value || 'this field is required',
+      //     notNull: value != 0 || 'quantity is not 0' 
+      // },
+      rules: {
+        required: function required(value) {
+          return !!value || 'This field is required.';
+        },
+        notNull: function notNull(v) {
+          return v != 0 || 'Quantity must be higher than 0';
+        }
+      },
+      snackbar: false,
+      message: ''
     };
   },
   methods: {
+    saveItem: function saveItem() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return _this.$http.post('api/saveItem', _this.addForm, {
+                  headers: {
+                    Authorization: 'Bearer ' + _this.$auth.getToken()
+                  }
+                }).then(function (res) {
+                  _this.snackbar = true;
+                  _this.message = res.data.message;
+                  _this.dialog = false;
+                });
+
+              case 2:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
     btnAddItem: function btnAddItem() {
+      // this.addForm = ''
       this.editmode = 'add';
       this.dialog = true;
     },
@@ -18908,80 +18997,142 @@ var render = function() {
                     "v-container",
                     [
                       _c(
-                        "v-row",
+                        "v-form",
+                        {
+                          model: {
+                            value: _vm.valid,
+                            callback: function($$v) {
+                              _vm.valid = $$v
+                            },
+                            expression: "valid"
+                          }
+                        },
                         [
                           _c(
-                            "v-col",
+                            "v-row",
                             [
-                              _c("v-text-field", {
-                                attrs: {
-                                  "prepend-icon": "mdi-dropbox",
-                                  label: "Item name"
-                                }
-                              })
+                              _c(
+                                "v-col",
+                                [
+                                  _c("v-text-field", {
+                                    attrs: {
+                                      rules: [_vm.rules.required],
+                                      "prepend-icon": "mdi-dropbox",
+                                      label: "Item name"
+                                    },
+                                    model: {
+                                      value: _vm.addForm.item_name,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.addForm, "item_name", $$v)
+                                      },
+                                      expression: "addForm.item_name"
+                                    }
+                                  })
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-col",
+                                [
+                                  _c("v-autocomplete", {
+                                    attrs: {
+                                      rules: [_vm.rules.required],
+                                      items: _vm.categories,
+                                      label: "Product Category",
+                                      placeholder: "Select...",
+                                      "prepend-icon": "mdi-format-list-bulleted"
+                                    },
+                                    model: {
+                                      value: _vm.addForm.category,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.addForm, "category", $$v)
+                                      },
+                                      expression: "addForm.category"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
                             ],
                             1
                           ),
                           _vm._v(" "),
                           _c(
-                            "v-col",
+                            "v-row",
                             [
-                              _c("v-autocomplete", {
-                                attrs: {
-                                  items: _vm.categories,
-                                  label: "Gender",
-                                  placeholder: "Select...",
-                                  "prepend-icon": "mdi-format-list-bulleted"
-                                }
-                              })
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "v-row",
-                        [
-                          _c(
-                            "v-col",
-                            [
-                              _c("v-text-field", {
-                                attrs: {
-                                  "prepend-icon": "mdi-currency-php",
-                                  label: "Price",
-                                  suffix: ".00",
-                                  type: "number"
-                                }
-                              })
+                              _c(
+                                "v-col",
+                                [
+                                  _c("v-text-field", {
+                                    attrs: {
+                                      rules: [_vm.rules.required],
+                                      "prepend-icon": "mdi-currency-php",
+                                      label: "Price",
+                                      suffix: ".00",
+                                      type: "number"
+                                    },
+                                    model: {
+                                      value: _vm.addForm.item_price,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.addForm, "item_price", $$v)
+                                      },
+                                      expression: "addForm.item_price"
+                                    }
+                                  })
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-col",
+                                [
+                                  _c("v-text-field", {
+                                    attrs: {
+                                      rules: [
+                                        _vm.rules.required,
+                                        _vm.rules.notNull
+                                      ],
+                                      "prepend-icon": "mdi-file-table-box",
+                                      label: "Quantity",
+                                      type: "number"
+                                    },
+                                    model: {
+                                      value: _vm.addForm.item_quantity,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.addForm,
+                                          "item_quantity",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "addForm.item_quantity"
+                                    }
+                                  })
+                                ],
+                                1
+                              )
                             ],
                             1
                           ),
                           _vm._v(" "),
-                          _c(
-                            "v-col",
-                            [
-                              _c("v-text-field", {
-                                attrs: {
-                                  "prepend-icon": "mdi-file-table-box",
-                                  label: "Quantity",
-                                  type: "number"
-                                }
-                              })
-                            ],
-                            1
-                          )
+                          _c("v-textarea", {
+                            attrs: {
+                              rules: [_vm.rules.required],
+                              label: "Description",
+                              "prepend-icon": "mdi-comment-quote-outline"
+                            },
+                            model: {
+                              value: _vm.addForm.item_desc,
+                              callback: function($$v) {
+                                _vm.$set(_vm.addForm, "item_desc", $$v)
+                              },
+                              expression: "addForm.item_desc"
+                            }
+                          })
                         ],
                         1
-                      ),
-                      _vm._v(" "),
-                      _c("v-textarea", {
-                        attrs: {
-                          label: "Description",
-                          "prepend-icon": "mdi-comment-quote-outline"
-                        }
-                      })
+                      )
                     ],
                     1
                   )
@@ -19046,11 +19197,7 @@ var render = function() {
                         "v-btn",
                         {
                           attrs: { color: "green darken-1", text: "" },
-                          on: {
-                            click: function($event) {
-                              _vm.dialog = false
-                            }
-                          }
+                          on: { click: _vm.saveItem }
                         },
                         [_vm._v("\n            Save\n        ")]
                       )
@@ -19100,6 +19247,47 @@ var render = function() {
           )
         ],
         1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-snackbar",
+        {
+          scopedSlots: _vm._u([
+            {
+              key: "action",
+              fn: function(ref) {
+                var attrs = ref.attrs
+                return [
+                  _c(
+                    "v-btn",
+                    _vm._b(
+                      {
+                        attrs: { color: "pink", text: "" },
+                        on: {
+                          click: function($event) {
+                            _vm.snackbar = false
+                          }
+                        }
+                      },
+                      "v-btn",
+                      attrs,
+                      false
+                    ),
+                    [_vm._v("\n        Close\n        ")]
+                  )
+                ]
+              }
+            }
+          ]),
+          model: {
+            value: _vm.snackbar,
+            callback: function($$v) {
+              _vm.snackbar = $$v
+            },
+            expression: "snackbar"
+          }
+        },
+        [_vm._v("\n    " + _vm._s(_vm.message) + "\n\n    ")]
       )
     ],
     1

@@ -75,43 +75,55 @@
                 Edit
             </v-card-title>
             <v-container v-if="editmode == 'add'">
-                <v-row>
-                    <v-col>
-                        <v-text-field
-                        prepend-icon="mdi-dropbox"
-                        label="Item name"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col>
-                        <v-autocomplete
-                            :items="categories"
-                            label="Gender"
-                            placeholder="Select..."
-                            prepend-icon="mdi-format-list-bulleted"
-                        ></v-autocomplete>
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col>
-                        <v-text-field
-                        prepend-icon="mdi-currency-php"
-                        label="Price"
-                        suffix=".00"
-                        type="number"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col>
-                        <v-text-field
-                        prepend-icon="mdi-file-table-box"
-                        label="Quantity"
-                        type="number"
-                        ></v-text-field>
-                    </v-col>
-                </v-row>
-                <v-textarea
-                label="Description"
-                prepend-icon="mdi-comment-quote-outline"
-                ></v-textarea>
+                <v-form v-model="valid">
+                    <v-row>
+                        <v-col>
+                            <v-text-field
+                            :rules="[rules.required]"
+                            v-model="addForm.item_name"
+                            prepend-icon="mdi-dropbox"
+                            label="Item name"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col>
+                            <v-autocomplete
+                                :rules="[rules.required]"
+                                v-model="addForm.category"
+                                :items="categories"
+                                label="Product Category"
+                                placeholder="Select..."
+                                prepend-icon="mdi-format-list-bulleted"
+                            ></v-autocomplete>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <v-text-field
+                            :rules="[rules.required]"
+                            v-model="addForm.item_price"
+                            prepend-icon="mdi-currency-php"
+                            label="Price"
+                            suffix=".00"
+                            type="number"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col>
+                            <v-text-field
+                            :rules="[rules.required, rules.notNull]"
+                            v-model="addForm.item_quantity"
+                            prepend-icon="mdi-file-table-box"
+                            label="Quantity"
+                            type="number"
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
+                    <v-textarea
+                    :rules="[rules.required]"
+                    v-model="addForm.item_desc"
+                    label="Description"
+                    prepend-icon="mdi-comment-quote-outline"
+                    ></v-textarea>
+                </v-form>
             </v-container>
             <v-container v-else-if="editmode == 'delete'">
                 <v-card-text>
@@ -144,7 +156,7 @@
             <v-btn v-if="editmode == 'add'"
                 color="green darken-1"
                 text
-                @click="dialog = false"
+                @click="saveItem"
             >
                 Save
             </v-btn>
@@ -172,11 +184,30 @@
             </v-card-actions>
         </v-card>
         </v-dialog>
+
+        <!-- snackbar  -->
+        <v-snackbar
+        v-model="snackbar"
+        >
+        {{ message }}
+
+        <template v-slot:action="{ attrs }">
+            <v-btn
+            color="pink"
+            text
+            v-bind="attrs"
+            @click="snackbar = false"
+            >
+            Close
+            </v-btn>
+        </template>
+        </v-snackbar>
     </v-app>
 </template>
 <script>
 export default {
     data: () => ({
+        valid: false,
         menu: false,
         editmode: '',
         search: '',
@@ -214,10 +245,38 @@ export default {
 
             }
         ],
-       
+        items: [],
+        addForm: {
+            item_name: '',
+            category: '',
+            item_price: '',
+            item_quantity: '',
+            item_desc: '',
+        },
+        // rules: {
+        //     required: value => !!value || 'this field is required',
+        //     notNull: value != 0 || 'quantity is not 0' 
+        // },
+        rules: {
+            required: value => !!value || 'This field is required.',
+            notNull: v => v != 0 || 'Quantity must be higher than 0',
+        },
+        snackbar: false,
+        message: '',
     }),
     methods:{
+        async saveItem(){
+
+            await this.$http.post('api/saveItem', this.addForm, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
+            .then((res) => {
+                this.snackbar = true
+                this.message = res.data.message
+                this.dialog = false
+            })
+            // console.log(this.addForm)
+        },
         btnAddItem(){
+            // this.addForm = ''
             this.editmode = 'add'
             this.dialog = true
         },

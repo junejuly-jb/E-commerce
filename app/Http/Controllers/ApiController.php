@@ -290,4 +290,19 @@ class ApiController extends Controller
 
         $item->save();
     }
+
+    public function saveItem(Request $request) {
+        $storeId = Store::where('store_owner', '=', auth()->user()->id);
+        // if($request->item_quantity > 0){
+        $item = new Item([
+            'item_name' => $request->item_name,
+            'store_id' => $storeId,
+            'category' => $request->category,
+            'item_price' => $request->item_price,
+            'item_quantity' => $request->item_quantity,
+            'item_desc' => $request->item_desc,
+            'item_status' => 'available'
+        ]);
+    
+    }
 }
