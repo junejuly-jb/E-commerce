@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Store;
 use App\Models\Todo;
 use App\Models\Logs;
+use App\Models\Item;
 use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
@@ -292,17 +293,29 @@ class ApiController extends Controller
     }
 
     public function saveItem(Request $request) {
-        $storeId = Store::where('store_owner', '=', auth()->user()->id);
+        $storeId = Store::where('store_owner', '=', auth()->user()->id)->first();
         // if($request->item_quantity > 0){
         $item = new Item([
             'item_name' => $request->item_name,
-            'store_id' => $storeId,
+            'store_id' => $storeId->store_id,
             'category' => $request->category,
             'item_price' => $request->item_price,
             'item_quantity' => $request->item_quantity,
             'item_desc' => $request->item_desc,
             'item_status' => 'available'
         ]);
+        $item->save();
+        return response()->json([
+            'message' => 'Item Added successfully' 
+        ]);
     
+    }
+    public function items(){
+        $store = Store::where('store_owner', '=', auth()->user()->id)->first();
+        $items = Item::where('store_id', '=', $store->store_id)->get();
+
+        return response()->json([
+            'data' => $items
+        ]);
     }
 }

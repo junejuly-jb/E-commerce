@@ -75,7 +75,7 @@
                 Edit
             </v-card-title>
             <v-container v-if="editmode == 'add'">
-                <v-form v-model="valid">
+                <v-form>
                     <v-row>
                         <v-col>
                             <v-text-field
@@ -234,18 +234,7 @@ export default {
           { text: 'Status', value: 'item_status' },
           { text: 'Actions', value: 'actions', align: 'center'},
         ],
-        inventoryItems: [
-            {
-                item_id: 1,
-                item_name: 'Mouse',
-                category: 'Accessories',
-                item_price: 1219,
-                item_quantity: 40,
-                item_status: 'in stock',
-
-            }
-        ],
-        items: [],
+        inventoryItems: [],
         addForm: {
             item_name: '',
             category: '',
@@ -266,14 +255,24 @@ export default {
     }),
     methods:{
         async saveItem(){
-
-            await this.$http.post('api/saveItem', this.addForm, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
+            if(this.addForm.item_quantity == 0 || this.addForm.item_quantity == ''){
+                this.message = "Error: Quantity must be filled"
+            }
+            else{
+                await this.$http.post('api/saveItem', this.addForm, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
+                .then((res) => {
+                    this.snackbar = true
+                    this.message = res.data.message
+                    this.dialog = false
+                    console.log(res.data.data)
+                })
+            }
+        },
+        async getAllItems(){
+            await this.$http.get('api/items', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
             .then((res) => {
-                this.snackbar = true
-                this.message = res.data.message
-                this.dialog = false
+                this.inventoryItems = res.data.data
             })
-            // console.log(this.addForm)
         },
         btnAddItem(){
             // this.addForm = ''
@@ -313,6 +312,7 @@ export default {
        
     },
     mounted(){
+        this.getAllItems()
         this.getUser()
     }
 }
