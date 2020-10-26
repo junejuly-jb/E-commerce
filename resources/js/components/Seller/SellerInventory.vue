@@ -132,7 +132,14 @@
             </v-container>
             <v-container v-else-if="editmode == 'show'">
                 <v-card-text>
-                    Show
+                    <div>
+                        <span>Item: </span><span>{{showItemDetails.item_name}}</span><br>
+                        <span>Category: </span><span>{{showItemDetails.category}}</span><br>
+                        <span>Price: </span><span>{{showItemDetails.item_price}}</span><br>
+                        <span>Quantity: </span><span>{{showItemDetails.item_quantity}}</span><br>
+                        <span>Status: </span><span>{{showItemDetails.item_status}}</span><br>
+                        <span>Description: </span><span>{{showItemDetails.item_desc}}</span>
+                    </div>
                 </v-card-text>
             </v-container>
             <v-container v-else>
@@ -163,7 +170,7 @@
             <v-btn v-else-if="editmode == 'delete'"
                 color="red darken-1"
                 text
-                @click="dialog = false"
+                @click="confirmDelete"
             >
                 Delete
             </v-btn>
@@ -235,6 +242,8 @@ export default {
           { text: 'Actions', value: 'actions', align: 'center'},
         ],
         inventoryItems: [],
+        showItemDetails: [],
+        toDelete: [],
         addForm: {
             item_name: '',
             category: '',
@@ -252,6 +261,7 @@ export default {
         },
         snackbar: false,
         message: '',
+        index: -1,
     }),
     methods:{
         async saveItem(){
@@ -264,10 +274,13 @@ export default {
                     this.snackbar = true
                     this.message = res.data.message
                     this.dialog = false
-                    console.log(res.data.data)
+                    this.inventoryItems.push(res.data.data)
+                    // console.log(res.data.data)
                 })
+                // .finally(() => this.res.data.data)
             }
         },
+        
         async getAllItems(){
             await this.$http.get('api/items', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
             .then((res) => {
@@ -279,13 +292,32 @@ export default {
             this.editmode = 'add'
             this.dialog = true
         },
-        btnDelete(){
+        btnDelete(item){
             this.editmode = 'delete'
             this.dialog = true
+            this.toDelete = item
+            this.index = this.inventoryItems.indexOf(item)
+            // console.log(this.index, this.toDelete.item_id)
         },
-        btnShow(){
+        async confirmDelete(){
+            // console.log(this.toDelete.store_id)
+            await this.$http.delete('api/deleteItem/' + this.toDelete.item_id, { 
+                headers: { 
+                    Authorization: 'Bearer ' + this.$auth.getToken() 
+                }
+            })
+            .then((res) => {
+                this.dialog = false
+                this.snackbar = true
+                this.message = res.data.message
+                this.inventoryItems.splice(this.index, 1)
+            })
+        },
+        btnShow(item){
             this.editmode = 'show'
             this.dialog = true
+            this.showItemDetails = item
+            console.log(item)
         },
         btnEdit(){
             this.editmode = 'edit'

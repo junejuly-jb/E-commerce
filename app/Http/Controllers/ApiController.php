@@ -306,7 +306,8 @@ class ApiController extends Controller
         ]);
         $item->save();
         return response()->json([
-            'message' => 'Item Added successfully' 
+            'message' => 'Item Added successfully',
+            'data' => $item 
         ]);
     
     }
@@ -316,6 +317,15 @@ class ApiController extends Controller
 
         return response()->json([
             'data' => $items
+        ]);
+    }
+
+    public function deleteItem($id) {
+        $item = Item::find($id);
+        $item->delete();
+
+        return response()->json([
+            'message' => 'Item deleted successfully'
         ]);
     }
 }

@@ -95,7 +95,6 @@ export default {
             })
             .then((res) => {
                 this.stores = res.data.data
-                console.log(this.stores)
             })
             .finally(() => { this.loadStores = false})
         }

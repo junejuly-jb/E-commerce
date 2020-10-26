@@ -227,8 +227,6 @@ export default {
     }),
     methods:{
         async discard(){
-            // console.log(this.toUpdate.store_id)
-            console.log(this.editedIndex)
             await this.$http.delete('api/discard/' + this.toUpdate.store_id , {
                 headers: {
                     Authorization: 'Bearer ' + this.$auth.getToken()
@@ -249,7 +247,6 @@ export default {
                 }
             })
             .then((res) => {
-                console.log(res.body.data)
                 this.stores = res.body.data
             })
             .finally(() => { this.loadStoreRequests = false})

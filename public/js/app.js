@@ -793,7 +793,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   }
                 }).then(function (res) {
                   _this.stores = res.data.data;
-                  console.log(_this.stores);
                 })["finally"](function () {
                   _this.loadStores = false;
                 });
@@ -1079,9 +1078,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                // console.log(this.toUpdate.store_id)
-                console.log(_this.editedIndex);
-                _context.next = 3;
+                _context.next = 2;
                 return _this.$http["delete"]('api/discard/' + _this.toUpdate.store_id, {
                   headers: {
                     Authorization: 'Bearer ' + _this.$auth.getToken()
@@ -1094,7 +1091,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this.stores.splice(_this.editedIndex, 1);
                 });
 
-              case 3:
+              case 2:
               case "end":
                 return _context.stop();
             }
@@ -1117,7 +1114,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     Authorization: 'Bearer ' + _this2.$auth.getToken()
                   }
                 }).then(function (res) {
-                  console.log(res.body.data);
                   _this2.stores = res.body.data;
                 })["finally"](function () {
                   _this2.loadStoreRequests = false;
@@ -2975,6 +2971,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3017,6 +3020,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         align: 'center'
       }],
       inventoryItems: [],
+      showItemDetails: [],
+      toDelete: [],
       addForm: {
         item_name: '',
         category: '',
@@ -3037,7 +3042,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       },
       snackbar: false,
-      message: ''
+      message: '',
+      index: -1
     };
   },
   methods: {
@@ -3068,7 +3074,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this.snackbar = true;
                   _this.message = res.data.message;
                   _this.dialog = false;
-                  console.log(res.data.data);
+
+                  _this.inventoryItems.push(res.data.data); // console.log(res.data.data)
+
                 });
 
               case 6:
@@ -3109,13 +3117,46 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.editmode = 'add';
       this.dialog = true;
     },
-    btnDelete: function btnDelete() {
+    btnDelete: function btnDelete(item) {
       this.editmode = 'delete';
       this.dialog = true;
+      this.toDelete = item;
+      this.index = this.inventoryItems.indexOf(item); // console.log(this.index, this.toDelete.item_id)
     },
-    btnShow: function btnShow() {
+    confirmDelete: function confirmDelete() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return _this3.$http["delete"]('api/deleteItem/' + _this3.toDelete.item_id, {
+                  headers: {
+                    Authorization: 'Bearer ' + _this3.$auth.getToken()
+                  }
+                }).then(function (res) {
+                  _this3.dialog = false;
+                  _this3.snackbar = true;
+                  _this3.message = res.data.message;
+
+                  _this3.inventoryItems.splice(_this3.index, 1);
+                });
+
+              case 2:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
+    btnShow: function btnShow(item) {
       this.editmode = 'show';
       this.dialog = true;
+      this.showItemDetails = item;
+      console.log(item);
     },
     btnEdit: function btnEdit() {
       this.editmode = 'edit';
@@ -19173,7 +19214,42 @@ var render = function() {
                     "v-container",
                     [
                       _c("v-card-text", [
-                        _vm._v("\n                Show\n            ")
+                        _c("div", [
+                          _c("span", [_vm._v("Item: ")]),
+                          _c("span", [
+                            _vm._v(_vm._s(_vm.showItemDetails.item_name))
+                          ]),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c("span", [_vm._v("Category: ")]),
+                          _c("span", [
+                            _vm._v(_vm._s(_vm.showItemDetails.category))
+                          ]),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c("span", [_vm._v("Price: ")]),
+                          _c("span", [
+                            _vm._v(_vm._s(_vm.showItemDetails.item_price))
+                          ]),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c("span", [_vm._v("Quantity: ")]),
+                          _c("span", [
+                            _vm._v(_vm._s(_vm.showItemDetails.item_quantity))
+                          ]),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c("span", [_vm._v("Status: ")]),
+                          _c("span", [
+                            _vm._v(_vm._s(_vm.showItemDetails.item_status))
+                          ]),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c("span", [_vm._v("Description: ")]),
+                          _c("span", [
+                            _vm._v(_vm._s(_vm.showItemDetails.item_desc))
+                          ])
+                        ])
                       ])
                     ],
                     1
@@ -19226,11 +19302,7 @@ var render = function() {
                         "v-btn",
                         {
                           attrs: { color: "red darken-1", text: "" },
-                          on: {
-                            click: function($event) {
-                              _vm.dialog = false
-                            }
-                          }
+                          on: { click: _vm.confirmDelete }
                         },
                         [_vm._v("\n            Delete\n        ")]
                       )
