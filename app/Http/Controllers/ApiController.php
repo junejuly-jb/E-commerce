@@ -276,4 +276,33 @@ class ApiController extends Controller
             'message' => 'Store discarded'
         ]);
     }
+
+    public function addItem(Request $req){
+        $item = new Item([
+            'seller_id' => $req->id,
+            'item_name' => $req->item_name,
+            'category' => $req->category,
+            'item_price' => $req->item_price,
+            'item_quantity' => $req->item_quantity,
+            'item_desc' => $req->item_desc,
+            'status' => 'in-stock'
+        ]);
+
+        $item->save();
+    }
+
+    public function saveItem(Request $request) {
+        $storeId = Store::where('store_owner', '=', auth()->user()->id);
+        // if($request->item_quantity > 0){
+        $item = new Item([
+            'item_name' => $request->item_name,
+            'store_id' => $storeId,
+            'category' => $request->category,
+            'item_price' => $request->item_price,
+            'item_quantity' => $request->item_quantity,
+            'item_desc' => $request->item_desc,
+            'item_status' => 'available'
+        ]);
+    
+    }
 }
