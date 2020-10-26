@@ -29,6 +29,7 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::post('/addItem', 'App\Http\Controllers\ApiController@addItem');
     Route::post('/saveItem', 'App\Http\Controllers\ApiController@saveItem');
     Route::get('/items', 'App\Http\Controllers\ApiController@items');
+    Route::delete('/deleteItem/{id}', 'App\Http\Controllers\ApiController@deleteItem');
 });
 
 Route::post('/register', 'App\Http\Controllers\ApiController@register');
