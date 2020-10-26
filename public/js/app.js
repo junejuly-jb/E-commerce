@@ -3016,15 +3016,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         value: 'actions',
         align: 'center'
       }],
-      inventoryItems: [{
-        item_id: 1,
-        item_name: 'Mouse',
-        category: 'Accessories',
-        item_price: 1219,
-        item_quantity: 40,
-        item_status: 'in stock'
-      }],
-      items: [],
+      inventoryItems: [],
       addForm: {
         item_name: '',
         category: '',
@@ -3057,7 +3049,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
+                if (!(_this.addForm.item_quantity == 0 || _this.addForm.item_quantity == '')) {
+                  _context.next = 4;
+                  break;
+                }
+
+                _this.message = "Error: Quantity must be filled";
+                _context.next = 6;
+                break;
+
+              case 4:
+                _context.next = 6;
                 return _this.$http.post('api/saveItem', _this.addForm, {
                   headers: {
                     Authorization: 'Bearer ' + _this.$auth.getToken()
@@ -3066,14 +3068,40 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this.snackbar = true;
                   _this.message = res.data.message;
                   _this.dialog = false;
+                  console.log(res.data.data);
                 });
 
-              case 2:
+              case 6:
               case "end":
                 return _context.stop();
             }
           }
         }, _callee);
+      }))();
+    },
+    getAllItems: function getAllItems() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return _this2.$http.get('api/items', {
+                  headers: {
+                    Authorization: 'Bearer ' + _this2.$auth.getToken()
+                  }
+                }).then(function (res) {
+                  _this2.inventoryItems = res.data.data;
+                });
+
+              case 2:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
       }))();
     },
     btnAddItem: function btnAddItem() {
@@ -3115,6 +3143,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   mounted: function mounted() {
+    this.getAllItems();
     this.getUser();
   }
 });
@@ -18998,15 +19027,6 @@ var render = function() {
                     [
                       _c(
                         "v-form",
-                        {
-                          model: {
-                            value: _vm.valid,
-                            callback: function($$v) {
-                              _vm.valid = $$v
-                            },
-                            expression: "valid"
-                          }
-                        },
                         [
                           _c(
                             "v-row",
