@@ -5412,9 +5412,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      dialog: true,
       user: {
         default_profile: '',
         name: '',
@@ -5987,9 +5989,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      dialog: false,
       user: {
         id: '',
         name: '',
@@ -6017,15 +6044,19 @@ __webpack_require__.r(__webpack_exports__);
 
           _this.$router.push('/login');
         } else if (res.body['usertype'] == 'seller') {
-          _this.$auth.destroyToken();
-
-          _this.$router.push('/login');
+          // this.$auth.destroyToken()
+          // this.$router.push('/login')
+          _this.dialog = true;
         }
       });
     },
     getUser: function getUser() {
       var user = JSON.parse(localStorage.getItem('user'));
       this.user = user;
+    },
+    logout: function logout() {
+      this.$auth.destroyToken();
+      this.$router.push('/login');
     },
     getSetting: function getSetting() {
       var setting = JSON.parse(localStorage.getItem('setting')); // console.log(setting)
@@ -23680,6 +23711,58 @@ var render = function() {
               ])
             ])
           ])
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "v-dialog",
+        {
+          attrs: { persistent: "", "max-width": "400" },
+          model: {
+            value: _vm.dialog,
+            callback: function($$v) {
+              _vm.dialog = $$v
+            },
+            expression: "dialog"
+          }
+        },
+        [
+          _c(
+            "v-card",
+            [
+              _c("v-card-title", { staticClass: "headline blue darken-2" }, [
+                _vm._v("\n        Welcome!\n        ")
+              ]),
+              _vm._v(" "),
+              _c("v-card-text", { staticClass: "py-3" }, [
+                _vm._v(
+                  "Congratulations! 🎉 your store is approved by our admins. "
+                ),
+                _c("br"),
+                _c("br"),
+                _vm._v("Click to log-in as seller")
+              ]),
+              _vm._v(" "),
+              _c(
+                "v-card-actions",
+                [
+                  _c("v-spacer"),
+                  _vm._v(" "),
+                  _c(
+                    "v-btn",
+                    {
+                      attrs: { color: "red darken-1", text: "" },
+                      on: { click: _vm.logout }
+                    },
+                    [_vm._v("\n                Login\n            ")]
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
         ],
         1
       )

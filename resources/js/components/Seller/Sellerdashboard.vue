@@ -11,11 +11,13 @@
                 </div>
             </div>
         </div>
+        
     </v-app>
 </template>
 <script>
 export default {
     data: () => ({
+        dialog: true,
         user: {
             default_profile: '',
             name: '',

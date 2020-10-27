@@ -104,11 +104,36 @@
                 </div>
             </div>
         </v-container>
+
+        <v-dialog
+        v-model="dialog"
+        persistent
+        max-width="400"
+        >
+        <v-card>
+            <v-card-title class="headline blue darken-2">
+            Welcome!
+            </v-card-title>
+            <v-card-text class="py-3">Congratulations! 🎉 your store is approved by our admins. <br><br>Click to log-in as seller</v-card-text>
+            <v-card-actions>
+            <v-spacer></v-spacer>
+                <v-btn
+                    color="red darken-1"
+                    text
+                    @click="logout"
+                >
+                    Login
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+        </v-dialog>
+
     </v-app>
 </template>
 <script>
 export default {
     data: () => ({
+        dialog: false,
         user: {
             id: '',
             name: '',
@@ -130,14 +155,19 @@ export default {
                     this.$router.push('/login')
                 }
                 else if(res.body['usertype'] == 'seller'){
-                    this.$auth.destroyToken()
-                    this.$router.push('/login')
+                    // this.$auth.destroyToken()
+                    // this.$router.push('/login')
+                    this.dialog = true
                 }
             })
         },
         getUser(){
             var user = JSON.parse(localStorage.getItem('user'))
             this.user = user
+        },
+        logout(){
+            this.$auth.destroyToken()
+            this.$router.push('/login')
         },
         getSetting(){
             var setting = JSON.parse(localStorage.getItem('setting'))

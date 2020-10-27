@@ -189,6 +189,10 @@ class ApiController extends Controller
         $user->usertype = 'seller';
         $user->save();
 
+        $setting = Setting::where('user_id', '=', $user->id)->first();
+        $setting->welcomeAsSeller = 1;
+        $setting->save();
+        
         $log = new Logs([
             'admin_id' => auth()->user()->id,
             'log' => "You accepted ".$user->name."`s Store"
