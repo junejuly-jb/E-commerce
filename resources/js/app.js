@@ -6,8 +6,10 @@ import Router from './routes'
 import VueProgressBar from 'vue-progressbar'
 import Auth from './auth.js'
 import VueNumber from 'vue-number-animation'
+import { Form, HasError, AlertError } from 'vform'
 
-export const bus = new Vue();
+window.Form = Form;
+// export const bus = new Vue();
 
 Vue.component('sidebar', require('./components/Addons/Sidebar.vue').default);
 Vue.component('navbar', require('./components/Addons/Navbar.vue').default);

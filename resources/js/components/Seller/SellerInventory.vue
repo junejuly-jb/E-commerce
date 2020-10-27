@@ -28,6 +28,21 @@
                                 mdi-plus
                             </v-icon>
                         </v-btn>
+                        <v-btn
+                        class="mx-2"
+                        @click="btnLoad"
+                        small
+                        fab
+                        color="blue darken-1"
+                        >
+                            <v-progress-circular v-if="btnLoadIsPressed == true"
+                            indeterminate
+                            color="amber"
+                            ></v-progress-circular>
+                            <v-icon v-else>
+                                mdi-refresh
+                            </v-icon>
+                        </v-btn>
                         </v-card-title>
                         <v-data-table
                         :headers="headers"
@@ -44,6 +59,14 @@
                                 <v-btn icon color="red lighten-2" @click="btnDelete(item)">
                                     <v-icon>mdi-trash-can-outline</v-icon>
                                 </v-btn>
+                            </template>
+                            <template v-slot:[`item.item_status`]="{ item }">
+                                <v-chip
+                                    :color="getColor(item.item_status)"
+                                    dark
+                                >
+                                    {{ item.item_status }}
+                                </v-chip>
                             </template>
                         </v-data-table>
                     </v-card>
@@ -69,13 +92,17 @@
                 </span>
             </v-card-title>
             <v-card-title class="headline" v-else-if="editmode == 'show'">
-                Item Details
+                <span class="text-primary">
+                    Item Details
+                </span> 
             </v-card-title>
             <v-card-title class="headline" v-else>
-                Edit
+                <span class="text-warning">
+                    Edit
+                </span>
             </v-card-title>
             <v-container v-if="editmode == 'add'">
-                <v-form>
+                <v-form ref="form" v-model="valid" lazy-validation>
                     <v-row>
                         <v-col>
                             <v-text-field
@@ -109,9 +136,10 @@
                         </v-col>
                         <v-col>
                             <v-text-field
-                            :rules="[rules.required, rules.notNull]"
+                            :rules="[rules.required]"
                             v-model="addForm.item_quantity"
                             prepend-icon="mdi-file-table-box"
+                            suffix="pcs"
                             label="Quantity"
                             type="number"
                             ></v-text-field>
@@ -133,24 +161,64 @@
             <v-container v-else-if="editmode == 'show'">
                 <v-card-text>
                     <div>
-                        <span>Item: </span><span>{{showItemDetails.item_name}}</span><br>
-                        <span>Category: </span><span>{{showItemDetails.category}}</span><br>
-                        <span>Price: </span><span>{{showItemDetails.item_price}}</span><br>
-                        <span>Quantity: </span><span>{{showItemDetails.item_quantity}}</span><br>
-                        <span>Status: </span><span>{{showItemDetails.item_status}}</span><br>
-                        <span>Description: </span><span>{{showItemDetails.item_desc}}</span>
+                        <span>Item: </span><span class="mx-5"></span><span>{{showItemDetails.item_name}}</span><br>
+                        <span>Category: </span><span class="mx-5"></span><span>{{showItemDetails.category}}</span><br>
+                        <span>Price: </span><span class="mx-5"></span><span>{{showItemDetails.item_price}}</span><br>
+                        <span>Quantity: </span><span class="mx-5"></span><span>{{showItemDetails.item_quantity}}</span><br>
+                        <span>Status: </span><span class="mx-5"></span><span>{{showItemDetails.item_status}}</span><br>
+                        <span>Description: </span><span class="mx-5"></span><span>{{showItemDetails.item_desc}}</span>
                     </div>
                 </v-card-text>
             </v-container>
             <v-container v-else>
                 <v-row>
-                    <v-col>
-                        <v-text-field></v-text-field>
-                    </v-col>
-                    <v-col>
-                        <v-text-field></v-text-field>
-                    </v-col>
-                </v-row>
+                        <v-col>
+                            <v-text-field
+                            :rules="[rules.required]"
+                            v-model="editForm.item_name"
+                            prepend-icon="mdi-dropbox"
+                            label="Item name"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col>
+                            <v-autocomplete
+                                :rules="[rules.required]"
+                                v-model="editForm.category"
+                                :items="categories"
+                                label="Product Category"
+                                placeholder="Select..."
+                                prepend-icon="mdi-format-list-bulleted"
+                            ></v-autocomplete>
+                        </v-col>
+                    </v-row>
+                    <v-row>
+                        <v-col>
+                            <v-text-field
+                            :rules="[rules.required]"
+                            v-model="editForm.item_price"
+                            prepend-icon="mdi-currency-php"
+                            label="Price"
+                            suffix=".00"
+                            type="number"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col>
+                            <v-text-field
+                            :rules="[rules.required]"
+                            v-model="editForm.item_quantity"
+                            prepend-icon="mdi-file-table-box"
+                            label="Quantity"
+                            suffix="pcs"
+                            type="number"
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
+                    <v-textarea
+                    :rules="[rules.required]"
+                    v-model="editForm.item_desc"
+                    label="Description"
+                    prepend-icon="mdi-comment-quote-outline"
+                    ></v-textarea>
             </v-container>
             <v-card-actions>
             <v-spacer></v-spacer>
@@ -177,7 +245,7 @@
             <v-btn v-else-if="editmode == 'edit'"
                 color="green darken-1"
                 text
-                @click="dialog = false"
+                @click="updateItem"
             >
                 Update
             </v-btn>
@@ -214,7 +282,8 @@
 <script>
 export default {
     data: () => ({
-        valid: false,
+        btnLoadIsPressed: false,
+        valid: true,
         menu: false,
         editmode: '',
         search: '',
@@ -251,10 +320,13 @@ export default {
             item_quantity: '',
             item_desc: '',
         },
-        // rules: {
-        //     required: value => !!value || 'this field is required',
-        //     notNull: value != 0 || 'quantity is not 0' 
-        // },
+        editForm: {
+            item_name: '',
+            category: '',
+            item_price: '',
+            item_quantity: '',
+            item_desc: '',
+        },
         rules: {
             required: value => !!value || 'This field is required.',
             notNull: v => v != 0 || 'Quantity must be higher than 0',
@@ -264,6 +336,10 @@ export default {
         index: -1,
     }),
     methods:{
+        getColor(item_status){
+            if(item_status == 'available') return 'green'
+            else return 'red'
+        },
         async saveItem(){
             if(this.addForm.item_quantity == 0 || this.addForm.item_quantity == ''){
                 this.message = "Error: Quantity must be filled"
@@ -275,22 +351,28 @@ export default {
                     this.message = res.data.message
                     this.dialog = false
                     this.inventoryItems.push(res.data.data)
-                    // console.log(res.data.data)
                 })
-                // .finally(() => this.res.data.data)
             }
         },
-        
+        btnLoad(){
+            this.btnLoadIsPressed = true
+            this.getAllItems()
+            console.log(this.btnLoadIsPressed)
+        },
         async getAllItems(){
             await this.$http.get('api/items', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
             .then((res) => {
                 this.inventoryItems = res.data.data
             })
+            .finally(() => {
+                this.btnLoadIsPressed = false
+            })
         },
         btnAddItem(){
-            // this.addForm = ''
+            this.formReset()
             this.editmode = 'add'
             this.dialog = true
+            console.log(this.addForm)
         },
         btnDelete(item){
             this.editmode = 'delete'
@@ -319,9 +401,24 @@ export default {
             this.showItemDetails = item
             console.log(item)
         },
-        btnEdit(){
+        btnEdit(item){
             this.editmode = 'edit'
             this.dialog = true
+            this.editForm = item
+            this.index = this.inventoryItems.indexOf(item)
+        },
+        async updateItem(){
+            await this.$http.put('api/updateItem/' + this.editForm.item_id, this.editForm, {
+                headers: {
+                    Authorization: 'Bearer ' + this.$auth.getToken()
+                }
+            })
+            .then((res) => {
+                this.snackbar = true
+                this.message = res.data.message
+                this.dialog = false
+                Object.assign(this.inventoryItems[this.index], res.data.data)
+            })
         },
         getUser(){
             var user = JSON.parse(localStorage.getItem('user'))
@@ -341,7 +438,14 @@ export default {
             }
             this.user.default_profile = getInitials(name);
         },
-       
+        formReset(){
+            this.addForm.item_name = ''
+            this.addForm.category = ''
+            this.addForm.item_price = ''
+            this.addForm.item_quantity = ''
+            this.addForm.item_desc = ''
+            this.valid = true
+        }
     },
     mounted(){
         this.getAllItems()
