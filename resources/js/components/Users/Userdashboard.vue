@@ -2,6 +2,31 @@
     <v-app>
         <usernav v-bind:user="user"></usernav>
         <v-container class="card-notifier">
+            <!-- <v-btn @click="sample">Sample</v-btn> -->
+            <v-row v-if="toShowBanner == true">
+                <v-col cols="6">
+                    <v-alert 
+                    color="cyan"
+                    border="left"
+                    elevation="2"
+                    colored-border
+                    >
+                    <div class="mx-2">
+                        <v-row>
+                            <v-col>
+                                Want to start building business with us? <br>Click the button below to start! <br><br>
+                            </v-col>
+                            <v-col cols="2">
+                                <v-btn icon color="red lighter-4" @click.prevent="sample"> <v-icon>mdi-close</v-icon></v-btn>
+                            </v-col>
+                        </v-row>
+                        <v-btn outlined color="blue lighter-2" to="/store_registration" small>
+                            Start Now
+                        </v-btn>
+                    </div>
+                    </v-alert>
+                </v-col>
+            </v-row>
             <div class="row">
                 <div class="col">
                     <div class="dashHeader">
@@ -91,34 +116,60 @@ export default {
             address: '',
             contact: '',
         },
-        toShow: ''
+        toShow: '',
+        toShowBanner: false,
+        message: 'Hello'
     }),
-    created(){
-        this.$http.get('api/profile', { headers: { Authorization: 'Bearer ' + this.$auth.getToken()}})
-        .then((res) => {
-            // console.log(res.body)
-            if(res.body['status'] == 'inactive'){
-                this.$auth.destroyToken()
-                this.$router.push('/login')
-            }
-            else if(res.body['usertype'] == 'seller'){
-                this.$auth.destroyToken()
-                this.$router.push('/login')
-            }
-        })
-
-        bus.$on('updated', (data) => {
-            console.log(data)
-        })
-    },
     methods: {
+        checkIfActive(){
+            this.$http.get('api/profile', { headers: { Authorization: 'Bearer ' + this.$auth.getToken()}})
+            .then((res) => {
+                // console.log(res.body)
+                if(res.body['status'] == 'inactive'){
+                    this.$auth.destroyToken()
+                    this.$router.push('/login')
+                }
+                else if(res.body['usertype'] == 'seller'){
+                    this.$auth.destroyToken()
+                    this.$router.push('/login')
+                }
+            })
+        },
         getUser(){
             var user = JSON.parse(localStorage.getItem('user'))
             this.user = user
         },
+        getSetting(){
+            var setting = JSON.parse(localStorage.getItem('setting'))
+            // console.log(setting)
+            if(setting.adBanner == true){
+                this.toShowBanner = true
+            }
+            else{
+                this.toShowBanner = false
+            }
+        },
+        sample(){
+            this.$http.post('api/updateAd', this.user,{
+                headers: {
+                    Authorization: 'Bearer ' + this.$auth.getToken()
+                }
+            })
+            .then((res) => {
+                console.log(res)
+                this.toShowBanner = false
+                localStorage.removeItem('setting')
+                localStorage.setItem('setting', JSON.stringify(res.data.data))
+            })
+            .finally(() => this.getSetting())
+        }
     },
     mounted(){
         this.getUser()
+        this.getSetting()
+        this.checkIfActive()
+        console.log(this.toShowBanner)
+        // console.log(this.$auth.getToken())
     }
 }
 </script>

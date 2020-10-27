@@ -46,10 +46,12 @@ class ApiController extends Controller
             if(auth()->user()->status == 'active'){
                 $token = auth()->user()->createToken($pass_phrase);
                 $usertype = auth()->user()->usertype;
+                $setting = Setting::where('user_id', '=', auth()->user()->id)->first();
 
                 return response()->json([
                     'message' => 'User logged in!',
                     'token' => $token,
+                    'setting' => $setting,
                     'user' => auth()->user()
                 ]);
             }
@@ -366,5 +368,26 @@ class ApiController extends Controller
             'message' => 'Item updated successfully',
             'data' => $item,
         ]);
+    }
+
+    public function dismissAd(){
+        $setting = Setting::where('user_id', '=', auth()->user()->id)->first();
+        $setting->adBanner = 0;
+        $setting->save();
+        return response()->json([
+            'data' => $setting
+        ]);
+    }
+
+    public function updateAd(Request $req){
+        // return response()->json($setting)
+        $userSetting = Setting::where('user_id', '=', auth()->user()->id)->first();
+        $userSetting->adBanner = 0;
+        $userSetting->save();
+        // $userSetting->adBanner = 0;
+        return response()->json([
+            'data' => $userSetting
+        ]);
+
     }
 }

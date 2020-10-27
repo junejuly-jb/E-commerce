@@ -4256,7 +4256,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   } else if (res.body.user['usertype'] == 'user') {
                     _this.$Progress.start();
 
-                    _this.$auth.setToken(res.body.token['accessToken'], res.body.user['usertype'], JSON.stringify(res.body.user));
+                    _this.$auth.setToken(res.body.token['accessToken'], res.body.user['usertype'], JSON.stringify(res.body.user), JSON.stringify(res.body.setting));
 
                     _this.$router.push('/userdashboard');
 
@@ -4264,7 +4264,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   } else if (res.body.user['usertype'] == 'seller') {
                     _this.$Progress.start();
 
-                    _this.$auth.setToken(res.body.token['accessToken'], res.body.user['usertype'], JSON.stringify(res.body.user));
+                    _this.$auth.setToken(res.body.token['accessToken'], res.body.user['usertype'], JSON.stringify(res.body.user), JSON.stringify(res.body.setting));
 
                     _this.$router.push('/sellerdashboard');
 
@@ -5962,6 +5962,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -5972,40 +5997,67 @@ __webpack_require__.r(__webpack_exports__);
         address: '',
         contact: ''
       },
-      toShow: ''
+      toShow: '',
+      toShowBanner: false,
+      message: 'Hello'
     };
   },
-  created: function created() {
-    var _this = this;
-
-    this.$http.get('api/profile', {
-      headers: {
-        Authorization: 'Bearer ' + this.$auth.getToken()
-      }
-    }).then(function (res) {
-      // console.log(res.body)
-      if (res.body['status'] == 'inactive') {
-        _this.$auth.destroyToken();
-
-        _this.$router.push('/login');
-      } else if (res.body['usertype'] == 'seller') {
-        _this.$auth.destroyToken();
-
-        _this.$router.push('/login');
-      }
-    });
-    bus.$on('updated', function (data) {
-      console.log(data);
-    });
-  },
   methods: {
+    checkIfActive: function checkIfActive() {
+      var _this = this;
+
+      this.$http.get('api/profile', {
+        headers: {
+          Authorization: 'Bearer ' + this.$auth.getToken()
+        }
+      }).then(function (res) {
+        // console.log(res.body)
+        if (res.body['status'] == 'inactive') {
+          _this.$auth.destroyToken();
+
+          _this.$router.push('/login');
+        } else if (res.body['usertype'] == 'seller') {
+          _this.$auth.destroyToken();
+
+          _this.$router.push('/login');
+        }
+      });
+    },
     getUser: function getUser() {
       var user = JSON.parse(localStorage.getItem('user'));
       this.user = user;
+    },
+    getSetting: function getSetting() {
+      var setting = JSON.parse(localStorage.getItem('setting')); // console.log(setting)
+
+      if (setting.adBanner == true) {
+        this.toShowBanner = true;
+      } else {
+        this.toShowBanner = false;
+      }
+    },
+    sample: function sample() {
+      var _this2 = this;
+
+      this.$http.post('api/updateAd', this.user, {
+        headers: {
+          Authorization: 'Bearer ' + this.$auth.getToken()
+        }
+      }).then(function (res) {
+        console.log(res);
+        _this2.toShowBanner = false;
+        localStorage.removeItem('setting');
+        localStorage.setItem('setting', JSON.stringify(res.data.data));
+      })["finally"](function () {
+        return _this2.getSetting();
+      });
     }
   },
   mounted: function mounted() {
     this.getUser();
+    this.getSetting();
+    this.checkIfActive();
+    console.log(this.toShowBanner); // console.log(this.$auth.getToken())
   }
 });
 
@@ -23318,219 +23370,319 @@ var render = function() {
     [
       _c("usernav", { attrs: { user: _vm.user } }),
       _vm._v(" "),
-      _c("v-container", { staticClass: "card-notifier" }, [
-        _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "col" }, [
-            _c("div", { staticClass: "dashHeader" }, [
-              _c("span", { staticClass: "discover" }, [_vm._v("Discover ")]),
-              _c("span", { staticClass: "daily" }, [_vm._v("daily")])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-7" }, [
-                _c("div", { staticClass: "img1-container" }, [
-                  _c("img", {
-                    staticClass: "img1",
-                    attrs: { src: "/images/img1.jpg", alt: "" }
-                  })
-                ])
+      _c(
+        "v-container",
+        { staticClass: "card-notifier" },
+        [
+          _vm.toShowBanner == true
+            ? _c(
+                "v-row",
+                [
+                  _c(
+                    "v-col",
+                    { attrs: { cols: "6" } },
+                    [
+                      _c(
+                        "v-alert",
+                        {
+                          attrs: {
+                            color: "cyan",
+                            border: "left",
+                            elevation: "2",
+                            "colored-border": ""
+                          }
+                        },
+                        [
+                          _c(
+                            "div",
+                            { staticClass: "mx-2" },
+                            [
+                              _c(
+                                "v-row",
+                                [
+                                  _c("v-col", [
+                                    _vm._v(
+                                      "\n                            Want to start building business with us? "
+                                    ),
+                                    _c("br"),
+                                    _vm._v("Click the button below to start! "),
+                                    _c("br"),
+                                    _c("br")
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-col",
+                                    { attrs: { cols: "2" } },
+                                    [
+                                      _c(
+                                        "v-btn",
+                                        {
+                                          attrs: {
+                                            icon: "",
+                                            color: "red lighter-4"
+                                          },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.sample($event)
+                                            }
+                                          }
+                                        },
+                                        [_c("v-icon", [_vm._v("mdi-close")])],
+                                        1
+                                      )
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-btn",
+                                {
+                                  attrs: {
+                                    outlined: "",
+                                    color: "blue lighter-2",
+                                    to: "/store_registration",
+                                    small: ""
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                        Start Now\n                    "
+                                  )
+                                ]
+                              )
+                            ],
+                            1
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col" }, [
+              _c("div", { staticClass: "dashHeader" }, [
+                _c("span", { staticClass: "discover" }, [_vm._v("Discover ")]),
+                _c("span", { staticClass: "daily" }, [_vm._v("daily")])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "col" }, [
-                _c("div", [
-                  _c("div", { staticClass: "img2-container" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-7" }, [
+                  _c("div", { staticClass: "img1-container" }, [
                     _c("img", {
-                      staticClass: "img2",
-                      attrs: { src: "/images/img2.jpg", alt: "" }
+                      staticClass: "img1",
+                      attrs: { src: "/images/img1.jpg", alt: "" }
                     })
                   ])
                 ]),
                 _vm._v(" "),
-                _c("div", [
-                  _c("div", { staticClass: "img3-container" }, [
-                    _c("img", {
-                      staticClass: "img3",
-                      attrs: { src: "/images/img3.jpg", alt: "" }
-                    })
+                _c("div", { staticClass: "col" }, [
+                  _c("div", [
+                    _c("div", { staticClass: "img2-container" }, [
+                      _c("img", {
+                        staticClass: "img2",
+                        attrs: { src: "/images/img2.jpg", alt: "" }
+                      })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", [
+                    _c("div", { staticClass: "img3-container" }, [
+                      _c("img", {
+                        staticClass: "img3",
+                        attrs: { src: "/images/img3.jpg", alt: "" }
+                      })
+                    ])
                   ])
                 ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "dashHeader" }, [
+                _c("span", { staticClass: "new" }, [_vm._v("New")]),
+                _vm._v(" "),
+                _c("span", { staticClass: "items" }, [_vm._v("Items")])
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "dashHeader" }, [
-              _c("span", { staticClass: "new" }, [_vm._v("New")]),
-              _vm._v(" "),
-              _c("span", { staticClass: "items" }, [_vm._v("Items")])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-5" }, [
-            _c("div", { staticClass: "container" }, [
-              _c("div", { staticClass: "cart-card" }, [
-                _c("div", { staticClass: "container" }, [
-                  _c(
-                    "div",
-                    { staticClass: "header d-flex align-items-center" },
-                    [
-                      _c("span", [
-                        _c(
-                          "svg",
-                          {
-                            staticClass:
-                              "icon icon-tabler icon-tabler-shopping-cart",
-                            attrs: {
-                              xmlns: "http://www.w3.org/2000/svg",
-                              width: "44",
-                              height: "44",
-                              viewBox: "0 0 24 24",
-                              "stroke-width": "1.5",
-                              stroke: "#FFFFFF",
-                              fill: "none",
-                              "stroke-linecap": "round",
-                              "stroke-linejoin": "round"
-                            }
-                          },
-                          [
-                            _c("path", {
+            _c("div", { staticClass: "col-md-5" }, [
+              _c("div", { staticClass: "container" }, [
+                _c("div", { staticClass: "cart-card" }, [
+                  _c("div", { staticClass: "container" }, [
+                    _c(
+                      "div",
+                      { staticClass: "header d-flex align-items-center" },
+                      [
+                        _c("span", [
+                          _c(
+                            "svg",
+                            {
+                              staticClass:
+                                "icon icon-tabler icon-tabler-shopping-cart",
                               attrs: {
-                                stroke: "none",
-                                d: "M0 0h24v24H0z",
-                                fill: "none"
+                                xmlns: "http://www.w3.org/2000/svg",
+                                width: "44",
+                                height: "44",
+                                viewBox: "0 0 24 24",
+                                "stroke-width": "1.5",
+                                stroke: "#FFFFFF",
+                                fill: "none",
+                                "stroke-linecap": "round",
+                                "stroke-linejoin": "round"
                               }
-                            }),
+                            },
+                            [
+                              _c("path", {
+                                attrs: {
+                                  stroke: "none",
+                                  d: "M0 0h24v24H0z",
+                                  fill: "none"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("circle", {
+                                attrs: { cx: "9", cy: "19", r: "2" }
+                              }),
+                              _vm._v(" "),
+                              _c("circle", {
+                                attrs: { cx: "17", cy: "19", r: "2" }
+                              }),
+                              _vm._v(" "),
+                              _c("path", {
+                                attrs: {
+                                  d:
+                                    "M3 3h2l2 12a3 3 0 0 0 3 2h7a3 3 0 0 0 3 -2l1 -7h-15.2"
+                                }
+                              })
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("span", { staticClass: "cartName" }, [
+                          _vm._v("Cart")
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "cart-body pt-3" }, [
+                      _c("div", { staticClass: "container" }, [
+                        _c("div", { staticClass: "itemRow row" }, [
+                          _c("div", { staticClass: "col-4" }, [
+                            _c("div", { staticClass: "img-container" }, [
+                              _c("img", {
+                                staticClass: "img-fluid",
+                                attrs: {
+                                  src: "/images/raze.jpg",
+                                  alt: "",
+                                  width: "120"
+                                }
+                              })
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "col text-white" }, [
+                            _c("div", { staticClass: "itemTitle" }, [
+                              _vm._v("Razer Black Widow")
+                            ]),
                             _vm._v(" "),
-                            _c("circle", {
-                              attrs: { cx: "9", cy: "19", r: "2" }
-                            }),
+                            _c("div", [_vm._v("$ 20")]),
                             _vm._v(" "),
-                            _c("circle", {
-                              attrs: { cx: "17", cy: "19", r: "2" }
-                            }),
-                            _vm._v(" "),
-                            _c("path", {
-                              attrs: {
-                                d:
-                                  "M3 3h2l2 12a3 3 0 0 0 3 2h7a3 3 0 0 0 3 -2l1 -7h-15.2"
-                              }
-                            })
-                          ]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "cartName" }, [_vm._v("Cart")])
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "cart-body pt-3" }, [
-                    _c("div", { staticClass: "container" }, [
-                      _c("div", { staticClass: "itemRow row" }, [
-                        _c("div", { staticClass: "col-4" }, [
-                          _c("div", { staticClass: "img-container" }, [
-                            _c("img", {
-                              staticClass: "img-fluid",
-                              attrs: {
-                                src: "/images/raze.jpg",
-                                alt: "",
-                                width: "120"
-                              }
-                            })
+                            _c("div", [_c("span", [_vm._v("Qty. 1")])])
                           ])
                         ]),
                         _vm._v(" "),
-                        _c("div", { staticClass: "col text-white" }, [
-                          _c("div", { staticClass: "itemTitle" }, [
-                            _vm._v("Razer Black Widow")
-                          ]),
-                          _vm._v(" "),
-                          _c("div", [_vm._v("$ 20")]),
-                          _vm._v(" "),
-                          _c("div", [_c("span", [_vm._v("Qty. 1")])])
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "py-5" }),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "text-center text-white" },
-                        [
-                          _c(
-                            "router-link",
-                            {
-                              staticClass: "text-white",
-                              attrs: { to: "/cart" }
-                            },
-                            [
-                              _vm._v(
-                                "\n                                        View All "
-                              ),
-                              _c(
-                                "svg",
-                                {
-                                  staticClass:
-                                    "icon icon-tabler icon-tabler-arrow-right",
-                                  attrs: {
-                                    xmlns: "http://www.w3.org/2000/svg",
-                                    width: "28",
-                                    height: "28",
-                                    viewBox: "0 0 24 24",
-                                    "stroke-width": "1.5",
-                                    stroke: "#FFFFFF",
-                                    fill: "none",
-                                    "stroke-linecap": "round",
-                                    "stroke-linejoin": "round"
-                                  }
-                                },
-                                [
-                                  _c("path", {
+                        _c("div", { staticClass: "py-5" }),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "text-center text-white" },
+                          [
+                            _c(
+                              "router-link",
+                              {
+                                staticClass: "text-white",
+                                attrs: { to: "/cart" }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                        View All "
+                                ),
+                                _c(
+                                  "svg",
+                                  {
+                                    staticClass:
+                                      "icon icon-tabler icon-tabler-arrow-right",
                                     attrs: {
-                                      stroke: "none",
-                                      d: "M0 0h24v24H0z",
-                                      fill: "none"
+                                      xmlns: "http://www.w3.org/2000/svg",
+                                      width: "28",
+                                      height: "28",
+                                      viewBox: "0 0 24 24",
+                                      "stroke-width": "1.5",
+                                      stroke: "#FFFFFF",
+                                      fill: "none",
+                                      "stroke-linecap": "round",
+                                      "stroke-linejoin": "round"
                                     }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("line", {
-                                    attrs: {
-                                      x1: "5",
-                                      y1: "12",
-                                      x2: "19",
-                                      y2: "12"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("line", {
-                                    attrs: {
-                                      x1: "13",
-                                      y1: "18",
-                                      x2: "19",
-                                      y2: "12"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c("line", {
-                                    attrs: {
-                                      x1: "13",
-                                      y1: "6",
-                                      x2: "19",
-                                      y2: "12"
-                                    }
-                                  })
-                                ]
-                              )
-                            ]
-                          )
-                        ],
-                        1
-                      )
+                                  },
+                                  [
+                                    _c("path", {
+                                      attrs: {
+                                        stroke: "none",
+                                        d: "M0 0h24v24H0z",
+                                        fill: "none"
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("line", {
+                                      attrs: {
+                                        x1: "5",
+                                        y1: "12",
+                                        x2: "19",
+                                        y2: "12"
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("line", {
+                                      attrs: {
+                                        x1: "13",
+                                        y1: "18",
+                                        x2: "19",
+                                        y2: "12"
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c("line", {
+                                      attrs: {
+                                        x1: "13",
+                                        y1: "6",
+                                        x2: "19",
+                                        y2: "12"
+                                      }
+                                    })
+                                  ]
+                                )
+                              ]
+                            )
+                          ],
+                          1
+                        )
+                      ])
                     ])
                   ])
                 ])
               ])
             ])
           ])
-        ])
-      ])
+        ],
+        1
+      )
     ],
     1
   )
@@ -84299,10 +84451,11 @@ var app = new Vue({
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = (function (Vue) {
   Vue.auth = {
-    setToken: function setToken(token, usertype, user) {
+    setToken: function setToken(token, usertype, user, setting) {
       localStorage.setItem('token', token);
       localStorage.setItem('usertype', usertype);
       localStorage.setItem('user', user);
+      localStorage.setItem('setting', setting);
     },
     getToken: function getToken() {
       var token = localStorage.getItem('token'); // var usertype = localStorage.getItem('usertype')
@@ -84319,6 +84472,7 @@ __webpack_require__.r(__webpack_exports__);
       localStorage.removeItem('token');
       localStorage.removeItem('usertype');
       localStorage.removeItem('user');
+      localStorage.removeItem('setting');
     }
   };
   Object.defineProperties(Vue.prototype, {
