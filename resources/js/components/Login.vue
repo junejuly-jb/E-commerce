@@ -132,13 +132,13 @@ export default {
                 }
                 else if(res.body.user['usertype'] == 'user'){
                     this.$Progress.start()
-                    this.$auth.setToken(res.body.token['accessToken'], res.body.user['usertype'], JSON.stringify(res.body.user))
+                    this.$auth.setToken(res.body.token['accessToken'], res.body.user['usertype'], JSON.stringify(res.body.user), JSON.stringify(res.body.setting))
                     this.$router.push('/userdashboard')
                     this.$Progress.finish()
                 }
                 else if(res.body.user['usertype'] == 'seller'){
                     this.$Progress.start()
-                    this.$auth.setToken(res.body.token['accessToken'], res.body.user['usertype'], JSON.stringify(res.body.user))
+                    this.$auth.setToken(res.body.token['accessToken'], res.body.user['usertype'], JSON.stringify(res.body.user), JSON.stringify(res.body.setting))
                     this.$router.push('/sellerdashboard')
                     this.$Progress.finish()
                 }
