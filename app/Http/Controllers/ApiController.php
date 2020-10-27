@@ -8,6 +8,7 @@ use App\Models\Store;
 use App\Models\Todo;
 use App\Models\Logs;
 use App\Models\Item;
+use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
@@ -24,8 +25,14 @@ class ApiController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password)
         ]);
+        
         $user->save();
-
+        $setting = new Setting([
+            'user_id' => $user->id,
+            'welcomeAsSeller' => 0,
+            'adBanner' => 1,
+        ]);
+        $setting->save();
         return response()->json([
             'data' => $user,
             'message' => 'User added successfully'
@@ -326,6 +333,38 @@ class ApiController extends Controller
 
         return response()->json([
             'message' => 'Item deleted successfully'
+        ]);
+    }
+
+    public function updateItem($id, Request $req){
+
+        if($req->item_quantity < 0){
+            $item = Item::find($id);
+            $item->item_name = $req->item_name;
+            $item->category = $req->category;
+            $item->item_price = $req->item_price;
+            $item->item_quantity = '0';
+            $item->item_desc = $req->item_desc;
+            $item->item_status = 'out of stock';
+            $item->save();
+
+            return response()->json([
+                'message' => 'Item updated successfully',
+                'data' => $item,
+            ]);
+        }
+        $item = Item::find($id);
+        $item->item_name = $req->item_name;
+        $item->category = $req->category;
+        $item->item_price = $req->item_price;
+        $item->item_quantity = $req->item_quantity;
+        $item->item_desc = $req->item_desc;
+        $item->item_status = 'available';
+        $item->save();
+
+        return response()->json([
+            'message' => 'Item updated successfully',
+            'data' => $item,
         ]);
     }
 }

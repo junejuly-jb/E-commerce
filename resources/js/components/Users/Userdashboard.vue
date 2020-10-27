@@ -82,7 +82,6 @@
     </v-app>
 </template>
 <script>
-import { bus } from '../../app';
 export default {
     data: () => ({
         user: {

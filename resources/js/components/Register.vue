@@ -126,6 +126,7 @@ export default {
             if(this.form.password != this.form.cPassword){
                 this.message = '❌ Password mismatch'
                 this.snack = true
+                this.loading = false
             }
             else{
                 await this.$http.post('api/register', this.form)
@@ -133,6 +134,7 @@ export default {
                     // bus.$emit('registered', this.busMessage)
                     this.message = res.data.message + ' Redirecting ...'
                     this.snack = true
+                    console.log(res.data.data)
                     setTimeout(() => {
                         this.$router.push('/login')
                     }, 3000)
