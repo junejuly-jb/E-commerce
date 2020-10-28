@@ -4887,6 +4887,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -4938,8 +4960,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         item_name: "",
         category: "",
         item_price: "",
-        item_quantity: ""
+        item_quantity: "",
+        item_status: "available"
       },
+      spec: [{
+        spec_name: ''
+      }],
+      lastId: '',
       editForm: {
         item_name: "",
         category: "",
@@ -4957,83 +4984,95 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       },
       snackbar: false,
       message: "",
-      index: -1
+      index: -1,
+      error: false
     };
   },
   methods: {
-    add: function add() {
-      this.addForm.spec.push({
-        spec_name: ""
+    saveAll: function saveAll() {
+      var _this = this;
+
+      if (this.addForm.item_quantity <= 0) {
+        this.addForm.item_quantity = '0';
+        this.addForm.item_status = 'out of stock';
+      }
+
+      this.$http.post('api/saveItem', this.addForm, {
+        headers: {
+          Authorization: 'Bearer ' + this.$auth.getToken()
+        }
+      }).then(function (res) {
+        if (res.status == 200) {
+          _this.lastId = res.data.data['item_id'];
+          console.log(_this.spec);
+
+          _this.$http.post('api/setSpecs/' + _this.lastId, _this.spec, {
+            headers: {
+              Authorization: 'Bearer ' + _this.$auth.getToken()
+            }
+          }).then(function (res) {
+            _this.dialogAdd = false;
+            _this.snackbar = true;
+            _this.message = res.data.message;
+          });
+        }
       });
     },
-    remove: function remove(k) {
-      this.addForm.spec.splice(k, 1);
+    add: function add() {
+      this.spec.push({
+        spec_name: ''
+      });
+    },
+    remove: function remove(index) {
+      this.spec.splice(index, 1);
+      console.log(index);
     },
     getColor: function getColor(item_status) {
       if (item_status == "available") return "green";else return "red";
     },
     saveItem: function saveItem() {
-      var _this = this;
+      var _this2 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                // if (this.addForm.item_quantity == 0 || this.addForm.item_quantity == "") {
-                //   this.message = "Error: Quantity must be filled";
-                // } else {
-                //   await this.$http
-                //     .post("api/saveItem", this.addForm, {
-                //       headers: { Authorization: "Bearer " + this.$auth.getToken() },
-                //     })
-                //     .then((res) => {
-                //       this.snackbar = true;
-                //       this.message = res.data.message;
-                //       this.dialog = false;
-                //       this.inventoryItems.push(res.data.data);
-                //       console.log(res.data.spec);
-                //     });
-                // }
-                console.log(_this.addForm);
-
-              case 1:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }))();
+      if (this.addForm.item_name == '' || this.addForm.category == '' || this.addForm.item_quantity == '' || this.addForm.item_price == '') {
+        this.error = true;
+        this.err_message = 'Pls input fields';
+        setTimeout(function () {
+          _this2.error = false;
+        }, 2000);
+      } else {
+        this.stepper = 2;
+        this.error = false;
+      }
     },
     btnLoad: function btnLoad() {
       this.btnLoadIsPressed = true;
       this.getAllItems(); // console.log(this.btnLoadIsPressed);
     },
     getAllItems: function getAllItems() {
-      var _this2 = this;
+      var _this3 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context.prev = _context.next) {
               case 0:
-                _context2.next = 2;
-                return _this2.$http.get("api/items", {
+                _context.next = 2;
+                return _this3.$http.get("api/items", {
                   headers: {
-                    Authorization: "Bearer " + _this2.$auth.getToken()
+                    Authorization: "Bearer " + _this3.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this2.inventoryItems = res.data.data;
+                  _this3.inventoryItems = res.data.data;
                 })["finally"](function () {
-                  _this2.btnLoadIsPressed = false;
+                  _this3.btnLoadIsPressed = false;
                 });
 
               case 2:
               case "end":
-                return _context2.stop();
+                return _context.stop();
             }
           }
-        }, _callee2);
+        }, _callee);
       }))();
     },
     btnAddItem: function btnAddItem() {
@@ -5047,32 +5086,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.index = this.inventoryItems.indexOf(item); // console.log(this.index, this.toDelete.item_id)
     },
     confirmDelete: function confirmDelete() {
-      var _this3 = this;
+      var _this4 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context3.next = 2;
-                return _this3.$http["delete"]("api/deleteItem/" + _this3.toDelete.item_id, {
+                _context2.next = 2;
+                return _this4.$http["delete"]("api/deleteItem/" + _this4.toDelete.item_id, {
                   headers: {
-                    Authorization: "Bearer " + _this3.$auth.getToken()
+                    Authorization: "Bearer " + _this4.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this3.dialog = false;
-                  _this3.snackbar = true;
-                  _this3.message = res.data.message;
+                  _this4.dialog = false;
+                  _this4.snackbar = true;
+                  _this4.message = res.data.message;
 
-                  _this3.inventoryItems.splice(_this3.index, 1);
+                  _this4.inventoryItems.splice(_this4.index, 1);
                 });
 
               case 2:
               case "end":
-                return _context3.stop();
+                return _context2.stop();
             }
           }
-        }, _callee3);
+        }, _callee2);
       }))();
     },
     btnShow: function btnShow(item) {
@@ -5087,31 +5126,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.index = this.inventoryItems.indexOf(item);
     },
     updateItem: function updateItem() {
-      var _this4 = this;
+      var _this5 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
-                _context4.next = 2;
-                return _this4.$http.put("api/updateItem/" + _this4.editForm.item_id, _this4.editForm, {
+                _context3.next = 2;
+                return _this5.$http.put("api/updateItem/" + _this5.editForm.item_id, _this5.editForm, {
                   headers: {
-                    Authorization: "Bearer " + _this4.$auth.getToken()
+                    Authorization: "Bearer " + _this5.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this4.snackbar = true;
-                  _this4.message = res.data.message;
-                  _this4.dialog = false;
-                  Object.assign(_this4.inventoryItems[_this4.index], res.data.data);
+                  _this5.snackbar = true;
+                  _this5.message = res.data.message;
+                  _this5.dialog = false;
+                  Object.assign(_this5.inventoryItems[_this5.index], res.data.data);
                 });
 
               case 2:
               case "end":
-                return _context4.stop();
+                return _context3.stop();
             }
           }
-        }, _callee4);
+        }, _callee3);
       }))();
     },
     getUser: function getUser() {
@@ -5139,7 +5178,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.addForm.category = "";
       this.addForm.item_price = "";
       this.addForm.item_quantity = "";
-      this.addForm.item_desc = "";
       this.valid = true;
     }
   },
@@ -39350,20 +39388,181 @@ var render = function() {
                         "v-stepper-content",
                         { attrs: { step: "1" } },
                         [
-                          _c("v-card", {
-                            staticClass: "mb-12",
-                            attrs: { color: "grey lighten-1", height: "200px" }
-                          }),
+                          _c(
+                            "v-container",
+                            [
+                              _c(
+                                "v-form",
+                                {
+                                  ref: "form",
+                                  attrs: { "lazy-validation": "" },
+                                  model: {
+                                    value: _vm.valid,
+                                    callback: function($$v) {
+                                      _vm.valid = $$v
+                                    },
+                                    expression: "valid"
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "v-row",
+                                    [
+                                      _c(
+                                        "v-col",
+                                        [
+                                          _c("v-text-field", {
+                                            attrs: {
+                                              rules: [_vm.rules.required],
+                                              "prepend-icon": "mdi-dropbox",
+                                              label: "Item name"
+                                            },
+                                            model: {
+                                              value: _vm.addForm.item_name,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  _vm.addForm,
+                                                  "item_name",
+                                                  $$v
+                                                )
+                                              },
+                                              expression: "addForm.item_name"
+                                            }
+                                          })
+                                        ],
+                                        1
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "v-col",
+                                        [
+                                          _c("v-autocomplete", {
+                                            attrs: {
+                                              rules: [_vm.rules.required],
+                                              items: _vm.categories,
+                                              label: "Product Category",
+                                              placeholder: "Select...",
+                                              "prepend-icon":
+                                                "mdi-format-list-bulleted"
+                                            },
+                                            model: {
+                                              value: _vm.addForm.category,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  _vm.addForm,
+                                                  "category",
+                                                  $$v
+                                                )
+                                              },
+                                              expression: "addForm.category"
+                                            }
+                                          })
+                                        ],
+                                        1
+                                      )
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-row",
+                                    [
+                                      _c(
+                                        "v-col",
+                                        [
+                                          _c("v-text-field", {
+                                            attrs: {
+                                              rules: [_vm.rules.required],
+                                              "prepend-icon":
+                                                "mdi-currency-php",
+                                              label: "Price",
+                                              suffix: ".00",
+                                              type: "number"
+                                            },
+                                            model: {
+                                              value: _vm.addForm.item_price,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  _vm.addForm,
+                                                  "item_price",
+                                                  $$v
+                                                )
+                                              },
+                                              expression: "addForm.item_price"
+                                            }
+                                          })
+                                        ],
+                                        1
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "v-col",
+                                        [
+                                          _c("v-text-field", {
+                                            attrs: {
+                                              rules: [_vm.rules.required],
+                                              "prepend-icon":
+                                                "mdi-file-table-box",
+                                              suffix: "pcs",
+                                              label: "Quantity",
+                                              type: "number"
+                                            },
+                                            model: {
+                                              value: _vm.addForm.item_quantity,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  _vm.addForm,
+                                                  "item_quantity",
+                                                  $$v
+                                                )
+                                              },
+                                              expression:
+                                                "addForm.item_quantity"
+                                            }
+                                          })
+                                        ],
+                                        1
+                                      )
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c("v-expand-transition", [
+                                    _vm.error == true
+                                      ? _c(
+                                          "div",
+                                          [
+                                            _c(
+                                              "v-alert",
+                                              {
+                                                staticClass: "m-auto",
+                                                attrs: {
+                                                  color: "red",
+                                                  dense: "",
+                                                  text: "",
+                                                  width: "250",
+                                                  type: "error"
+                                                }
+                                              },
+                                              [_vm._v(_vm._s(_vm.err_message))]
+                                            )
+                                          ],
+                                          1
+                                        )
+                                      : _vm._e()
+                                  ])
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          ),
                           _vm._v(" "),
                           _c(
                             "v-btn",
                             {
                               attrs: { color: "primary" },
-                              on: {
-                                click: function($event) {
-                                  _vm.stepper = 2
-                                }
-                              }
+                              on: { click: _vm.saveItem }
                             },
                             [_vm._v("\n            Proceed\n          ")]
                           ),
@@ -39400,29 +39599,104 @@ var render = function() {
                         "v-stepper-content",
                         { attrs: { step: "2" } },
                         [
-                          _c("v-card", {
-                            staticClass: "mb-12",
-                            attrs: { color: "grey lighten-1", height: "200px" }
+                          _c(
+                            "v-btn",
+                            {
+                              attrs: { small: "", fab: "", color: "black" },
+                              on: { click: _vm.add }
+                            },
+                            [_c("v-icon", [_vm._v("mdi-plus")])],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _vm._l(_vm.spec, function(specs, index) {
+                            return _c(
+                              "div",
+                              { key: index, staticClass: "row" },
+                              [
+                                _c(
+                                  "div",
+                                  { staticClass: "col" },
+                                  [
+                                    _c("v-text-field", {
+                                      model: {
+                                        value: specs.spec_name,
+                                        callback: function($$v) {
+                                          _vm.$set(specs, "spec_name", $$v)
+                                        },
+                                        expression: "specs.spec_name"
+                                      }
+                                    })
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "div",
+                                  { staticClass: "col-2" },
+                                  [
+                                    index >= 1
+                                      ? _c(
+                                          "v-btn",
+                                          {
+                                            attrs: {
+                                              fab: "",
+                                              small: "",
+                                              color: "red darken-2"
+                                            },
+                                            on: {
+                                              click: function($event) {
+                                                return _vm.remove(index)
+                                              }
+                                            }
+                                          },
+                                          [_c("v-icon", [_vm._v("mdi-minus")])],
+                                          1
+                                        )
+                                      : _vm._e()
+                                  ],
+                                  1
+                                )
+                              ]
+                            )
                           }),
                           _vm._v(" "),
                           _c(
                             "v-btn",
                             {
                               attrs: { color: "primary" },
+                              on: { click: _vm.saveAll }
+                            },
+                            [_vm._v("\n            Save\n          ")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-btn",
+                            {
+                              attrs: { text: "" },
+                              on: {
+                                click: function($event) {
+                                  _vm.stepper = 1
+                                }
+                              }
+                            },
+                            [_vm._v("\n            Previous\n          ")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-btn",
+                            {
+                              attrs: { color: "red darken-2", text: "" },
                               on: {
                                 click: function($event) {
                                   _vm.dialogAdd = false
                                 }
                               }
                             },
-                            [_vm._v("\n            Save\n          ")]
-                          ),
-                          _vm._v(" "),
-                          _c("v-btn", { attrs: { text: "" } }, [
-                            _vm._v("\n            Cancel\n          ")
-                          ])
+                            [_vm._v("\n            Discard\n          ")]
+                          )
                         ],
-                        1
+                        2
                       )
                     ],
                     1
@@ -39477,136 +39751,7 @@ var render = function() {
                     ])
                   ]),
               _vm._v(" "),
-              _vm.editmode == "add"
-                ? _c(
-                    "v-container",
-                    [
-                      _c(
-                        "v-form",
-                        {
-                          ref: "form",
-                          attrs: { "lazy-validation": "" },
-                          model: {
-                            value: _vm.valid,
-                            callback: function($$v) {
-                              _vm.valid = $$v
-                            },
-                            expression: "valid"
-                          }
-                        },
-                        [
-                          _c(
-                            "v-row",
-                            [
-                              _c(
-                                "v-col",
-                                [
-                                  _c("v-text-field", {
-                                    attrs: {
-                                      rules: [_vm.rules.required],
-                                      "prepend-icon": "mdi-dropbox",
-                                      label: "Item name"
-                                    },
-                                    model: {
-                                      value: _vm.addForm.item_name,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.addForm, "item_name", $$v)
-                                      },
-                                      expression: "addForm.item_name"
-                                    }
-                                  })
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "v-col",
-                                [
-                                  _c("v-autocomplete", {
-                                    attrs: {
-                                      rules: [_vm.rules.required],
-                                      items: _vm.categories,
-                                      label: "Product Category",
-                                      placeholder: "Select...",
-                                      "prepend-icon": "mdi-format-list-bulleted"
-                                    },
-                                    model: {
-                                      value: _vm.addForm.category,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.addForm, "category", $$v)
-                                      },
-                                      expression: "addForm.category"
-                                    }
-                                  })
-                                ],
-                                1
-                              )
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "v-row",
-                            [
-                              _c(
-                                "v-col",
-                                [
-                                  _c("v-text-field", {
-                                    attrs: {
-                                      rules: [_vm.rules.required],
-                                      "prepend-icon": "mdi-currency-php",
-                                      label: "Price",
-                                      suffix: ".00",
-                                      type: "number"
-                                    },
-                                    model: {
-                                      value: _vm.addForm.item_price,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.addForm, "item_price", $$v)
-                                      },
-                                      expression: "addForm.item_price"
-                                    }
-                                  })
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "v-col",
-                                [
-                                  _c("v-text-field", {
-                                    attrs: {
-                                      rules: [_vm.rules.required],
-                                      "prepend-icon": "mdi-file-table-box",
-                                      suffix: "pcs",
-                                      label: "Quantity",
-                                      type: "number"
-                                    },
-                                    model: {
-                                      value: _vm.addForm.item_quantity,
-                                      callback: function($$v) {
-                                        _vm.$set(
-                                          _vm.addForm,
-                                          "item_quantity",
-                                          $$v
-                                        )
-                                      },
-                                      expression: "addForm.item_quantity"
-                                    }
-                                  })
-                                ],
-                                1
-                              )
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
-                : _vm.editmode == "delete"
+              _vm.editmode == "delete"
                 ? _c(
                     "v-container",
                     [
