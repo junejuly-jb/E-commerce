@@ -90,14 +90,68 @@
           </v-stepper-step>
 
           <v-stepper-content step="1">
-            <v-card
-              color="grey lighten-1"
-              class="mb-12"
-              height="200px"
-            ></v-card>
+            <v-container>
+            <v-form ref="form" v-model="valid" lazy-validation>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    :rules="[rules.required]"
+                    v-model="addForm.item_name"
+                    prepend-icon="mdi-dropbox"
+                    label="Item name"
+                  ></v-text-field>
+                </v-col>
+                <v-col>
+                  <v-autocomplete
+                    :rules="[rules.required]"
+                    v-model="addForm.category"
+                    :items="categories"
+                    label="Product Category"
+                    placeholder="Select..."
+                    prepend-icon="mdi-format-list-bulleted"
+                  ></v-autocomplete>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col>
+                  <v-text-field
+                    :rules="[rules.required]"
+                    v-model="addForm.item_price"
+                    prepend-icon="mdi-currency-php"
+                    label="Price"
+                    suffix=".00"
+                    type="number"
+                  ></v-text-field>
+                </v-col>
+                <v-col>
+                  <v-text-field
+                    :rules="[rules.required]"
+                    v-model="addForm.item_quantity"
+                    prepend-icon="mdi-file-table-box"
+                    suffix="pcs"
+                    label="Quantity"
+                    type="number"
+                  ></v-text-field>
+                </v-col>
+              </v-row>
+              <v-expand-transition>
+                <div v-if="error == true">
+                  <v-alert
+                    class="m-auto"
+                    color="red"
+                    dense
+                    text
+                    width="250"
+                    type="error"
+                  >{{ err_message }}</v-alert>
+                </div>
+              </v-expand-transition>
+
+            </v-form>
+          </v-container>
             <v-btn
               color="primary"
-              @click="stepper = 2"
+              @click="saveItem"
             >
               Proceed
             </v-btn>
@@ -113,21 +167,34 @@
           >
             Product Specification
           </v-stepper-step>
-
           <v-stepper-content step="2">
-            <v-card
-              color="grey lighten-1"
-              class="mb-12"
-              height="200px"
-            ></v-card>
+            <v-btn small fab color="black" @click="add"> <v-icon>mdi-plus</v-icon></v-btn>
+            <div class="row" v-for="(specs, index) in spec" v-bind:key="index">
+              <div class="col">
+                 <v-text-field v-model="specs.spec_name"></v-text-field>
+              </div>
+              <div class="col-2">
+                <v-btn 
+                @click="remove(index)"
+                fab
+                small
+                color="red darken-2" 
+                v-if="index >= 1">
+                <v-icon>mdi-minus</v-icon>
+                </v-btn>
+              </div>
+            </div>
             <v-btn
               color="primary"
-              @click="dialogAdd = false"
+              @click="saveAll"
             >
               Save
             </v-btn>
-            <v-btn text>
-              Cancel
+            <v-btn text @click="stepper = 1">
+              Previous
+            </v-btn>
+            <v-btn color="red darken-2" text @click="dialogAdd = false">
+              Discard
             </v-btn>
           </v-stepper-content>
         </v-stepper>
@@ -153,53 +220,8 @@
         <v-card-title class="headline" v-else>
           <span class="text-warning"> Edit </span>
         </v-card-title>
-        <v-container v-if="editmode == 'add'">
-          <v-form ref="form" v-model="valid" lazy-validation>
-            <v-row>
-              <v-col>
-                <v-text-field
-                  :rules="[rules.required]"
-                  v-model="addForm.item_name"
-                  prepend-icon="mdi-dropbox"
-                  label="Item name"
-                ></v-text-field>
-              </v-col>
-              <v-col>
-                <v-autocomplete
-                  :rules="[rules.required]"
-                  v-model="addForm.category"
-                  :items="categories"
-                  label="Product Category"
-                  placeholder="Select..."
-                  prepend-icon="mdi-format-list-bulleted"
-                ></v-autocomplete>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-text-field
-                  :rules="[rules.required]"
-                  v-model="addForm.item_price"
-                  prepend-icon="mdi-currency-php"
-                  label="Price"
-                  suffix=".00"
-                  type="number"
-                ></v-text-field>
-              </v-col>
-              <v-col>
-                <v-text-field
-                  :rules="[rules.required]"
-                  v-model="addForm.item_quantity"
-                  prepend-icon="mdi-file-table-box"
-                  suffix="pcs"
-                  label="Quantity"
-                  type="number"
-                ></v-text-field>
-              </v-col>
-            </v-row>
-          </v-form>
-        </v-container>
-        <v-container v-else-if="editmode == 'delete'">
+        
+        <v-container v-if="editmode == 'delete'">
           <v-card-text> do you want to delete this item? </v-card-text>
         </v-container>
         <v-container v-else-if="editmode == 'show'">
@@ -355,8 +377,15 @@ export default {
       item_name: "",
       category: "",
       item_price: "",
-      item_quantity: ""
+      item_quantity: "",
+      item_status: "available"
     },
+    spec: [
+      {
+        spec_name: ''
+      }
+    ],
+    lastId: '',
     editForm: {
       item_name: "",
       category: "",
@@ -371,37 +400,57 @@ export default {
     snackbar: false,
     message: "",
     index: -1,
+    error: false
   }),
   methods: {
+    saveAll(){
+      if(this.addForm.item_quantity <= 0){
+        this.addForm.item_quantity = '0'
+        this.addForm.item_status = 'out of stock'
+      }
+      this.$http.post('api/saveItem', this.addForm, {
+        headers: {
+          Authorization: 'Bearer ' + this.$auth.getToken()
+        }
+      })
+      .then((res) => {
+        if(res.status == 200){
+          this.lastId = res.data.data['item_id']
+          console.log(this.spec)
+          this.$http.post('api/setSpecs/' + this.lastId , this.spec, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+          .then((res) => {
+            this.dialogAdd = false
+            this.snackbar = true
+            this.message = res.data.message
+          })
+        }
+      })
+    },
     add() {
-      this.addForm.spec.push({
-        spec_name: "",
+      this.spec.push({
+        spec_name: '',
       });
     },
-    remove(k) {
-      this.addForm.spec.splice(k, 1);
+    remove(index) {
+      this.spec.splice(index, 1);
+      console.log(index)
     },
     getColor(item_status) {
       if (item_status == "available") return "green";
       else return "red";
     },
-    async saveItem() {
-      // if (this.addForm.item_quantity == 0 || this.addForm.item_quantity == "") {
-      //   this.message = "Error: Quantity must be filled";
-      // } else {
-      //   await this.$http
-      //     .post("api/saveItem", this.addForm, {
-      //       headers: { Authorization: "Bearer " + this.$auth.getToken() },
-      //     })
-      //     .then((res) => {
-      //       this.snackbar = true;
-      //       this.message = res.data.message;
-      //       this.dialog = false;
-      //       this.inventoryItems.push(res.data.data);
-      //       console.log(res.data.spec);
-      //     });
-      // }
-      console.log(this.addForm);
+    saveItem() {
+      if(this.addForm.item_name == '' || this.addForm.category == '' || this.addForm.item_quantity == '' || this.addForm.item_price == ''){
+        this.error = true
+        this.err_message = 'Pls input fields'
+        setTimeout(() => {
+          this.error = false
+        },2000)
+      }
+      else{
+        this.stepper = 2
+        this.error = false
+      }
     },
     btnLoad() {
       this.btnLoadIsPressed = true;
@@ -495,7 +544,6 @@ export default {
       this.addForm.category = "";
       this.addForm.item_price = "";
       this.addForm.item_quantity = "";
-      this.addForm.item_desc = "";
       this.valid = true;
     },
   },

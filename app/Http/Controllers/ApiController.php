@@ -308,32 +308,34 @@ class ApiController extends Controller
 
     public function saveItem(Request $request) {
         $storeId = Store::where('store_owner', '=', auth()->user()->id)->first();
-        // if($request->item_quantity > 0){
         $item = new Item([
             'item_name' => $request->item_name,
             'store_id' => $storeId->store_id,
             'category' => $request->category,
             'item_price' => $request->item_price,
             'item_quantity' => $request->item_quantity,
-            'item_desc' => $request->item_desc,
-            'item_status' => 'available'
+            'item_status' => $request->item_status
         ]);
         $item->save();
-
-        for($count = 0; $count < count($request->spec); $count++){
-            $data = array(
-                'item_id' => $item->id,
-                'spec' => $request->spec[$count]
-            );
-            $toInsert[] = $data;
-        }
-        Spec::insert($toInsert);
         return response()->json([
             'message' => 'Item Added successfully',
             'data' => $item,
-            'spec' => $toInsert
         ]);
-    
+
+    }
+    public function setSpecs(Request $req, $id){
+        for($count = 0;  $count < count($req->spec_name); $count++){
+            $data = array(
+                'item_id' => $id,
+                'spec' => $req->spec_name[$count],
+            );
+            $specs[] = $data;
+        }
+        Specification::insert($specs);
+
+        return response()->json([
+            'message' => 'item added successfully'
+        ]);
     }
     public function items(){
         $store = Store::where('store_owner', '=', auth()->user()->id)->first();
