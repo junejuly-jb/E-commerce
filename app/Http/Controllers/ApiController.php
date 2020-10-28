@@ -9,6 +9,7 @@ use App\Models\Todo;
 use App\Models\Logs;
 use App\Models\Item;
 use App\Models\Setting;
+use App\Models\Specification;
 use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
@@ -318,9 +319,19 @@ class ApiController extends Controller
             'item_status' => 'available'
         ]);
         $item->save();
+
+        for($count = 0; $count < count($request->spec); $count++){
+            $data = array(
+                'item_id' => $item->id,
+                'spec' => $request->spec[$count]
+            );
+            $toInsert[] = $data;
+        }
+        Spec::insert($toInsert);
         return response()->json([
             'message' => 'Item Added successfully',
-            'data' => $item 
+            'data' => $item,
+            'spec' => $toInsert
         ]);
     
     }

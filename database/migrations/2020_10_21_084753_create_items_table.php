@@ -19,7 +19,6 @@ class CreateItemsTable extends Migration
             $table->string('store_id');
             $table->string('item_name');
             $table->string('category');
-            $table->string('item_desc');
             $table->string('item_price');
             $table->string('item_quantity');
             $table->string('item_status');

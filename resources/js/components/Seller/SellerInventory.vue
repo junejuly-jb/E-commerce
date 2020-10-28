@@ -1,455 +1,507 @@
 <template>
-    <v-app>
-        <div class="d-flex page" id="wrapper">
-            <sellersidebar v-bind:user="user"></sellersidebar>
-            <div id="page-content-wrapper">
-                <sellernav v-bind:user="user"></sellernav>
-                <div class="container">
-                    <div class="dashHeader">
-                        <span class="discover">Inventory</span><span class="daily"> Details</span>
-                    </div>
-                    <v-card>
-                        <v-card-title>
-                        <v-text-field
-                            v-model="search"
-                            append-icon="mdi-magnify"
-                            label="Search"
-                            single-line
-                            hide-details
-                        ></v-text-field>
-                        <v-btn
-                        class="mx-4"
-                        @click="btnAddItem"
-                        small
-                        fab
-                        color="blue darken-1"
-                        >
-                            <v-icon>
-                                mdi-plus
-                            </v-icon>
-                        </v-btn>
-                        <v-btn
-                        class="mx-2"
-                        @click="btnLoad"
-                        small
-                        fab
-                        color="blue darken-1"
-                        >
-                            <v-progress-circular v-if="btnLoadIsPressed == true"
-                            indeterminate
-                            color="amber"
-                            ></v-progress-circular>
-                            <v-icon v-else>
-                                mdi-refresh
-                            </v-icon>
-                        </v-btn>
-                        </v-card-title>
-                        <v-data-table
-                        :headers="headers"
-                        :items="inventoryItems"
-                        :search="search"
-                        >
-                            <template v-slot:[`item.actions`]="{ item }">
-                                <v-btn icon color="blue lighten-2" @click="btnShow(item)">
-                                    <v-icon>mdi-eye-outline</v-icon>
-                                </v-btn>
-                                <v-btn icon color="green lighten-2" @click="btnEdit(item)">
-                                    <v-icon>mdi-pencil-outline</v-icon>
-                                </v-btn>
-                                <v-btn icon color="red lighten-2" @click="btnDelete(item)">
-                                    <v-icon>mdi-trash-can-outline</v-icon>
-                                </v-btn>
-                            </template>
-                            <template v-slot:[`item.item_status`]="{ item }">
-                                <v-chip
-                                    :color="getColor(item.item_status)"
-                                    dark
-                                >
-                                    {{ item.item_status }}
-                                </v-chip>
-                            </template>
-                        </v-data-table>
-                    </v-card>
-                </div>
-            </div>
+  <v-app>
+    <div class="d-flex page" id="wrapper">
+      <sellersidebar v-bind:user="user"></sellersidebar>
+      <div id="page-content-wrapper">
+        <sellernav v-bind:user="user"></sellernav>
+        <div class="container">
+          <div class="dashHeader">
+            <span class="discover">Inventory</span
+            ><span class="daily"> Details</span>
+          </div>
+          <v-card>
+            <v-card-title>
+              <v-text-field
+                v-model="search"
+                append-icon="mdi-magnify"
+                label="Search"
+                single-line
+                hide-details
+              ></v-text-field>
+              <v-btn
+                class="mx-4"
+                @click="btnAddItem"
+                small
+                fab
+                color="blue darken-1"
+              >
+                <v-icon> mdi-plus </v-icon>
+              </v-btn>
+              <v-btn
+                class="mx-2"
+                @click="btnLoad"
+                small
+                fab
+                color="blue darken-1"
+              >
+                <v-progress-circular
+                  v-if="btnLoadIsPressed == true"
+                  indeterminate
+                  color="amber"
+                ></v-progress-circular>
+                <v-icon v-else> mdi-refresh </v-icon>
+              </v-btn>
+            </v-card-title>
+            <v-data-table
+              :headers="headers"
+              :items="inventoryItems"
+              :search="search"
+            >
+              <template v-slot:[`item.actions`]="{ item }">
+                <v-btn icon color="blue lighten-2" @click="btnShow(item)">
+                  <v-icon>mdi-eye-outline</v-icon>
+                </v-btn>
+                <v-btn icon color="green lighten-2" @click="btnEdit(item)">
+                  <v-icon>mdi-pencil-outline</v-icon>
+                </v-btn>
+                <v-btn icon color="red lighten-2" @click="btnDelete(item)">
+                  <v-icon>mdi-trash-can-outline</v-icon>
+                </v-btn>
+              </template>
+              <template v-slot:[`item.item_status`]="{ item }">
+                <v-chip :color="getColor(item.item_status)" dark>
+                  {{ item.item_status }}
+                </v-chip>
+              </template>
+            </v-data-table>
+          </v-card>
         </div>
+      </div>
+    </div>
 
-        <!-- dialog -->
-        <v-dialog
-        v-model="dialog"
-        persistent
-        max-width="600"
+    <!-- DIALOG ADD  -->
+    <v-dialog v-model="dialogAdd" persistent max-width="600">
+      <v-card>
+        <v-card-title class="headline">
+          <span class="text-primary"> Add item </span>
+        </v-card-title>
+        <v-container>
+          <v-stepper
+          v-model="stepper"
+          vertical
         >
-        <v-card>
-            <v-card-title class="headline" v-if="editmode == 'add'">
-                <span class="text-primary">
-                    Add item
-                </span>
-            </v-card-title>
-            <v-card-title class="headline" v-else-if="editmode == 'delete'">
-                <span class="text-danger">
-                    Delete
-                </span>
-            </v-card-title>
-            <v-card-title class="headline" v-else-if="editmode == 'show'">
-                <span class="text-primary">
-                    Item Details
-                </span> 
-            </v-card-title>
-            <v-card-title class="headline" v-else>
-                <span class="text-warning">
-                    Edit
-                </span>
-            </v-card-title>
-            <v-container v-if="editmode == 'add'">
-                <v-form ref="form" v-model="valid" lazy-validation>
-                    <v-row>
-                        <v-col>
-                            <v-text-field
-                            :rules="[rules.required]"
-                            v-model="addForm.item_name"
-                            prepend-icon="mdi-dropbox"
-                            label="Item name"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col>
-                            <v-autocomplete
-                                :rules="[rules.required]"
-                                v-model="addForm.category"
-                                :items="categories"
-                                label="Product Category"
-                                placeholder="Select..."
-                                prepend-icon="mdi-format-list-bulleted"
-                            ></v-autocomplete>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <v-text-field
-                            :rules="[rules.required]"
-                            v-model="addForm.item_price"
-                            prepend-icon="mdi-currency-php"
-                            label="Price"
-                            suffix=".00"
-                            type="number"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col>
-                            <v-text-field
-                            :rules="[rules.required]"
-                            v-model="addForm.item_quantity"
-                            prepend-icon="mdi-file-table-box"
-                            suffix="pcs"
-                            label="Quantity"
-                            type="number"
-                            ></v-text-field>
-                        </v-col>
-                    </v-row>
-                    <v-textarea
-                    :rules="[rules.required]"
-                    v-model="addForm.item_desc"
-                    label="Description"
-                    prepend-icon="mdi-comment-quote-outline"
-                    ></v-textarea>
-                </v-form>
-            </v-container>
-            <v-container v-else-if="editmode == 'delete'">
-                <v-card-text>
-                    do you want to delete this item?
-                </v-card-text>
-            </v-container>
-            <v-container v-else-if="editmode == 'show'">
-                <v-card-text>
-                    <div>
-                        <span>Item: </span><span class="mx-5"></span><span>{{showItemDetails.item_name}}</span><br>
-                        <span>Category: </span><span class="mx-5"></span><span>{{showItemDetails.category}}</span><br>
-                        <span>Price: </span><span class="mx-5"></span><span>{{showItemDetails.item_price}}</span><br>
-                        <span>Quantity: </span><span class="mx-5"></span><span>{{showItemDetails.item_quantity}}</span><br>
-                        <span>Status: </span><span class="mx-5"></span><span>{{showItemDetails.item_status}}</span><br>
-                        <span>Description: </span><span class="mx-5"></span><span>{{showItemDetails.item_desc}}</span>
-                    </div>
-                </v-card-text>
-            </v-container>
-            <v-container v-else>
-                <v-row>
-                        <v-col>
-                            <v-text-field
-                            :rules="[rules.required]"
-                            v-model="editForm.item_name"
-                            prepend-icon="mdi-dropbox"
-                            label="Item name"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col>
-                            <v-autocomplete
-                                :rules="[rules.required]"
-                                v-model="editForm.category"
-                                :items="categories"
-                                label="Product Category"
-                                placeholder="Select..."
-                                prepend-icon="mdi-format-list-bulleted"
-                            ></v-autocomplete>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            <v-text-field
-                            :rules="[rules.required]"
-                            v-model="editForm.item_price"
-                            prepend-icon="mdi-currency-php"
-                            label="Price"
-                            suffix=".00"
-                            type="number"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col>
-                            <v-text-field
-                            :rules="[rules.required]"
-                            v-model="editForm.item_quantity"
-                            prepend-icon="mdi-file-table-box"
-                            label="Quantity"
-                            suffix="pcs"
-                            type="number"
-                            ></v-text-field>
-                        </v-col>
-                    </v-row>
-                    <v-textarea
-                    :rules="[rules.required]"
-                    v-model="editForm.item_desc"
-                    label="Description"
-                    prepend-icon="mdi-comment-quote-outline"
-                    ></v-textarea>
-            </v-container>
-            <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn
-                text
-                @click="dialog = false"
-            >
-                Cancel
-            </v-btn>
-            <v-btn v-if="editmode == 'add'"
-                color="green darken-1"
-                text
-                @click="saveItem"
-            >
-                Save
-            </v-btn>
-            <v-btn v-else-if="editmode == 'delete'"
-                color="red darken-1"
-                text
-                @click="confirmDelete"
-            >
-                Delete
-            </v-btn>
-            <v-btn v-else-if="editmode == 'edit'"
-                color="green darken-1"
-                text
-                @click="updateItem"
-            >
-                Update
-            </v-btn>
-            <v-btn v-else
-                color="green darken-1"
-                text
-                @click="dialog = false"
-            >
-                Okay
-            </v-btn>
-            </v-card-actions>
-        </v-card>
-        </v-dialog>
+          <v-stepper-step
+            :complete="stepper > 1"
+            step="1"
+            color="green darken-2"
+          >
+            Provide Item Details
+            <small>Summarize if needed</small>
+          </v-stepper-step>
 
-        <!-- snackbar  -->
-        <v-snackbar
-        v-model="snackbar"
-        >
-        {{ message }}
-
-        <template v-slot:action="{ attrs }">
+          <v-stepper-content step="1">
+            <v-card
+              color="grey lighten-1"
+              class="mb-12"
+              height="200px"
+            ></v-card>
             <v-btn
-            color="pink"
+              color="primary"
+              @click="stepper = 2"
+            >
+              Proceed
+            </v-btn>
+            <v-btn text @click="dialogAdd = false">
+              Cancel
+            </v-btn>
+          </v-stepper-content>
+
+          <v-stepper-step
+            :complete="stepper > 2"
+            step="2"
+            color="green darken-2"
+          >
+            Product Specification
+          </v-stepper-step>
+
+          <v-stepper-content step="2">
+            <v-card
+              color="grey lighten-1"
+              class="mb-12"
+              height="200px"
+            ></v-card>
+            <v-btn
+              color="primary"
+              @click="dialogAdd = false"
+            >
+              Save
+            </v-btn>
+            <v-btn text>
+              Cancel
+            </v-btn>
+          </v-stepper-content>
+        </v-stepper>
+        </v-container>
+      </v-card>
+    </v-dialog>
+
+
+
+
+    <!-- dialog -->
+    <v-dialog v-model="dialog" persistent max-width="600">
+      <v-card>
+        <v-card-title class="headline" v-if="editmode == 'add'">
+          <span class="text-primary"> Add item </span>
+        </v-card-title>
+        <v-card-title class="headline" v-else-if="editmode == 'delete'">
+          <span class="text-danger"> Delete </span>
+        </v-card-title>
+        <v-card-title class="headline" v-else-if="editmode == 'show'">
+          <span class="text-primary"> Item Details </span>
+        </v-card-title>
+        <v-card-title class="headline" v-else>
+          <span class="text-warning"> Edit </span>
+        </v-card-title>
+        <v-container v-if="editmode == 'add'">
+          <v-form ref="form" v-model="valid" lazy-validation>
+            <v-row>
+              <v-col>
+                <v-text-field
+                  :rules="[rules.required]"
+                  v-model="addForm.item_name"
+                  prepend-icon="mdi-dropbox"
+                  label="Item name"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-autocomplete
+                  :rules="[rules.required]"
+                  v-model="addForm.category"
+                  :items="categories"
+                  label="Product Category"
+                  placeholder="Select..."
+                  prepend-icon="mdi-format-list-bulleted"
+                ></v-autocomplete>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col>
+                <v-text-field
+                  :rules="[rules.required]"
+                  v-model="addForm.item_price"
+                  prepend-icon="mdi-currency-php"
+                  label="Price"
+                  suffix=".00"
+                  type="number"
+                ></v-text-field>
+              </v-col>
+              <v-col>
+                <v-text-field
+                  :rules="[rules.required]"
+                  v-model="addForm.item_quantity"
+                  prepend-icon="mdi-file-table-box"
+                  suffix="pcs"
+                  label="Quantity"
+                  type="number"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-container>
+        <v-container v-else-if="editmode == 'delete'">
+          <v-card-text> do you want to delete this item? </v-card-text>
+        </v-container>
+        <v-container v-else-if="editmode == 'show'">
+          <v-card-text>
+            <div>
+              <span>Item: </span><span class="mx-5"></span
+              ><span>{{ showItemDetails.item_name }}</span
+              ><br />
+              <span>Category: </span><span class="mx-5"></span
+              ><span>{{ showItemDetails.category }}</span
+              ><br />
+              <span>Price: </span><span class="mx-5"></span
+              ><span>{{ showItemDetails.item_price }}</span
+              ><br />
+              <span>Quantity: </span><span class="mx-5"></span
+              ><span>{{ showItemDetails.item_quantity }}</span
+              ><br />
+              <span>Status: </span><span class="mx-5"></span
+              ><span>{{ showItemDetails.item_status }}</span
+              ><br />
+              <span>Description: </span><span class="mx-5"></span
+              ><span>{{ showItemDetails.item_desc }}</span>
+            </div>
+          </v-card-text>
+        </v-container>
+        <v-container v-else>
+          <v-row>
+            <v-col>
+              <v-text-field
+                :rules="[rules.required]"
+                v-model="editForm.item_name"
+                prepend-icon="mdi-dropbox"
+                label="Item name"
+              ></v-text-field>
+            </v-col>
+            <v-col>
+              <v-autocomplete
+                :rules="[rules.required]"
+                v-model="editForm.category"
+                :items="categories"
+                label="Product Category"
+                placeholder="Select..."
+                prepend-icon="mdi-format-list-bulleted"
+              ></v-autocomplete>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-text-field
+                :rules="[rules.required]"
+                v-model="editForm.item_price"
+                prepend-icon="mdi-currency-php"
+                label="Price"
+                suffix=".00"
+                type="number"
+              ></v-text-field>
+            </v-col>
+            <v-col>
+              <v-text-field
+                :rules="[rules.required]"
+                v-model="editForm.item_quantity"
+                prepend-icon="mdi-file-table-box"
+                label="Quantity"
+                suffix="pcs"
+                type="number"
+              ></v-text-field>
+            </v-col>
+          </v-row>
+        </v-container>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="dialog = false"> Cancel </v-btn>
+          <v-btn
+            v-if="editmode == 'delete'"
+            color="red darken-1"
             text
-            v-bind="attrs"
-            @click="snackbar = false"
-            >
-            Close
-            </v-btn>
-        </template>
-        </v-snackbar>
-    </v-app>
+            @click="confirmDelete"
+          >
+            Delete
+          </v-btn>
+          <v-btn
+            v-else-if="editmode == 'edit'"
+            color="green darken-1"
+            text
+            @click="updateItem"
+          >
+            Update
+          </v-btn>
+          <v-btn v-else color="green darken-1" text @click="dialog = false">
+            Okay
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
+    <!-- snackbar  -->
+    <v-snackbar v-model="snackbar">
+      {{ message }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </v-app>
 </template>
 <script>
 export default {
-    data: () => ({
-        btnLoadIsPressed: false,
-        valid: true,
-        menu: false,
-        editmode: '',
-        search: '',
-        dialog: false,
-        categories: ['Motherboards','Mouse', 'Keyboards', 'Monitor', 'RAM', 'HDD', 'SSD'],
-        user: {
-            default_profile: '',
-            name: '',
-            email: '',
-            address: '',
-            usertype: '',
-            contact: '',
-        },
-        headers: [
-          {
-            text: 'Item (ID Number)',
-            align: 'start',
-            value: 'item_id',
-          },
-          { text: 'Name', value: 'item_name' },
-          { text: 'Category', value: 'category' },
-          { text: 'Price', value: 'item_price' },
-          { text: 'Quantity', value: 'item_quantity' },
-          { text: 'Status', value: 'item_status' },
-          { text: 'Actions', value: 'actions', align: 'center'},
-        ],
-        inventoryItems: [],
-        showItemDetails: [],
-        toDelete: [],
-        addForm: {
-            item_name: '',
-            category: '',
-            item_price: '',
-            item_quantity: '',
-            item_desc: '',
-        },
-        editForm: {
-            item_name: '',
-            category: '',
-            item_price: '',
-            item_quantity: '',
-            item_desc: '',
-        },
-        rules: {
-            required: value => !!value || 'This field is required.',
-            notNull: v => v != 0 || 'Quantity must be higher than 0',
-        },
-        snackbar: false,
-        message: '',
-        index: -1,
-    }),
-    methods:{
-        getColor(item_status){
-            if(item_status == 'available') return 'green'
-            else return 'red'
-        },
-        async saveItem(){
-            if(this.addForm.item_quantity == 0 || this.addForm.item_quantity == ''){
-                this.message = "Error: Quantity must be filled"
-            }
-            else{
-                await this.$http.post('api/saveItem', this.addForm, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
-                .then((res) => {
-                    this.snackbar = true
-                    this.message = res.data.message
-                    this.dialog = false
-                    this.inventoryItems.push(res.data.data)
-                })
-            }
-        },
-        btnLoad(){
-            this.btnLoadIsPressed = true
-            this.getAllItems()
-            console.log(this.btnLoadIsPressed)
-        },
-        async getAllItems(){
-            await this.$http.get('api/items', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
-            .then((res) => {
-                this.inventoryItems = res.data.data
-            })
-            .finally(() => {
-                this.btnLoadIsPressed = false
-            })
-        },
-        btnAddItem(){
-            this.formReset()
-            this.editmode = 'add'
-            this.dialog = true
-            console.log(this.addForm)
-        },
-        btnDelete(item){
-            this.editmode = 'delete'
-            this.dialog = true
-            this.toDelete = item
-            this.index = this.inventoryItems.indexOf(item)
-            // console.log(this.index, this.toDelete.item_id)
-        },
-        async confirmDelete(){
-            // console.log(this.toDelete.store_id)
-            await this.$http.delete('api/deleteItem/' + this.toDelete.item_id, { 
-                headers: { 
-                    Authorization: 'Bearer ' + this.$auth.getToken() 
-                }
-            })
-            .then((res) => {
-                this.dialog = false
-                this.snackbar = true
-                this.message = res.data.message
-                this.inventoryItems.splice(this.index, 1)
-            })
-        },
-        btnShow(item){
-            this.editmode = 'show'
-            this.dialog = true
-            this.showItemDetails = item
-            console.log(item)
-        },
-        btnEdit(item){
-            this.editmode = 'edit'
-            this.dialog = true
-            this.editForm = item
-            this.index = this.inventoryItems.indexOf(item)
-        },
-        async updateItem(){
-            await this.$http.put('api/updateItem/' + this.editForm.item_id, this.editForm, {
-                headers: {
-                    Authorization: 'Bearer ' + this.$auth.getToken()
-                }
-            })
-            .then((res) => {
-                this.snackbar = true
-                this.message = res.data.message
-                this.dialog = false
-                Object.assign(this.inventoryItems[this.index], res.data.data)
-            })
-        },
-        getUser(){
-            var user = JSON.parse(localStorage.getItem('user'))
-            this.user = user
-
-            var name = user.name
-
-            var getInitials = function (name) {
-            var parts = name.split(' ')
-            var initials = ''
-            for (var i = 0; i < parts.length; i++) {
-                if (parts[i].length > 0 && parts[i] !== '') {
-                    initials += parts[i][0]
-                }
-            }
-                return initials
-            }
-            this.user.default_profile = getInitials(name);
-        },
-        formReset(){
-            this.addForm.item_name = ''
-            this.addForm.category = ''
-            this.addForm.item_price = ''
-            this.addForm.item_quantity = ''
-            this.addForm.item_desc = ''
-            this.valid = true
-        }
+  data: () => ({
+    stepper: 1,
+    dialogAdd: false,
+    btnLoadIsPressed: false,
+    valid: true,
+    menu: false,
+    editmode: "",
+    search: "",
+    dialog: false,
+    categories: [
+      "Motherboards",
+      "Mouse",
+      "Keyboards",
+      "Monitor",
+      "RAM",
+      "HDD",
+      "SSD",
+    ],
+    user: {
+      default_profile: "",
+      name: "",
+      email: "",
+      address: "",
+      usertype: "",
+      contact: "",
     },
-    mounted(){
-        this.getAllItems()
-        this.getUser()
-    }
-}
+    headers: [
+      {
+        text: "Item (ID Number)",
+        align: "start",
+        value: "item_id",
+      },
+      { text: "Name", value: "item_name" },
+      { text: "Category", value: "category" },
+      { text: "Price", value: "item_price" },
+      { text: "Quantity", value: "item_quantity" },
+      { text: "Status", value: "item_status" },
+      { text: "Actions", value: "actions", align: "center" },
+    ],
+    inventoryItems: [],
+    showItemDetails: [],
+    toDelete: [],
+    addForm: {
+      item_name: "",
+      category: "",
+      item_price: "",
+      item_quantity: ""
+    },
+    editForm: {
+      item_name: "",
+      category: "",
+      item_price: "",
+      item_quantity: "",
+      item_desc: "",
+    },
+    rules: {
+      required: (value) => !!value || "This field is required.",
+      notNull: (v) => v != 0 || "Quantity must be higher than 0",
+    },
+    snackbar: false,
+    message: "",
+    index: -1,
+  }),
+  methods: {
+    add() {
+      this.addForm.spec.push({
+        spec_name: "",
+      });
+    },
+    remove(k) {
+      this.addForm.spec.splice(k, 1);
+    },
+    getColor(item_status) {
+      if (item_status == "available") return "green";
+      else return "red";
+    },
+    async saveItem() {
+      // if (this.addForm.item_quantity == 0 || this.addForm.item_quantity == "") {
+      //   this.message = "Error: Quantity must be filled";
+      // } else {
+      //   await this.$http
+      //     .post("api/saveItem", this.addForm, {
+      //       headers: { Authorization: "Bearer " + this.$auth.getToken() },
+      //     })
+      //     .then((res) => {
+      //       this.snackbar = true;
+      //       this.message = res.data.message;
+      //       this.dialog = false;
+      //       this.inventoryItems.push(res.data.data);
+      //       console.log(res.data.spec);
+      //     });
+      // }
+      console.log(this.addForm);
+    },
+    btnLoad() {
+      this.btnLoadIsPressed = true;
+      this.getAllItems();
+      // console.log(this.btnLoadIsPressed);
+    },
+    async getAllItems() {
+      await this.$http
+        .get("api/items", {
+          headers: { Authorization: "Bearer " + this.$auth.getToken() },
+        })
+        .then((res) => {
+          this.inventoryItems = res.data.data;
+        })
+        .finally(() => {
+          this.btnLoadIsPressed = false;
+        });
+    },
+    btnAddItem() {
+      this.formReset();
+      this.dialogAdd = true;
+    },
+    btnDelete(item) {
+      this.editmode = "delete";
+      this.dialog = true;
+      this.toDelete = item;
+      this.index = this.inventoryItems.indexOf(item);
+      // console.log(this.index, this.toDelete.item_id)
+    },
+    async confirmDelete() {
+      // console.log(this.toDelete.store_id)
+      await this.$http
+        .delete("api/deleteItem/" + this.toDelete.item_id, {
+          headers: {
+            Authorization: "Bearer " + this.$auth.getToken(),
+          },
+        })
+        .then((res) => {
+          this.dialog = false;
+          this.snackbar = true;
+          this.message = res.data.message;
+          this.inventoryItems.splice(this.index, 1);
+        });
+    },
+    btnShow(item) {
+      this.editmode = "show";
+      this.dialog = true;
+      this.showItemDetails = item;
+      // console.log(item);
+    },
+    btnEdit(item) {
+      this.editmode = "edit";
+      this.dialog = true;
+      this.editForm = item;
+      this.index = this.inventoryItems.indexOf(item);
+    },
+    async updateItem() {
+      await this.$http
+        .put("api/updateItem/" + this.editForm.item_id, this.editForm, {
+          headers: {
+            Authorization: "Bearer " + this.$auth.getToken(),
+          },
+        })
+        .then((res) => {
+          this.snackbar = true;
+          this.message = res.data.message;
+          this.dialog = false;
+          Object.assign(this.inventoryItems[this.index], res.data.data);
+        });
+    },
+    getUser() {
+      var user = JSON.parse(localStorage.getItem("user"));
+      this.user = user;
+
+      var name = user.name;
+
+      var getInitials = function (name) {
+        var parts = name.split(" ");
+        var initials = "";
+        for (var i = 0; i < parts.length; i++) {
+          if (parts[i].length > 0 && parts[i] !== "") {
+            initials += parts[i][0];
+          }
+        }
+        return initials;
+      };
+      this.user.default_profile = getInitials(name);
+    },
+    formReset() {
+      this.addForm.item_name = "";
+      this.addForm.category = "";
+      this.addForm.item_price = "";
+      this.addForm.item_quantity = "";
+      this.addForm.item_desc = "";
+      this.valid = true;
+    },
+  },
+  mounted() {
+    this.getAllItems();
+    this.getUser();
+  },
+};
 </script>

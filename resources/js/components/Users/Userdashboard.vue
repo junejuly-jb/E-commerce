@@ -155,8 +155,6 @@ export default {
                     this.$router.push('/login')
                 }
                 else if(res.body['usertype'] == 'seller'){
-                    // this.$auth.destroyToken()
-                    // this.$router.push('/login')
                     this.dialog = true
                 }
             })

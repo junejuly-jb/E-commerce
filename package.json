@@ -15,7 +15,7 @@
         "cross-env": "^7.0",
         "jquery": "^3.2",
         "laravel-mix": "^5.0.1",
-        "lodash": "^4.17.19",
+        "lodash": "^4.17.20",
         "popper.js": "^1.12",
         "resolve-url-loader": "^2.3.1",
         "sass": "^1.20.1",
@@ -24,6 +24,8 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "install": "^0.13.0",
+        "npm": "^6.14.8",
         "vform": "^1.0.1",
         "vue-number-animation": "^1.0.5",
         "vue-progressbar": "^0.7.5",

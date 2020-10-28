@@ -7,6 +7,7 @@ import VueProgressBar from 'vue-progressbar'
 import Auth from './auth.js'
 import VueNumber from 'vue-number-animation'
 import { Form, HasError, AlertError } from 'vform'
+import _ from 'lodash'
 
 window.Form = Form;
 // export const bus = new Vue();
