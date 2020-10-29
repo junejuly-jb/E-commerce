@@ -323,19 +323,25 @@ class ApiController extends Controller
         ]);
 
     }
-    public function setSpecs(Request $req, $id){
-        for($count = 0;  $count < count($req->spec_name); $count++){
-            $data = array(
-                'item_id' => $id,
-                'spec' => $req->spec_name[$count],
-            );
-            $specs[] = $data;
-        }
-        Specification::insert($specs);
+    // public function setSpecs(Request $req, $id){
+    //     for($count = 0;  $count < count($req->spec_name); $count++){
+    //         $data = array(
+    //             'item_id' => $id,
+    //             'spec' => $req->spec_name[$count],
+    //         );
+    //         $specs[] = $data;
+    //     }
+    //     Specification::insert($specs);
 
-        return response()->json([
-            'message' => 'item added successfully'
-        ]);
+    //     return response()->json([
+    //         'message' => 'item added successfully'
+    //     ]);
+    // }
+    public function setSpecs(Request $request){
+        //$res = json_decode($request->spec_name);
+        $res = $request->spec_name;
+        
+        return $res;
     }
     public function items(){
         $store = Store::where('store_owner', '=', auth()->user()->id)->first();
