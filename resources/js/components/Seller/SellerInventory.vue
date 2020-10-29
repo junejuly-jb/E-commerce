@@ -169,6 +169,15 @@
           </v-stepper-step>
           <v-stepper-content step="2">
             <v-btn small fab color="black" @click="add"> <v-icon>mdi-plus</v-icon></v-btn>
+            <!-- <div class="container">
+                 <v-text-field v-model="spec_name" name="spec_name[]"></v-text-field>
+                 <form id="sampleForm">
+                    <v-text-field name="spec_name[]"></v-text-field>
+                    <div class="container1">
+
+                    </div>
+                 </form>
+            </div> -->
             <div class="row" v-for="(specs, index) in spec" v-bind:key="index">
               <div class="col">
                  <v-text-field v-model="specs.spec_name"></v-text-field>
@@ -332,6 +341,12 @@
 <script>
 export default {
   data: () => ({
+    // spec: [{
+    //   spec_name: ''
+    // }],  
+    spec: {
+      spec_name: ''
+    },
     stepper: 1,
     dialogAdd: false,
     btnLoadIsPressed: false,
@@ -380,11 +395,6 @@ export default {
       item_quantity: "",
       item_status: "available"
     },
-    spec: [
-      {
-        spec_name: ''
-      }
-    ],
     lastId: '',
     editForm: {
       item_name: "",
@@ -400,39 +410,65 @@ export default {
     snackbar: false,
     message: "",
     index: -1,
-    error: false
+    error: false,
+    x: 0,
+    // spec_name: ''
   }),
   methods: {
+    // saveAll(){
+    //   if(this.addForm.item_quantity <= 0){
+    //     this.addForm.item_quantity = '0'
+    //     this.addForm.item_status = 'out of stock'
+    //   }
+    //   this.$http.post('api/saveItem', this.addForm, {
+    //     headers: {
+    //       Authorization: 'Bearer ' + this.$auth.getToken()
+    //     }
+    //   })
+    //   .then((res) => {
+    //     if(res.status == 200){
+    //       this.lastId = res.data.data['item_id']
+    //       console.log(this.spec)
+    //       this.$http.post('api/setSpecs/' + this.lastId , this.spec, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+    //       .then((res) => {
+    //         this.dialogAdd = false
+    //         this.snackbar = true
+    //         this.message = res.data.message
+    //       })
+    //     }
+    //   })
+    // },
     saveAll(){
-      if(this.addForm.item_quantity <= 0){
-        this.addForm.item_quantity = '0'
-        this.addForm.item_status = 'out of stock'
-      }
-      this.$http.post('api/saveItem', this.addForm, {
-        headers: {
-          Authorization: 'Bearer ' + this.$auth.getToken()
-        }
-      })
-      .then((res) => {
-        if(res.status == 200){
-          this.lastId = res.data.data['item_id']
-          console.log(this.spec)
-          this.$http.post('api/setSpecs/' + this.lastId , this.spec, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
-          .then((res) => {
-            this.dialogAdd = false
-            this.snackbar = true
-            this.message = res.data.message
-          })
-        }
-      })
+      // var formData = $('#sampleForm').serializeArray();
+      // console.log(formData)
+      console.log(this.spec)
+      // this.$http.post('api/setSpecs', this.spec.spec_name, {
+      //   headers: {
+      //     Authorization: 'Bearer ' + this.$auth.getToken()
+      //   }
+      // })
+      // .then((res) => {
+      //   console.log(this.)
+      // })
     },
     add() {
+      // var max_fields = 5
+      // var wrapper = $('.container1')
+      // var html = ''
+      // if(this.x < max_fields){
+      //   this.x++
+      //   html = html + "<input class='form-control' name='spec_name[]'>"
+      //   $(wrapper).append(html)
+      // }
+      //   console.log(this.x)
+
       this.spec.push({
-        spec_name: '',
-      });
+        spec_name: ''
+      })
+
     },
     remove(index) {
-      this.spec.splice(index, 1);
+      this.addRows.splice(index, 1);
       console.log(index)
     },
     getColor(item_status) {
