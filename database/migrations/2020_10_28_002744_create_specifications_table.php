@@ -15,8 +15,8 @@ class CreateSpecificationsTable extends Migration
     {
         Schema::create('specifications', function (Blueprint $table) {
             $table->id();
-            $table->string('item_id');
-            $table->string('spec');
+            $table->string('item_id')->nullable();
+            $table->string('spec')->nullable();
         });
     }
 

@@ -178,9 +178,9 @@
                     </div>
                  </form>
             </div> -->
-            <div class="row" v-for="(specs, index) in spec" v-bind:key="index">
+            <div class="row" v-for="(spec, index) in specs" v-bind:key="index">
               <div class="col">
-                 <v-text-field v-model="specs.spec_name"></v-text-field>
+                 <v-text-field v-model="spec.spec_name"></v-text-field>
               </div>
               <div class="col-2">
                 <v-btn 
@@ -341,12 +341,7 @@
 <script>
 export default {
   data: () => ({
-    // spec: [{
-    //   spec_name: ''
-    // }],  
-    spec: {
-      spec_name: ''
-    },
+    specs: [],
     stepper: 1,
     dialogAdd: false,
     btnLoadIsPressed: false,
@@ -411,58 +406,54 @@ export default {
     message: "",
     index: -1,
     error: false,
-    x: 0,
-    // spec_name: ''
+    // x: 0,
+    addRows: []
   }),
   methods: {
+    saveAll(){
+      if(this.addForm.item_quantity <= 0){
+        this.addForm.item_quantity = '0'
+        this.addForm.item_status = 'out of stock'
+      }
+      this.$http.post('api/saveItem', this.addForm, {
+        headers: {
+          Authorization: 'Bearer ' + this.$auth.getToken()
+        }
+      })
+      .then((res) => {
+        if(res.status == 200){
+          this.lastId = res.data.data['item_id']
+
+          var addRows = _.map(this.specs, function(num){
+            return _.pick(num, 'spec_name');
+          })
+
+          this.$http.post('api/setSpecs/' + this.lastId , { specs: addRows }, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+          .then((res) => {
+            this.dialogAdd = false
+            this.snackbar = true
+            this.message = res.data.message
+          })
+        }
+        else{
+          this.dialogAdd = false
+          this.snackbar = true
+          this.message = 'Something went wrong'
+        }
+      })
+    },
     // saveAll(){
-    //   if(this.addForm.item_quantity <= 0){
-    //     this.addForm.item_quantity = '0'
-    //     this.addForm.item_status = 'out of stock'
-    //   }
-    //   this.$http.post('api/saveItem', this.addForm, {
-    //     headers: {
-    //       Authorization: 'Bearer ' + this.$auth.getToken()
-    //     }
+    //   var addRows = _.map(this.specs, function(num) {
+    //     return _.pick(num, 'spec_name');
     //   })
+    //   console.log(addRows)
+    //   this.$http.post('api/setSpecs', {specs: addRows}, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
     //   .then((res) => {
-    //     if(res.status == 200){
-    //       this.lastId = res.data.data['item_id']
-    //       console.log(this.spec)
-    //       this.$http.post('api/setSpecs/' + this.lastId , this.spec, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
-    //       .then((res) => {
-    //         this.dialogAdd = false
-    //         this.snackbar = true
-    //         this.message = res.data.message
-    //       })
-    //     }
+    //     console.log(res.data.message)
     //   })
     // },
-    saveAll(){
-      // var formData = $('#sampleForm').serializeArray();
-      // console.log(formData)
-      console.log(this.spec)
-      // this.$http.post('api/setSpecs', this.spec.spec_name, {
-      //   headers: {
-      //     Authorization: 'Bearer ' + this.$auth.getToken()
-      //   }
-      // })
-      // .then((res) => {
-      //   console.log(this.)
-      // })
-    },
     add() {
-      // var max_fields = 5
-      // var wrapper = $('.container1')
-      // var html = ''
-      // if(this.x < max_fields){
-      //   this.x++
-      //   html = html + "<input class='form-control' name='spec_name[]'>"
-      //   $(wrapper).append(html)
-      // }
-      //   console.log(this.x)
-
-      this.spec.push({
+      this.specs.push({
         spec_name: ''
       })
 
@@ -506,6 +497,8 @@ export default {
         });
     },
     btnAddItem() {
+      this.stepper = 1
+      this.specs = []
       this.formReset();
       this.dialogAdd = true;
     },

@@ -337,11 +337,16 @@ class ApiController extends Controller
     //         'message' => 'item added successfully'
     //     ]);
     // }
-    public function setSpecs(Request $request){
-        //$res = json_decode($request->spec_name);
-        $res = $request->spec_name;
-        
-        return $res;
+    public function setSpecs(Request $request, $id){
+        foreach($request->specs as $key => $value){
+            Specification::updateOrCreate([
+                'item_id' => $id,
+                'spec' => $request->input('specs.'.$key.'.spec_name')
+            ]);
+        }
+        return response()->json([
+            'message' => 'Success'
+        ]);
     }
     public function items(){
         $store = Store::where('store_owner', '=', auth()->user()->id)->first();
@@ -353,8 +358,8 @@ class ApiController extends Controller
     }
 
     public function deleteItem($id) {
-        $item = Item::find($id);
-        $item->delete();
+        Item::find($id)->delete();
+        Specification::where('item_id', '=', $id)->delete();
 
         return response()->json([
             'message' => 'Item deleted successfully'
@@ -403,11 +408,9 @@ class ApiController extends Controller
     }
 
     public function updateAd(Request $req){
-        // return response()->json($setting)
         $userSetting = Setting::where('user_id', '=', auth()->user()->id)->first();
         $userSetting->adBanner = 0;
         $userSetting->save();
-        // $userSetting->adBanner = 0;
         return response()->json([
             'data' => $userSetting
         ]);

@@ -4921,12 +4921,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      // spec: [{
-      //   spec_name: ''
-      // }],  
-      spec: {
-        spec_name: ''
-      },
+      specs: [],
       stepper: 1,
       dialogAdd: false,
       btnLoadIsPressed: false,
@@ -4998,57 +4993,61 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       message: "",
       index: -1,
       error: false,
-      x: 0 // spec_name: ''
-
+      // x: 0,
+      addRows: []
     };
   },
   methods: {
+    saveAll: function saveAll() {
+      var _this = this;
+
+      if (this.addForm.item_quantity <= 0) {
+        this.addForm.item_quantity = '0';
+        this.addForm.item_status = 'out of stock';
+      }
+
+      this.$http.post('api/saveItem', this.addForm, {
+        headers: {
+          Authorization: 'Bearer ' + this.$auth.getToken()
+        }
+      }).then(function (res) {
+        if (res.status == 200) {
+          _this.lastId = res.data.data['item_id'];
+
+          var addRows = _.map(_this.specs, function (num) {
+            return _.pick(num, 'spec_name');
+          });
+
+          _this.$http.post('api/setSpecs/' + _this.lastId, {
+            specs: addRows
+          }, {
+            headers: {
+              Authorization: 'Bearer ' + _this.$auth.getToken()
+            }
+          }).then(function (res) {
+            _this.dialogAdd = false;
+            _this.snackbar = true;
+            _this.message = res.data.message;
+          });
+        } else {
+          _this.dialogAdd = false;
+          _this.snackbar = true;
+          _this.message = 'Something went wrong';
+        }
+      });
+    },
     // saveAll(){
-    //   if(this.addForm.item_quantity <= 0){
-    //     this.addForm.item_quantity = '0'
-    //     this.addForm.item_status = 'out of stock'
-    //   }
-    //   this.$http.post('api/saveItem', this.addForm, {
-    //     headers: {
-    //       Authorization: 'Bearer ' + this.$auth.getToken()
-    //     }
+    //   var addRows = _.map(this.specs, function(num) {
+    //     return _.pick(num, 'spec_name');
     //   })
+    //   console.log(addRows)
+    //   this.$http.post('api/setSpecs', {specs: addRows}, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
     //   .then((res) => {
-    //     if(res.status == 200){
-    //       this.lastId = res.data.data['item_id']
-    //       console.log(this.spec)
-    //       this.$http.post('api/setSpecs/' + this.lastId , this.spec, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
-    //       .then((res) => {
-    //         this.dialogAdd = false
-    //         this.snackbar = true
-    //         this.message = res.data.message
-    //       })
-    //     }
+    //     console.log(res.data.message)
     //   })
     // },
-    saveAll: function saveAll() {
-      // var formData = $('#sampleForm').serializeArray();
-      // console.log(formData)
-      console.log(this.spec); // this.$http.post('api/setSpecs', this.spec.spec_name, {
-      //   headers: {
-      //     Authorization: 'Bearer ' + this.$auth.getToken()
-      //   }
-      // })
-      // .then((res) => {
-      //   console.log(this.)
-      // })
-    },
     add: function add() {
-      // var max_fields = 5
-      // var wrapper = $('.container1')
-      // var html = ''
-      // if(this.x < max_fields){
-      //   this.x++
-      //   html = html + "<input class='form-control' name='spec_name[]'>"
-      //   $(wrapper).append(html)
-      // }
-      //   console.log(this.x)
-      this.spec.push({
+      this.specs.push({
         spec_name: ''
       });
     },
@@ -5060,13 +5059,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (item_status == "available") return "green";else return "red";
     },
     saveItem: function saveItem() {
-      var _this = this;
+      var _this2 = this;
 
       if (this.addForm.item_name == '' || this.addForm.category == '' || this.addForm.item_quantity == '' || this.addForm.item_price == '') {
         this.error = true;
         this.err_message = 'Pls input fields';
         setTimeout(function () {
-          _this.error = false;
+          _this2.error = false;
         }, 2000);
       } else {
         this.stepper = 2;
@@ -5078,7 +5077,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.getAllItems(); // console.log(this.btnLoadIsPressed);
     },
     getAllItems: function getAllItems() {
-      var _this2 = this;
+      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
@@ -5086,14 +5085,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return _this2.$http.get("api/items", {
+                return _this3.$http.get("api/items", {
                   headers: {
-                    Authorization: "Bearer " + _this2.$auth.getToken()
+                    Authorization: "Bearer " + _this3.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this2.inventoryItems = res.data.data;
+                  _this3.inventoryItems = res.data.data;
                 })["finally"](function () {
-                  _this2.btnLoadIsPressed = false;
+                  _this3.btnLoadIsPressed = false;
                 });
 
               case 2:
@@ -5105,6 +5104,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     btnAddItem: function btnAddItem() {
+      this.stepper = 1;
+      this.specs = [];
       this.formReset();
       this.dialogAdd = true;
     },
@@ -5115,7 +5116,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.index = this.inventoryItems.indexOf(item); // console.log(this.index, this.toDelete.item_id)
     },
     confirmDelete: function confirmDelete() {
-      var _this3 = this;
+      var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
@@ -5123,16 +5124,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return _this3.$http["delete"]("api/deleteItem/" + _this3.toDelete.item_id, {
+                return _this4.$http["delete"]("api/deleteItem/" + _this4.toDelete.item_id, {
                   headers: {
-                    Authorization: "Bearer " + _this3.$auth.getToken()
+                    Authorization: "Bearer " + _this4.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this3.dialog = false;
-                  _this3.snackbar = true;
-                  _this3.message = res.data.message;
+                  _this4.dialog = false;
+                  _this4.snackbar = true;
+                  _this4.message = res.data.message;
 
-                  _this3.inventoryItems.splice(_this3.index, 1);
+                  _this4.inventoryItems.splice(_this4.index, 1);
                 });
 
               case 2:
@@ -5155,7 +5156,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.index = this.inventoryItems.indexOf(item);
     },
     updateItem: function updateItem() {
-      var _this4 = this;
+      var _this5 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
@@ -5163,15 +5164,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context3.prev = _context3.next) {
               case 0:
                 _context3.next = 2;
-                return _this4.$http.put("api/updateItem/" + _this4.editForm.item_id, _this4.editForm, {
+                return _this5.$http.put("api/updateItem/" + _this5.editForm.item_id, _this5.editForm, {
                   headers: {
-                    Authorization: "Bearer " + _this4.$auth.getToken()
+                    Authorization: "Bearer " + _this5.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this4.snackbar = true;
-                  _this4.message = res.data.message;
-                  _this4.dialog = false;
-                  Object.assign(_this4.inventoryItems[_this4.index], res.data.data);
+                  _this5.snackbar = true;
+                  _this5.message = res.data.message;
+                  _this5.dialog = false;
+                  Object.assign(_this5.inventoryItems[_this5.index], res.data.data);
                 });
 
               case 2:
@@ -39638,7 +39639,7 @@ var render = function() {
                             1
                           ),
                           _vm._v(" "),
-                          _vm._l(_vm.spec, function(specs, index) {
+                          _vm._l(_vm.specs, function(spec, index) {
                             return _c(
                               "div",
                               { key: index, staticClass: "row" },
@@ -39649,11 +39650,11 @@ var render = function() {
                                   [
                                     _c("v-text-field", {
                                       model: {
-                                        value: specs.spec_name,
+                                        value: spec.spec_name,
                                         callback: function($$v) {
-                                          _vm.$set(specs, "spec_name", $$v)
+                                          _vm.$set(spec, "spec_name", $$v)
                                         },
-                                        expression: "specs.spec_name"
+                                        expression: "spec.spec_name"
                                       }
                                     })
                                   ],
