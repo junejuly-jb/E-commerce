@@ -32,8 +32,7 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::delete('/deleteItem/{id}', 'App\Http\Controllers\ApiController@deleteItem');
     Route::put('/updateItem/{id}', 'App\Http\Controllers\ApiController@updateItem');
     Route::post('/updateAd', 'App\Http\Controllers\ApiController@updateAd');
-    // Route::post('/setSpecs/{id}', 'App\Http\Controllers\ApiController@setSpecs');
-    Route::post('/setSpecs', 'App\Http\Controllers\ApiController@setSpecs');
+    Route::post('/setSpecs/{id}', 'App\Http\Controllers\ApiController@setSpecs');
 });
 
 Route::post('/register', 'App\Http\Controllers\ApiController@register');
