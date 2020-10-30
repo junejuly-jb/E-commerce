@@ -416,4 +416,11 @@ class ApiController extends Controller
         ]);
 
     }
+    public function getSpecs(Request $req){
+        // $item_id = json_decode($req->item_id);
+        $specs = Specification::where('item_id', '=', $req->item_id)->get();
+        return response()->json([
+            'data' => $specs
+        ]);
+    }
 }
