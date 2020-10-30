@@ -4920,6 +4920,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -4970,6 +4972,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       showSpecDetails: [],
       toDelete: [],
       addForm: {
+        item_image: "",
         item_name: "",
         category: "",
         item_price: "",
@@ -5043,6 +5046,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       });
     },
+    selectPhoto: function selectPhoto(e) {
+      var _this2 = this;
+
+      var file = e.target.files[0];
+      var reader = new FileReader(); // console.log(file['size'])
+
+      if (file['size'] < 1048576) {
+        reader.onload = function (file) {
+          _this2.addForm.item_image = reader.result;
+        };
+
+        reader.readAsDataURL(file);
+      } else {
+        this.err_message = 'File too large';
+        this.error = true;
+        setTimeout(function () {
+          _this2.error = false;
+        }, 3000);
+      }
+    },
     discardAdd: function discardAdd() {
       this.specs = [];
       this.stepper = 1;
@@ -5067,25 +5090,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (item_status == "available") return "green";else return "red";
     },
     saveItem: function saveItem() {
-      var _this2 = this;
+      var _this3 = this;
 
-      if (this.addForm.item_name == '' || this.addForm.category == '' || this.addForm.item_quantity == '' || this.addForm.item_price == '') {
+      if (this.addForm.item_name == '' || this.addForm.category == '' || this.addForm.item_quantity == '' || this.addForm.item_price == '' || this.addForm.item_image == '') {
         this.error = true;
         this.err_message = 'Pls input fields';
         setTimeout(function () {
-          _this2.error = false;
+          _this3.error = false;
         }, 2000);
       } else {
         this.stepper = 2;
         this.error = false;
       }
+
+      console.log(this.addForm);
     },
     btnLoad: function btnLoad() {
       this.btnLoadIsPressed = true;
       this.getAllItems();
     },
     getAllItems: function getAllItems() {
-      var _this3 = this;
+      var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
@@ -5093,14 +5118,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return _this3.$http.get("api/items", {
+                return _this4.$http.get("api/items", {
                   headers: {
-                    Authorization: "Bearer " + _this3.$auth.getToken()
+                    Authorization: "Bearer " + _this4.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this3.inventoryItems = res.data.data;
+                  _this4.inventoryItems = res.data.data;
                 })["finally"](function () {
-                  _this3.btnLoadIsPressed = false;
+                  _this4.btnLoadIsPressed = false;
                 });
 
               case 2:
@@ -5122,7 +5147,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.index = this.inventoryItems.indexOf(item);
     },
     confirmDelete: function confirmDelete() {
-      var _this4 = this;
+      var _this5 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
@@ -5130,16 +5155,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return _this4.$http["delete"]("api/deleteItem/" + _this4.toDelete.item_id, {
+                return _this5.$http["delete"]("api/deleteItem/" + _this5.toDelete.item_id, {
                   headers: {
-                    Authorization: "Bearer " + _this4.$auth.getToken()
+                    Authorization: "Bearer " + _this5.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this4.dialog = false;
-                  _this4.snackbar = true;
-                  _this4.message = res.data.message;
+                  _this5.dialog = false;
+                  _this5.snackbar = true;
+                  _this5.message = res.data.message;
 
-                  _this4.inventoryItems.splice(_this4.index, 1);
+                  _this5.inventoryItems.splice(_this5.index, 1);
                 });
 
               case 2:
@@ -5151,25 +5176,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     btnShow: function btnShow(item) {
-      var _this5 = this;
+      var _this6 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _this5.editmode = "show";
-                _this5.dialog = true;
-                _this5.showItemDetails = item; // console.log(item.item_id)
+                _this6.editmode = "show";
+                _this6.dialog = true;
+                _this6.showItemDetails = item; // console.log(item.item_id)
 
                 _context3.next = 5;
-                return _this5.$http.post('api/getSpecs', item, {
+                return _this6.$http.post('api/getSpecs', item, {
                   headers: {
-                    Authorization: 'Bearer ' + _this5.$auth.getToken()
+                    Authorization: 'Bearer ' + _this6.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this5.showSpecDetails = res.data.data;
-                  console.log(_this5.showSpecDetails);
+                  _this6.showSpecDetails = res.data.data;
+                  console.log(_this6.showSpecDetails);
                 });
 
               case 5:
@@ -5187,7 +5212,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.index = this.inventoryItems.indexOf(item);
     },
     updateItem: function updateItem() {
-      var _this6 = this;
+      var _this7 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
@@ -5195,15 +5220,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context4.prev = _context4.next) {
               case 0:
                 _context4.next = 2;
-                return _this6.$http.put("api/updateItem/" + _this6.editForm.item_id, _this6.editForm, {
+                return _this7.$http.put("api/updateItem/" + _this7.editForm.item_id, _this7.editForm, {
                   headers: {
-                    Authorization: "Bearer " + _this6.$auth.getToken()
+                    Authorization: "Bearer " + _this7.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this6.snackbar = true;
-                  _this6.message = res.data.message;
-                  _this6.dialog = false;
-                  Object.assign(_this6.inventoryItems[_this6.index], res.data.data);
+                  _this7.snackbar = true;
+                  _this7.message = res.data.message;
+                  _this7.dialog = false;
+                  Object.assign(_this7.inventoryItems[_this7.index], res.data.data);
                 });
 
               case 2:
@@ -39466,6 +39491,12 @@ var render = function() {
                                   }
                                 },
                                 [
+                                  _c("input", {
+                                    staticClass: "form-control",
+                                    attrs: { type: "file" },
+                                    on: { change: _vm.selectPhoto }
+                                  }),
+                                  _vm._v(" "),
                                   _c(
                                     "v-row",
                                     [
@@ -39894,7 +39925,7 @@ var render = function() {
                             _c("br"),
                             _vm._v(" "),
                             _vm._l(_vm.showSpecDetails, function(specs) {
-                              return _c("div", [
+                              return _c("div", { key: specs.id }, [
                                 _c("div", [_vm._v(_vm._s(specs.spec))])
                               ])
                             })

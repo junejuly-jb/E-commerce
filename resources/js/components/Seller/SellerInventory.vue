@@ -92,6 +92,11 @@
           <v-stepper-content step="1">
             <v-container>
             <v-form ref="form" v-model="valid" lazy-validation>
+              <input
+                class="form-control"
+                type="file"
+                @change="selectPhoto"
+              >
               <v-row>
                 <v-col>
                   <v-text-field
@@ -211,9 +216,6 @@
       </v-card>
     </v-dialog>
 
-
-
-
     <!-- dialog -->
     <v-dialog v-model="dialog" persistent max-width="600">
       <v-card>
@@ -252,7 +254,7 @@
               ><span>{{ showItemDetails.item_status }}</span
               ><br />
               <span>SPECS</span><br>
-              <div v-for="specs in showSpecDetails">
+              <div v-for="specs in showSpecDetails" v-bind:key="specs.id">
                 <div>{{specs.spec}}</div>
               </div>
             </div>
@@ -387,6 +389,7 @@ export default {
     showSpecDetails: [],
     toDelete: [],
     addForm: {
+      item_image: "",
       item_name: "",
       category: "",
       item_price: "",
@@ -446,6 +449,22 @@ export default {
         }
       })
     },
+    selectPhoto(e){
+        let file = e.target.files[0]
+        let reader = new FileReader();
+        // console.log(file['size'])
+        if(file['size'] < 1048576){
+            reader.onload = (file) => {
+                this.addForm.item_image = reader.result
+            }
+            reader.readAsDataURL(file)
+        }
+        else{
+            this.err_message = 'File too large'
+            this.error = true
+            setTimeout(() => { this.error = false }, 3000)
+        }
+    },
     discardAdd(){
       this.specs = []
       this.stepper = 1
@@ -471,7 +490,7 @@ export default {
       else return "red";
     },
     saveItem() {
-      if(this.addForm.item_name == '' || this.addForm.category == '' || this.addForm.item_quantity == '' || this.addForm.item_price == ''){
+      if(this.addForm.item_name == '' || this.addForm.category == '' || this.addForm.item_quantity == '' || this.addForm.item_price == '' || this.addForm.item_image == ''){
         this.error = true
         this.err_message = 'Pls input fields'
         setTimeout(() => {
@@ -482,6 +501,8 @@ export default {
         this.stepper = 2
         this.error = false
       }
+        console.log(this.addForm)
+
     },
     btnLoad() {
       this.btnLoadIsPressed = true;
