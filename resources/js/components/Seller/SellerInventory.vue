@@ -168,19 +168,19 @@
             Product Specification
           </v-stepper-step>
           <v-stepper-content step="2">
-            <v-btn small fab color="black" @click="add"> <v-icon>mdi-plus</v-icon></v-btn>
-            <!-- <div class="container">
-                 <v-text-field v-model="spec_name" name="spec_name[]"></v-text-field>
-                 <form id="sampleForm">
-                    <v-text-field name="spec_name[]"></v-text-field>
-                    <div class="container1">
-
-                    </div>
-                 </form>
-            </div> -->
+            <div class="container mb-5">
+              <v-alert
+                border="left"
+                color="orange"
+                dense
+                text
+                type="warning"
+              >Press "+" to add new field, Maximum fields: (5)</v-alert>
+              <v-btn color="blue darken-2" @click="add"> <v-icon>mdi-plus</v-icon> New field</v-btn>
+            </div>
             <div class="row" v-for="(spec, index) in specs" v-bind:key="index">
               <div class="col">
-                 <v-text-field v-model="spec.spec_name"></v-text-field>
+                  <v-text-field v-model="spec.spec_name" label="Specification"></v-text-field>
               </div>
               <div class="col-2">
                 <v-btn 
@@ -202,7 +202,7 @@
             <v-btn text @click="stepper = 1">
               Previous
             </v-btn>
-            <v-btn color="red darken-2" text @click="dialogAdd = false">
+            <v-btn color="red darken-2" text @click="discardAdd">
               Discard
             </v-btn>
           </v-stepper-content>
@@ -423,16 +423,18 @@ export default {
       .then((res) => {
         if(res.status == 200){
           this.lastId = res.data.data['item_id']
-
-          var addRows = _.map(this.specs, function(num){
+          var toPush = res.data.data
+          var addRows = _.map(this.specs, (num) => {
             return _.pick(num, 'spec_name');
           })
-
           this.$http.post('api/setSpecs/' + this.lastId , { specs: addRows }, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
           .then((res) => {
             this.dialogAdd = false
             this.snackbar = true
+            this.specs = []
+            this.stepper = 1
             this.message = res.data.message
+            this.inventoryItems.push(toPush)
           })
         }
         else{
@@ -442,25 +444,25 @@ export default {
         }
       })
     },
-    // saveAll(){
-    //   var addRows = _.map(this.specs, function(num) {
-    //     return _.pick(num, 'spec_name');
-    //   })
-    //   console.log(addRows)
-    //   this.$http.post('api/setSpecs', {specs: addRows}, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
-    //   .then((res) => {
-    //     console.log(res.data.message)
-    //   })
-    // },
+    discardAdd(){
+      this.specs = []
+      this.stepper = 1
+      this.dialogAdd = false
+      this.formReset()
+    },
     add() {
-      this.specs.push({
-        spec_name: ''
-      })
-
+      console.log( _.size(this.specs) )
+      if( _.size(this.specs) <= 4 ){
+        this.specs.push({
+          spec_name: ''
+        })
+      }
+      else{
+        console.log('Out of bounds')
+      }
     },
     remove(index) {
-      this.addRows.splice(index, 1);
-      console.log(index)
+      this.specs.splice(index, 1);
     },
     getColor(item_status) {
       if (item_status == "available") return "green";
@@ -482,7 +484,6 @@ export default {
     btnLoad() {
       this.btnLoadIsPressed = true;
       this.getAllItems();
-      // console.log(this.btnLoadIsPressed);
     },
     async getAllItems() {
       await this.$http
@@ -497,8 +498,6 @@ export default {
         });
     },
     btnAddItem() {
-      this.stepper = 1
-      this.specs = []
       this.formReset();
       this.dialogAdd = true;
     },
@@ -507,10 +506,8 @@ export default {
       this.dialog = true;
       this.toDelete = item;
       this.index = this.inventoryItems.indexOf(item);
-      // console.log(this.index, this.toDelete.item_id)
     },
     async confirmDelete() {
-      // console.log(this.toDelete.store_id)
       await this.$http
         .delete("api/deleteItem/" + this.toDelete.item_id, {
           headers: {

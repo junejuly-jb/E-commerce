@@ -5013,6 +5013,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }).then(function (res) {
         if (res.status == 200) {
           _this.lastId = res.data.data['item_id'];
+          var toPush = res.data.data;
 
           var addRows = _.map(_this.specs, function (num) {
             return _.pick(num, 'spec_name');
@@ -5027,7 +5028,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }).then(function (res) {
             _this.dialogAdd = false;
             _this.snackbar = true;
+            _this.specs = [];
+            _this.stepper = 1;
             _this.message = res.data.message;
+
+            _this.inventoryItems.push(toPush);
           });
         } else {
           _this.dialogAdd = false;
@@ -5036,24 +5041,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }
       });
     },
-    // saveAll(){
-    //   var addRows = _.map(this.specs, function(num) {
-    //     return _.pick(num, 'spec_name');
-    //   })
-    //   console.log(addRows)
-    //   this.$http.post('api/setSpecs', {specs: addRows}, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
-    //   .then((res) => {
-    //     console.log(res.data.message)
-    //   })
-    // },
+    discardAdd: function discardAdd() {
+      this.specs = [];
+      this.stepper = 1;
+      this.dialogAdd = false;
+      this.formReset();
+    },
     add: function add() {
-      this.specs.push({
-        spec_name: ''
-      });
+      console.log(_.size(this.specs));
+
+      if (_.size(this.specs) <= 4) {
+        this.specs.push({
+          spec_name: ''
+        });
+      } else {
+        console.log('Out of bounds');
+      }
     },
     remove: function remove(index) {
-      this.addRows.splice(index, 1);
-      console.log(index);
+      this.specs.splice(index, 1);
     },
     getColor: function getColor(item_status) {
       if (item_status == "available") return "green";else return "red";
@@ -5074,7 +5080,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     btnLoad: function btnLoad() {
       this.btnLoadIsPressed = true;
-      this.getAllItems(); // console.log(this.btnLoadIsPressed);
+      this.getAllItems();
     },
     getAllItems: function getAllItems() {
       var _this3 = this;
@@ -5104,8 +5110,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     btnAddItem: function btnAddItem() {
-      this.stepper = 1;
-      this.specs = [];
       this.formReset();
       this.dialogAdd = true;
     },
@@ -5113,7 +5117,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.editmode = "delete";
       this.dialog = true;
       this.toDelete = item;
-      this.index = this.inventoryItems.indexOf(item); // console.log(this.index, this.toDelete.item_id)
+      this.index = this.inventoryItems.indexOf(item);
     },
     confirmDelete: function confirmDelete() {
       var _this4 = this;
@@ -39630,12 +39634,40 @@ var render = function() {
                         { attrs: { step: "2" } },
                         [
                           _c(
-                            "v-btn",
-                            {
-                              attrs: { small: "", fab: "", color: "black" },
-                              on: { click: _vm.add }
-                            },
-                            [_c("v-icon", [_vm._v("mdi-plus")])],
+                            "div",
+                            { staticClass: "container mb-5" },
+                            [
+                              _c(
+                                "v-alert",
+                                {
+                                  attrs: {
+                                    border: "left",
+                                    color: "orange",
+                                    dense: "",
+                                    text: "",
+                                    type: "warning"
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    'Press "+" to add new field, Maximum fields: (5)'
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-btn",
+                                {
+                                  attrs: { color: "blue darken-2" },
+                                  on: { click: _vm.add }
+                                },
+                                [
+                                  _c("v-icon", [_vm._v("mdi-plus")]),
+                                  _vm._v(" New field")
+                                ],
+                                1
+                              )
+                            ],
                             1
                           ),
                           _vm._v(" "),
@@ -39649,6 +39681,7 @@ var render = function() {
                                   { staticClass: "col" },
                                   [
                                     _c("v-text-field", {
+                                      attrs: { label: "Specification" },
                                       model: {
                                         value: spec.spec_name,
                                         callback: function($$v) {
@@ -39717,11 +39750,7 @@ var render = function() {
                             "v-btn",
                             {
                               attrs: { color: "red darken-2", text: "" },
-                              on: {
-                                click: function($event) {
-                                  _vm.dialogAdd = false
-                                }
-                              }
+                              on: { click: _vm.discardAdd }
                             },
                             [_vm._v("\n            Discard\n          ")]
                           )
