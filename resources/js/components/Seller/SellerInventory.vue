@@ -251,8 +251,10 @@
               <span>Status: </span><span class="mx-5"></span
               ><span>{{ showItemDetails.item_status }}</span
               ><br />
-              <span>Description: </span><span class="mx-5"></span
-              ><span>{{ showItemDetails.item_desc }}</span>
+              <span>SPECS</span><br>
+              <div v-for="specs in showSpecDetails">
+                <div>{{specs.spec}}</div>
+              </div>
             </div>
           </v-card-text>
         </v-container>
@@ -382,6 +384,7 @@ export default {
     ],
     inventoryItems: [],
     showItemDetails: [],
+    showSpecDetails: [],
     toDelete: [],
     addForm: {
       item_name: "",
@@ -406,7 +409,6 @@ export default {
     message: "",
     index: -1,
     error: false,
-    // x: 0,
     addRows: []
   }),
   methods: {
@@ -521,11 +523,16 @@ export default {
           this.inventoryItems.splice(this.index, 1);
         });
     },
-    btnShow(item) {
+    async btnShow(item) {
       this.editmode = "show";
       this.dialog = true;
       this.showItemDetails = item;
-      // console.log(item);
+      // console.log(item.item_id)
+      await this.$http.post('api/getSpecs', item, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
+      .then((res) => {
+        this.showSpecDetails = res.data.data
+        console.log(this.showSpecDetails)
+      })
     },
     btnEdit(item) {
       this.editmode = "edit";

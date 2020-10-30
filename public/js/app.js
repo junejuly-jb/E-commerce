@@ -4918,6 +4918,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -4965,6 +4967,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }],
       inventoryItems: [],
       showItemDetails: [],
+      showSpecDetails: [],
       toDelete: [],
       addForm: {
         item_name: "",
@@ -4993,7 +4996,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       message: "",
       index: -1,
       error: false,
-      // x: 0,
       addRows: []
     };
   },
@@ -5149,9 +5151,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     btnShow: function btnShow(item) {
-      this.editmode = "show";
-      this.dialog = true;
-      this.showItemDetails = item; // console.log(item);
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _this5.editmode = "show";
+                _this5.dialog = true;
+                _this5.showItemDetails = item; // console.log(item.item_id)
+
+                _context3.next = 5;
+                return _this5.$http.post('api/getSpecs', item, {
+                  headers: {
+                    Authorization: 'Bearer ' + _this5.$auth.getToken()
+                  }
+                }).then(function (res) {
+                  _this5.showSpecDetails = res.data.data;
+                  console.log(_this5.showSpecDetails);
+                });
+
+              case 5:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
     },
     btnEdit: function btnEdit(item) {
       this.editmode = "edit";
@@ -5160,31 +5187,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.index = this.inventoryItems.indexOf(item);
     },
     updateItem: function updateItem() {
-      var _this5 = this;
+      var _this6 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
-                _context3.next = 2;
-                return _this5.$http.put("api/updateItem/" + _this5.editForm.item_id, _this5.editForm, {
+                _context4.next = 2;
+                return _this6.$http.put("api/updateItem/" + _this6.editForm.item_id, _this6.editForm, {
                   headers: {
-                    Authorization: "Bearer " + _this5.$auth.getToken()
+                    Authorization: "Bearer " + _this6.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this5.snackbar = true;
-                  _this5.message = res.data.message;
-                  _this5.dialog = false;
-                  Object.assign(_this5.inventoryItems[_this5.index], res.data.data);
+                  _this6.snackbar = true;
+                  _this6.message = res.data.message;
+                  _this6.dialog = false;
+                  Object.assign(_this6.inventoryItems[_this6.index], res.data.data);
                 });
 
               case 2:
               case "end":
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3);
+        }, _callee4);
       }))();
     },
     getUser: function getUser() {
@@ -39825,48 +39852,55 @@ var render = function() {
                     "v-container",
                     [
                       _c("v-card-text", [
-                        _c("div", [
-                          _c("span", [_vm._v("Item: ")]),
-                          _c("span", { staticClass: "mx-5" }),
-                          _c("span", [
-                            _vm._v(_vm._s(_vm.showItemDetails.item_name))
-                          ]),
-                          _c("br"),
-                          _vm._v(" "),
-                          _c("span", [_vm._v("Category: ")]),
-                          _c("span", { staticClass: "mx-5" }),
-                          _c("span", [
-                            _vm._v(_vm._s(_vm.showItemDetails.category))
-                          ]),
-                          _c("br"),
-                          _vm._v(" "),
-                          _c("span", [_vm._v("Price: ")]),
-                          _c("span", { staticClass: "mx-5" }),
-                          _c("span", [
-                            _vm._v(_vm._s(_vm.showItemDetails.item_price))
-                          ]),
-                          _c("br"),
-                          _vm._v(" "),
-                          _c("span", [_vm._v("Quantity: ")]),
-                          _c("span", { staticClass: "mx-5" }),
-                          _c("span", [
-                            _vm._v(_vm._s(_vm.showItemDetails.item_quantity))
-                          ]),
-                          _c("br"),
-                          _vm._v(" "),
-                          _c("span", [_vm._v("Status: ")]),
-                          _c("span", { staticClass: "mx-5" }),
-                          _c("span", [
-                            _vm._v(_vm._s(_vm.showItemDetails.item_status))
-                          ]),
-                          _c("br"),
-                          _vm._v(" "),
-                          _c("span", [_vm._v("Description: ")]),
-                          _c("span", { staticClass: "mx-5" }),
-                          _c("span", [
-                            _vm._v(_vm._s(_vm.showItemDetails.item_desc))
-                          ])
-                        ])
+                        _c(
+                          "div",
+                          [
+                            _c("span", [_vm._v("Item: ")]),
+                            _c("span", { staticClass: "mx-5" }),
+                            _c("span", [
+                              _vm._v(_vm._s(_vm.showItemDetails.item_name))
+                            ]),
+                            _c("br"),
+                            _vm._v(" "),
+                            _c("span", [_vm._v("Category: ")]),
+                            _c("span", { staticClass: "mx-5" }),
+                            _c("span", [
+                              _vm._v(_vm._s(_vm.showItemDetails.category))
+                            ]),
+                            _c("br"),
+                            _vm._v(" "),
+                            _c("span", [_vm._v("Price: ")]),
+                            _c("span", { staticClass: "mx-5" }),
+                            _c("span", [
+                              _vm._v(_vm._s(_vm.showItemDetails.item_price))
+                            ]),
+                            _c("br"),
+                            _vm._v(" "),
+                            _c("span", [_vm._v("Quantity: ")]),
+                            _c("span", { staticClass: "mx-5" }),
+                            _c("span", [
+                              _vm._v(_vm._s(_vm.showItemDetails.item_quantity))
+                            ]),
+                            _c("br"),
+                            _vm._v(" "),
+                            _c("span", [_vm._v("Status: ")]),
+                            _c("span", { staticClass: "mx-5" }),
+                            _c("span", [
+                              _vm._v(_vm._s(_vm.showItemDetails.item_status))
+                            ]),
+                            _c("br"),
+                            _vm._v(" "),
+                            _c("span", [_vm._v("SPECS")]),
+                            _c("br"),
+                            _vm._v(" "),
+                            _vm._l(_vm.showSpecDetails, function(specs) {
+                              return _c("div", [
+                                _c("div", [_vm._v(_vm._s(specs.spec))])
+                              ])
+                            })
+                          ],
+                          2
+                        )
                       ])
                     ],
                     1
