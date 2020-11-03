@@ -374,7 +374,6 @@ class ApiController extends Controller
             $item->category = $req->category;
             $item->item_price = $req->item_price;
             $item->item_quantity = '0';
-            $item->item_desc = $req->item_desc;
             $item->item_status = 'out of stock';
             $item->save();
 
@@ -388,10 +387,8 @@ class ApiController extends Controller
         $item->category = $req->category;
         $item->item_price = $req->item_price;
         $item->item_quantity = $req->item_quantity;
-        $item->item_desc = $req->item_desc;
         $item->item_status = 'available';
         $item->save();
-
         return response()->json([
             'message' => 'Item updated successfully',
             'data' => $item,
@@ -421,6 +418,33 @@ class ApiController extends Controller
         $specs = Specification::where('item_id', '=', $req->item_id)->get();
         return response()->json([
             'data' => $specs
+        ]);
+    }
+
+    public function editSpecs($id){
+        $specs = Specification::where('item_id', '=', $id)->get();
+        return response()->json([
+            'data' => $specs
+        ]);
+    }
+
+    public function delSpecs($id){
+        $spec = Specification::find($id);
+        $spec->delete();
+        return response()->json([
+            'message' => 'Specfication deleted'
+        ]);
+    }
+
+    public function updateSpecs(Request $request, $id){
+        foreach($request->specs as $key => $value){
+            Specification::updateOrCreate([
+                'item_id' => $id,
+                'spec' => $request->input('specs.'.$key.'.edit_spec_name')
+            ]);
+        }
+        return response()->json([
+            'message' => 'Success'
         ]);
     }
 }
