@@ -4922,9 +4922,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      img_selector: '',
       specs: [],
       stepper: 1,
       dialogAdd: false,
@@ -5050,20 +5055,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this2 = this;
 
       var file = e.target.files[0];
-      var reader = new FileReader(); // console.log(file['size'])
+      var reader = new FileReader();
 
-      if (file['size'] < 1048576) {
-        reader.onload = function (file) {
-          _this2.addForm.item_image = reader.result;
-        };
-
-        reader.readAsDataURL(file);
-      } else {
+      if (file['size'] > 4194304) {
         this.err_message = 'File too large';
         this.error = true;
         setTimeout(function () {
           _this2.error = false;
         }, 3000);
+      } else {
+        reader.onload = function (file) {
+          _this2.addForm.item_image = reader.result;
+        };
+
+        reader.readAsDataURL(file);
       }
     },
     discardAdd: function discardAdd() {
@@ -5092,9 +5097,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     saveItem: function saveItem() {
       var _this3 = this;
 
-      if (this.addForm.item_name == '' || this.addForm.category == '' || this.addForm.item_quantity == '' || this.addForm.item_price == '' || this.addForm.item_image == '') {
+      if (this.addForm.item_name == '' || this.addForm.category == '' || this.addForm.item_quantity == '' || this.addForm.item_price == '') {
         this.error = true;
         this.err_message = 'Pls input fields';
+        setTimeout(function () {
+          _this3.error = false;
+        }, 2000);
+      } else if (this.addForm.item_image == '') {
+        this.error = true;
+        this.err_message = 'Please select a new file';
         setTimeout(function () {
           _this3.error = false;
         }, 2000);
@@ -5185,8 +5196,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _this6.editmode = "show";
                 _this6.dialog = true;
-                _this6.showItemDetails = item; // console.log(item.item_id)
-
+                _this6.showItemDetails = item;
                 _context3.next = 5;
                 return _this6.$http.post('api/getSpecs', item, {
                   headers: {
@@ -5260,6 +5270,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.user.default_profile = getInitials(name);
     },
     formReset: function formReset() {
+      this.addForm.item_image = "";
       this.addForm.item_name = "";
       this.addForm.category = "";
       this.addForm.item_price = "";
@@ -39883,55 +39894,105 @@ var render = function() {
                     "v-container",
                     [
                       _c("v-card-text", [
-                        _c(
-                          "div",
-                          [
-                            _c("span", [_vm._v("Item: ")]),
-                            _c("span", { staticClass: "mx-5" }),
-                            _c("span", [
-                              _vm._v(_vm._s(_vm.showItemDetails.item_name))
-                            ]),
-                            _c("br"),
-                            _vm._v(" "),
-                            _c("span", [_vm._v("Category: ")]),
-                            _c("span", { staticClass: "mx-5" }),
-                            _c("span", [
-                              _vm._v(_vm._s(_vm.showItemDetails.category))
-                            ]),
-                            _c("br"),
-                            _vm._v(" "),
-                            _c("span", [_vm._v("Price: ")]),
-                            _c("span", { staticClass: "mx-5" }),
-                            _c("span", [
-                              _vm._v(_vm._s(_vm.showItemDetails.item_price))
-                            ]),
-                            _c("br"),
-                            _vm._v(" "),
-                            _c("span", [_vm._v("Quantity: ")]),
-                            _c("span", { staticClass: "mx-5" }),
-                            _c("span", [
-                              _vm._v(_vm._s(_vm.showItemDetails.item_quantity))
-                            ]),
-                            _c("br"),
-                            _vm._v(" "),
-                            _c("span", [_vm._v("Status: ")]),
-                            _c("span", { staticClass: "mx-5" }),
-                            _c("span", [
-                              _vm._v(_vm._s(_vm.showItemDetails.item_status))
-                            ]),
-                            _c("br"),
-                            _vm._v(" "),
-                            _c("span", [_vm._v("SPECS")]),
-                            _c("br"),
-                            _vm._v(" "),
-                            _vm._l(_vm.showSpecDetails, function(specs) {
-                              return _c("div", { key: specs.id }, [
-                                _c("div", [_vm._v(_vm._s(specs.spec))])
+                        _c("div", { staticClass: "row" }, [
+                          _c("div", { staticClass: "col" }, [
+                            _c("div", { staticClass: "my-2" }, [
+                              _c(
+                                "span",
+                                { staticClass: "my-3" },
+                                [_c("v-icon", [_vm._v("mdi-dropbox ")])],
+                                1
+                              ),
+                              _c("span", { staticClass: "ml-2" }, [
+                                _vm._v(_vm._s(_vm.showItemDetails.item_name))
                               ])
-                            })
-                          ],
-                          2
-                        )
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "my-2" }, [
+                              _c(
+                                "span",
+                                { staticClass: "py-1" },
+                                [
+                                  _c("v-icon", [
+                                    _vm._v("mdi-format-list-bulleted")
+                                  ])
+                                ],
+                                1
+                              ),
+                              _c("span", { staticClass: "ml-2" }, [
+                                _vm._v(_vm._s(_vm.showItemDetails.category))
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "my-2" }, [
+                              _c(
+                                "span",
+                                { staticClass: "py-1" },
+                                [_c("v-icon", [_vm._v("mdi-currency-php")])],
+                                1
+                              ),
+                              _c("span", { staticClass: "ml-2" }, [
+                                _vm._v(
+                                  _vm._s(_vm.showItemDetails.item_price) + ".00"
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "my-2" }, [
+                              _c(
+                                "span",
+                                [_c("v-icon", [_vm._v("mdi-file-table-box")])],
+                                1
+                              ),
+                              _c("span", { staticClass: "ml-2" }, [
+                                _vm._v(
+                                  _vm._s(_vm.showItemDetails.item_quantity) +
+                                    " pcs."
+                                )
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _vm.showItemDetails.item_status == "available"
+                              ? _c("div", { staticClass: "my-2" }, [
+                                  _c(
+                                    "span",
+                                    [
+                                      _c(
+                                        "v-icon",
+                                        { attrs: { color: "green darken-2" } },
+                                        [_vm._v("mdi-check-circle-outline")]
+                                      )
+                                    ],
+                                    1
+                                  ),
+                                  _c("span", { staticClass: "ml-2" }, [
+                                    _vm._v(
+                                      _vm._s(_vm.showItemDetails.item_status)
+                                    )
+                                  ])
+                                ])
+                              : _vm._e()
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "col" },
+                            [
+                              _c("div", { staticClass: "text-primary h5" }, [
+                                _vm._v("Product Specifications:")
+                              ]),
+                              _vm._v(" "),
+                              _vm._l(_vm.showSpecDetails, function(spec) {
+                                return _c(
+                                  "div",
+                                  { key: spec.id, staticClass: "my-2" },
+                                  [_c("span", [_vm._v(_vm._s(spec.spec))])]
+                                )
+                              })
+                            ],
+                            2
+                          )
+                        ])
                       ])
                     ],
                     1

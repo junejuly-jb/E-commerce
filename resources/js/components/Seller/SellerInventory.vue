@@ -237,25 +237,29 @@
         </v-container>
         <v-container v-else-if="editmode == 'show'">
           <v-card-text>
-            <div>
-              <span>Item: </span><span class="mx-5"></span
-              ><span>{{ showItemDetails.item_name }}</span
-              ><br />
-              <span>Category: </span><span class="mx-5"></span
-              ><span>{{ showItemDetails.category }}</span
-              ><br />
-              <span>Price: </span><span class="mx-5"></span
-              ><span>{{ showItemDetails.item_price }}</span
-              ><br />
-              <span>Quantity: </span><span class="mx-5"></span
-              ><span>{{ showItemDetails.item_quantity }}</span
-              ><br />
-              <span>Status: </span><span class="mx-5"></span
-              ><span>{{ showItemDetails.item_status }}</span
-              ><br />
-              <span>SPECS</span><br>
-              <div v-for="specs in showSpecDetails" v-bind:key="specs.id">
-                <div>{{specs.spec}}</div>
+            <div class="row">
+              <div class="col">
+                <div class="my-2">
+                  <span class="my-3"><v-icon>mdi-dropbox </v-icon></span><span class="ml-2">{{ showItemDetails.item_name }}</span>
+                </div>
+                <div class="my-2">
+                  <span class="py-1"><v-icon>mdi-format-list-bulleted</v-icon></span><span class="ml-2">{{ showItemDetails.category }}</span>
+                </div>
+                <div class="my-2">
+                  <span class="py-1"><v-icon>mdi-currency-php</v-icon></span><span class="ml-2">{{ showItemDetails.item_price }}.00</span>
+                </div>
+                <div class="my-2">
+                  <span><v-icon>mdi-file-table-box</v-icon></span><span class="ml-2">{{ showItemDetails.item_quantity }} pcs.</span>
+                </div>
+                <div class="my-2" v-if="showItemDetails.item_status == 'available'">
+                  <span><v-icon color="green darken-2">mdi-check-circle-outline</v-icon></span><span class="ml-2">{{ showItemDetails.item_status }}</span>
+                </div>
+                </div>
+              <div class="col">
+                  <div class="text-primary h5">Product Specifications:</div>
+                  <div class="my-2" v-for="spec in showSpecDetails" :key="spec.id">
+                    <span>{{spec.spec}}</span>
+                  </div>
               </div>
             </div>
           </v-card-text>
@@ -345,6 +349,7 @@
 <script>
 export default {
   data: () => ({
+    img_selector: '',
     specs: [],
     stepper: 1,
     dialogAdd: false,
@@ -452,17 +457,16 @@ export default {
     selectPhoto(e){
         let file = e.target.files[0]
         let reader = new FileReader();
-        // console.log(file['size'])
-        if(file['size'] < 1048576){
-            reader.onload = (file) => {
+        if(file['size'] > 4194304){
+          this.err_message = 'File too large'
+          this.error = true
+          setTimeout(() => { this.error = false }, 3000)
+        }
+        else{
+             reader.onload = (file) => {
                 this.addForm.item_image = reader.result
             }
             reader.readAsDataURL(file)
-        }
-        else{
-            this.err_message = 'File too large'
-            this.error = true
-            setTimeout(() => { this.error = false }, 3000)
         }
     },
     discardAdd(){
@@ -490,9 +494,16 @@ export default {
       else return "red";
     },
     saveItem() {
-      if(this.addForm.item_name == '' || this.addForm.category == '' || this.addForm.item_quantity == '' || this.addForm.item_price == '' || this.addForm.item_image == ''){
+      if(this.addForm.item_name == '' || this.addForm.category == '' || this.addForm.item_quantity == '' || this.addForm.item_price == ''){
         this.error = true
         this.err_message = 'Pls input fields'
+        setTimeout(() => {
+          this.error = false
+        },2000)
+      }
+      else if(this.addForm.item_image == ''){
+        this.error = true
+        this.err_message = 'Please select a new file'
         setTimeout(() => {
           this.error = false
         },2000)
@@ -548,7 +559,6 @@ export default {
       this.editmode = "show";
       this.dialog = true;
       this.showItemDetails = item;
-      // console.log(item.item_id)
       await this.$http.post('api/getSpecs', item, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
       .then((res) => {
         this.showSpecDetails = res.data.data
@@ -593,12 +603,13 @@ export default {
       };
       this.user.default_profile = getInitials(name);
     },
-    formReset() {
-      this.addForm.item_name = "";
-      this.addForm.category = "";
-      this.addForm.item_price = "";
-      this.addForm.item_quantity = "";
-      this.valid = true;
+    formReset() { 
+      this.addForm.item_image = ""
+      this.addForm.item_name = ""
+      this.addForm.category = ""
+      this.addForm.item_price = ""
+      this.addForm.item_quantity = ""
+      this.valid = true
     },
   },
   mounted() {
