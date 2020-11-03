@@ -34,6 +34,9 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::post('/updateAd', 'App\Http\Controllers\ApiController@updateAd');
     Route::post('/setSpecs/{id}', 'App\Http\Controllers\ApiController@setSpecs');
     Route::post('/getSpecs', 'App\Http\Controllers\ApiController@getSpecs');
+    Route::get('/editSpecs/{id}', 'App\Http\Controllers\ApiController@editSpecs');
+    Route::delete('/delSpecs/{id}', 'App\Http\Controllers\ApiController@delSpecs');
+    Route::post('/updateSpecs/{id}', 'App\Http\Controllers\ApiController@updateSpecs');
 });
 
 Route::post('/register', 'App\Http\Controllers\ApiController@register');

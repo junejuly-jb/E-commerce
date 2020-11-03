@@ -4926,10 +4926,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       img_selector: '',
+      additionalSpecs: [],
       specs: [],
       stepper: 1,
       dialogAdd: false,
@@ -4992,6 +5011,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         item_quantity: "",
         item_desc: ""
       },
+      editSpecsForm: [],
       rules: {
         required: function required(value) {
           return !!value || "This field is required.";
@@ -5078,8 +5098,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.formReset();
     },
     add: function add() {
-      console.log(_.size(this.specs));
-
       if (_.size(this.specs) <= 4) {
         this.specs.push({
           spec_name: ''
@@ -5088,40 +5106,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log('Out of bounds');
       }
     },
+    editAdditionalSpecs: function editAdditionalSpecs() {
+      // if( this.specsCount <= 4 ){
+      //   this.additionalSpecs.push({
+      //     spec_name: ''
+      //   })
+      // }
+      // else{
+      //   console.log('Out of bounds')
+      // }
+      this.additionalSpecs.push({
+        edit_spec_name: ''
+      });
+    },
     remove: function remove(index) {
       this.specs.splice(index, 1);
     },
-    getColor: function getColor(item_status) {
-      if (item_status == "available") return "green";else return "red";
+    removeAdditionalSpecs: function removeAdditionalSpecs(i) {
+      this.additionalSpecs.splice(i, 1);
     },
-    saveItem: function saveItem() {
+    removeSpecs: function removeSpecs(index, specs) {
       var _this3 = this;
-
-      if (this.addForm.item_name == '' || this.addForm.category == '' || this.addForm.item_quantity == '' || this.addForm.item_price == '') {
-        this.error = true;
-        this.err_message = 'Pls input fields';
-        setTimeout(function () {
-          _this3.error = false;
-        }, 2000);
-      } else if (this.addForm.item_image == '') {
-        this.error = true;
-        this.err_message = 'Please select a new file';
-        setTimeout(function () {
-          _this3.error = false;
-        }, 2000);
-      } else {
-        this.stepper = 2;
-        this.error = false;
-      }
-
-      console.log(this.addForm);
-    },
-    btnLoad: function btnLoad() {
-      this.btnLoadIsPressed = true;
-      this.getAllItems();
-    },
-    getAllItems: function getAllItems() {
-      var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
@@ -5129,14 +5134,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.next = 2;
-                return _this4.$http.get("api/items", {
+                return _this3.$http["delete"]('api/delSpecs/' + specs, {
                   headers: {
-                    Authorization: "Bearer " + _this4.$auth.getToken()
+                    Authorization: 'Bearer ' + _this3.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this4.inventoryItems = res.data.data;
-                })["finally"](function () {
-                  _this4.btnLoadIsPressed = false;
+                  _this3.snackbar = true;
+                  _this3.message = res.data.message;
+
+                  _this3.editSpecsForm.splice(index, 1);
                 });
 
               case 2:
@@ -5145,6 +5151,60 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             }
           }
         }, _callee);
+      }))();
+    },
+    getColor: function getColor(item_status) {
+      if (item_status == "available") return "green";else return "red";
+    },
+    saveItem: function saveItem() {
+      var _this4 = this;
+
+      if (this.addForm.item_name == '' || this.addForm.category == '' || this.addForm.item_quantity == '' || this.addForm.item_price == '') {
+        this.error = true;
+        this.err_message = 'Pls input fields';
+        setTimeout(function () {
+          _this4.error = false;
+        }, 2000);
+      } else if (this.addForm.item_image == '') {
+        this.error = true;
+        this.err_message = 'Please select a new file';
+        setTimeout(function () {
+          _this4.error = false;
+        }, 2000);
+      } else {
+        this.stepper = 2;
+        this.error = false;
+      }
+    },
+    btnLoad: function btnLoad() {
+      this.btnLoadIsPressed = true;
+      this.getAllItems();
+    },
+    getAllItems: function getAllItems() {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return _this5.$http.get("api/items", {
+                  headers: {
+                    Authorization: "Bearer " + _this5.$auth.getToken()
+                  }
+                }).then(function (res) {
+                  _this5.inventoryItems = res.data.data;
+                })["finally"](function () {
+                  _this5.btnLoadIsPressed = false;
+                });
+
+              case 2:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
       }))();
     },
     btnAddItem: function btnAddItem() {
@@ -5158,35 +5218,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.index = this.inventoryItems.indexOf(item);
     },
     confirmDelete: function confirmDelete() {
-      var _this5 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return _this5.$http["delete"]("api/deleteItem/" + _this5.toDelete.item_id, {
-                  headers: {
-                    Authorization: "Bearer " + _this5.$auth.getToken()
-                  }
-                }).then(function (res) {
-                  _this5.dialog = false;
-                  _this5.snackbar = true;
-                  _this5.message = res.data.message;
-
-                  _this5.inventoryItems.splice(_this5.index, 1);
-                });
-
-              case 2:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }))();
-    },
-    btnShow: function btnShow(item) {
       var _this6 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
@@ -5194,20 +5225,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _this6.editmode = "show";
-                _this6.dialog = true;
-                _this6.showItemDetails = item;
-                _context3.next = 5;
-                return _this6.$http.post('api/getSpecs', item, {
+                _context3.next = 2;
+                return _this6.$http["delete"]("api/deleteItem/" + _this6.toDelete.item_id, {
                   headers: {
-                    Authorization: 'Bearer ' + _this6.$auth.getToken()
+                    Authorization: "Bearer " + _this6.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this6.showSpecDetails = res.data.data;
-                  console.log(_this6.showSpecDetails);
+                  _this6.dialog = false;
+                  _this6.snackbar = true;
+                  _this6.message = res.data.message;
+
+                  _this6.inventoryItems.splice(_this6.index, 1);
                 });
 
-              case 5:
+              case 2:
               case "end":
                 return _context3.stop();
             }
@@ -5215,13 +5246,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee3);
       }))();
     },
-    btnEdit: function btnEdit(item) {
-      this.editmode = "edit";
-      this.dialog = true;
-      this.editForm = item;
-      this.index = this.inventoryItems.indexOf(item);
-    },
-    updateItem: function updateItem() {
+    btnShow: function btnShow(item) {
       var _this7 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
@@ -5229,24 +5254,95 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _context4.next = 2;
-                return _this7.$http.put("api/updateItem/" + _this7.editForm.item_id, _this7.editForm, {
+                _this7.editmode = "show";
+                _this7.showItemDetails = item;
+                _context4.next = 4;
+                return _this7.$http.post('api/getSpecs', item, {
                   headers: {
-                    Authorization: "Bearer " + _this7.$auth.getToken()
+                    Authorization: 'Bearer ' + _this7.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this7.snackbar = true;
-                  _this7.message = res.data.message;
-                  _this7.dialog = false;
-                  Object.assign(_this7.inventoryItems[_this7.index], res.data.data);
+                  _this7.showSpecDetails = res.data.data;
+                  _this7.dialog = true;
                 });
 
-              case 2:
+              case 4:
               case "end":
                 return _context4.stop();
             }
           }
         }, _callee4);
+      }))();
+    },
+    btnEdit: function btnEdit(item) {
+      var _this8 = this;
+
+      this.editmode = "edit";
+      this.editForm = item;
+      this.index = this.inventoryItems.indexOf(item); // console.log(item)
+
+      this.$http.get('api/editSpecs/' + item.item_id, {
+        headers: {
+          Authorization: 'Bearer ' + this.$auth.getToken()
+        }
+      }).then(function (res) {
+        _this8.editSpecsForm = res.data.data;
+        _this8.dialog = true; // console.log(this.editSpecsForm)
+      });
+    },
+    updateItem: function updateItem() {
+      var _this9 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.next = 2;
+                return _this9.$http.put("api/updateItem/" + _this9.editForm.item_id, _this9.editForm, {
+                  headers: {
+                    Authorization: "Bearer " + _this9.$auth.getToken()
+                  }
+                }).then(function (res) {
+                  if (res.status == 200) {
+                    _this9.lastId = res.data.data['item_id'];
+                    var toPush = res.data.data;
+
+                    var addRows = _.map(_this9.additionalSpecs, function (num) {
+                      return _.pick(num, 'edit_spec_name');
+                    }); // console.log(addRows)
+
+
+                    _this9.$http.post('api/updateSpecs/' + _this9.lastId, {
+                      specs: addRows
+                    }, {
+                      headers: {
+                        Authorization: 'Bearer ' + _this9.$auth.getToken()
+                      }
+                    }).then(function (res) {
+                      _this9.dialog = false;
+                      _this9.snackbar = true;
+                      _this9.additionalSpecs = [];
+                      _this9.message = res.data.message; // this.inventoryItems.push(toPush)
+
+                      Object.assign(_this9.inventoryItems[_this9.index], _this9.toPush);
+                    });
+                  } else {
+                    _this9.snackbar = true;
+                    _this9.dialog = false;
+                    _this9.message = 'Something went wrong';
+                  } // this.snackbar = true;
+                  // this.message = res.data.message;
+                  // this.dialog = false;
+
+                });
+
+              case 2:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5);
       }))();
     },
     getUser: function getUser() {
@@ -5276,6 +5372,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.addForm.item_price = "";
       this.addForm.item_quantity = "";
       this.valid = true;
+    }
+  },
+  computed: {
+    specsCount: function specsCount() {
+      return Object.keys(this.editSpecsForm).length;
     }
   },
   mounted: function mounted() {
@@ -40100,6 +40201,105 @@ var render = function() {
                           )
                         ],
                         1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "container" },
+                        [
+                          _c("div", { staticClass: "text-primary pb-3" }, [
+                            _vm._v(
+                              "Product Specifications " + _vm._s(_vm.specsCount)
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "v-btn",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.specsCount != 5,
+                                  expression: "specsCount != 5"
+                                }
+                              ],
+                              attrs: { color: "green", small: "" },
+                              on: { click: _vm.editAdditionalSpecs }
+                            },
+                            [
+                              _c("v-icon", [_vm._v("mdi-plus")]),
+                              _vm._v(" add field")
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _vm._l(_vm.editSpecsForm, function(specs, index) {
+                            return _c(
+                              "div",
+                              { key: index, staticClass: "d-flex" },
+                              [
+                                _c("v-text-field", {
+                                  attrs: { value: specs.spec, disabled: "" }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    attrs: { fab: "", color: "red", small: "" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.removeSpecs(index, specs.id)
+                                      }
+                                    }
+                                  },
+                                  [_c("v-icon", [_vm._v("mdi-minus")])],
+                                  1
+                                )
+                              ],
+                              1
+                            )
+                          }),
+                          _vm._v(" "),
+                          _vm._l(_vm.additionalSpecs, function(addition, i) {
+                            return _c(
+                              "div",
+                              { key: "A" + i, staticClass: "d-flex" },
+                              [
+                                _c("v-text-field", {
+                                  attrs: { label: "Specification" },
+                                  model: {
+                                    value: addition.edit_spec_name,
+                                    callback: function($$v) {
+                                      _vm.$set(addition, "edit_spec_name", $$v)
+                                    },
+                                    expression: "addition.edit_spec_name"
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    attrs: {
+                                      fab: "",
+                                      small: "",
+                                      color: "red darken-2"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.removeAdditionalSpecs(i)
+                                      }
+                                    }
+                                  },
+                                  [_c("v-icon", [_vm._v("mdi-minus")])],
+                                  1
+                                )
+                              ],
+                              1
+                            )
+                          })
+                        ],
+                        2
                       )
                     ],
                     1

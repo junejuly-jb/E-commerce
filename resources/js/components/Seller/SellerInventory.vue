@@ -307,6 +307,24 @@
               ></v-text-field>
             </v-col>
           </v-row>
+          <div class="container">
+            <div class="text-primary pb-3">Product Specifications {{specsCount}}</div>
+            <v-btn color="green" small v-show="specsCount != 5" @click="editAdditionalSpecs"><v-icon>mdi-plus</v-icon> add field</v-btn>
+            <div v-for="(specs, index) in editSpecsForm" :key="index" class="d-flex">
+              <v-text-field :value="specs.spec" disabled></v-text-field>
+              <v-btn fab color="red" small @click="removeSpecs(index, specs.id)"><v-icon>mdi-minus</v-icon></v-btn>
+            </div>
+            <div class="d-flex" v-for="(addition, i) in additionalSpecs" :key="'A' + i">
+                  <v-text-field v-model="addition.edit_spec_name" label="Specification"></v-text-field>
+                <v-btn 
+                @click="removeAdditionalSpecs(i)"
+                fab
+                small
+                color="red darken-2">
+                <v-icon>mdi-minus</v-icon>
+                </v-btn>
+            </div>
+          </div>
         </v-container>
         <v-card-actions>
           <v-spacer></v-spacer>
@@ -350,6 +368,7 @@
 export default {
   data: () => ({
     img_selector: '',
+    additionalSpecs: [],
     specs: [],
     stepper: 1,
     dialogAdd: false,
@@ -409,6 +428,7 @@ export default {
       item_quantity: "",
       item_desc: "",
     },
+    editSpecsForm: [],
     rules: {
       required: (value) => !!value || "This field is required.",
       notNull: (v) => v != 0 || "Quantity must be higher than 0",
@@ -476,7 +496,6 @@ export default {
       this.formReset()
     },
     add() {
-      console.log( _.size(this.specs) )
       if( _.size(this.specs) <= 4 ){
         this.specs.push({
           spec_name: ''
@@ -486,8 +505,34 @@ export default {
         console.log('Out of bounds')
       }
     },
+    editAdditionalSpecs(){
+      // if( this.specsCount <= 4 ){
+      //   this.additionalSpecs.push({
+      //     spec_name: ''
+      //   })
+      // }
+      // else{
+      //   console.log('Out of bounds')
+      // }
+      this.additionalSpecs.push({
+        edit_spec_name: ''
+      })
+    },
     remove(index) {
       this.specs.splice(index, 1);
+    },
+    removeAdditionalSpecs(i) {
+      this.additionalSpecs.splice(i, 1);
+    },
+    async removeSpecs(index, specs){
+      await this.$http.delete('api/delSpecs/' + specs, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+      .then((res) => {
+        this.snackbar = true
+        this.message = res.data.message
+        this.editSpecsForm.splice(index, 1)
+      })
+      // console.log(specs)
+      
     },
     getColor(item_status) {
       if (item_status == "available") return "green";
@@ -512,7 +557,6 @@ export default {
         this.stepper = 2
         this.error = false
       }
-        console.log(this.addForm)
 
     },
     btnLoad() {
@@ -557,32 +601,59 @@ export default {
     },
     async btnShow(item) {
       this.editmode = "show";
-      this.dialog = true;
       this.showItemDetails = item;
       await this.$http.post('api/getSpecs', item, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
       .then((res) => {
         this.showSpecDetails = res.data.data
-        console.log(this.showSpecDetails)
+        this.dialog = true;
       })
     },
     btnEdit(item) {
       this.editmode = "edit";
-      this.dialog = true;
       this.editForm = item;
       this.index = this.inventoryItems.indexOf(item);
+      // console.log(item)
+      this.$http.get('api/editSpecs/' + item.item_id, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
+      .then((res) => {
+        this.editSpecsForm = res.data.data
+        this.dialog = true;
+
+        // console.log(this.editSpecsForm)
+      })
     },
     async updateItem() {
-      await this.$http
-        .put("api/updateItem/" + this.editForm.item_id, this.editForm, {
+      await this.$http.put("api/updateItem/" + this.editForm.item_id, this.editForm, {
           headers: {
             Authorization: "Bearer " + this.$auth.getToken(),
           },
         })
         .then((res) => {
-          this.snackbar = true;
-          this.message = res.data.message;
-          this.dialog = false;
-          Object.assign(this.inventoryItems[this.index], res.data.data);
+          if(res.status == 200){
+            this.lastId = res.data.data['item_id']
+            var toPush = res.data.data
+            var addRows = _.map(this.additionalSpecs, (num) => {
+              return _.pick(num, 'edit_spec_name');
+            })
+
+            // console.log(addRows)
+            this.$http.post('api/updateSpecs/' + this.lastId, {specs: addRows}, { headers: { Authorization: 'Bearer ' + this.$auth.getToken()}})
+            .then((res) => {
+              this.dialog = false
+              this.snackbar = true
+              this.additionalSpecs = []
+              this.message = res.data.message
+              // this.inventoryItems.push(toPush)
+              Object.assign(this.inventoryItems[this.index], this.toPush);
+              })
+          }
+          else{
+            this.snackbar = true
+            this.dialog = false
+            this.message = 'Something went wrong'
+          }
+          // this.snackbar = true;
+          // this.message = res.data.message;
+          // this.dialog = false;
         });
     },
     getUser() {
@@ -611,6 +682,11 @@ export default {
       this.addForm.item_quantity = ""
       this.valid = true
     },
+  },
+  computed: {
+    specsCount(){
+      return Object.keys(this.editSpecsForm).length  
+    }
   },
   mounted() {
     this.getAllItems();
