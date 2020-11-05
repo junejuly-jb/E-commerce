@@ -42,28 +42,35 @@
                 <v-icon v-else> mdi-refresh </v-icon>
               </v-btn>
             </v-card-title>
-            <v-data-table
-              :headers="headers"
-              :items="inventoryItems"
-              :search="search"
-            >
-              <template v-slot:[`item.actions`]="{ item }">
-                <v-btn icon color="blue lighten-2" @click="btnShow(item)">
-                  <v-icon>mdi-eye-outline</v-icon>
-                </v-btn>
-                <v-btn icon color="green lighten-2" @click="btnEdit(item)">
-                  <v-icon>mdi-pencil-outline</v-icon>
-                </v-btn>
-                <v-btn icon color="red lighten-2" @click="btnDelete(item)">
-                  <v-icon>mdi-trash-can-outline</v-icon>
-                </v-btn>
-              </template>
-              <template v-slot:[`item.item_status`]="{ item }">
-                <v-chip :color="getColor(item.item_status)" dark>
-                  {{ item.item_status }}
-                </v-chip>
-              </template>
-            </v-data-table>
+            <div v-if="beforeDataFetch == true">
+              <v-skeleton-loader
+              type="article"
+              ></v-skeleton-loader>
+            </div>
+            <div v-else>
+              <v-data-table
+                :headers="headers"
+                :items="inventoryItems"
+                :search="search"
+              >
+                <template v-slot:[`item.actions`]="{ item }">
+                  <v-btn icon color="blue lighten-2" @click="btnShow(item)">
+                    <v-icon>mdi-eye-outline</v-icon>
+                  </v-btn>
+                  <v-btn icon color="green lighten-2" @click="btnEdit(item)">
+                    <v-icon>mdi-pencil-outline</v-icon>
+                  </v-btn>
+                  <v-btn icon color="red lighten-2" @click="btnDelete(item)">
+                    <v-icon>mdi-trash-can-outline</v-icon>
+                  </v-btn>
+                </template>
+                <template v-slot:[`item.item_status`]="{ item }">
+                  <v-chip :color="getColor(item.item_status)" dark>
+                    {{ item.item_status }}
+                  </v-chip>
+                </template>
+              </v-data-table>
+            </div>
           </v-card>
         </div>
       </div>
@@ -388,6 +395,7 @@
 <script>
 export default {
   data: () => ({
+    beforeDataFetch: false,
     loading_dialog: false,
     img_selector: '',
     additionalSpecs: [],
@@ -576,12 +584,16 @@ export default {
       this.getAllItems();
     },
     async getAllItems() {
+      this.beforeDataFetch = true
       await this.$http.get("api/items", { headers: { Authorization: "Bearer " + this.$auth.getToken() }})
         .then((res) => {
           this.inventoryItems = res.data.data;
         })
         .finally(() => {
-          this.btnLoadIsPressed = false;
+          setTimeout(() => {
+            this.beforeDataFetch = false
+            this.btnLoadIsPressed = false;
+          }, 1000)
         });
     },
     btnAddItem() {
