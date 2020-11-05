@@ -362,11 +362,33 @@
         </v-btn>
       </template>
     </v-snackbar>
+
+
+
+    <!-- spinner dialog  -->
+    <v-dialog
+      v-model="loading_dialog"
+      persistent
+      max-width="290"
+    >
+      <v-card>
+        <div class="py-5 text-center">
+          <v-progress-circular
+            :size="70"
+            :width="7"
+            color="purple"
+            indeterminate
+          ></v-progress-circular>
+          <span> Updating...</span>
+        </div>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 <script>
 export default {
   data: () => ({
+    loading_dialog: false,
     img_selector: '',
     additionalSpecs: [],
     specs: [],
@@ -506,14 +528,6 @@ export default {
       }
     },
     editAdditionalSpecs(){
-      // if( this.specsCount <= 4 ){
-      //   this.additionalSpecs.push({
-      //     spec_name: ''
-      //   })
-      // }
-      // else{
-      //   console.log('Out of bounds')
-      // }
       this.additionalSpecs.push({
         edit_spec_name: ''
       })
@@ -531,8 +545,6 @@ export default {
         this.message = res.data.message
         this.editSpecsForm.splice(index, 1)
       })
-      // console.log(specs)
-      
     },
     getColor(item_status) {
       if (item_status == "available") return "green";
@@ -564,10 +576,7 @@ export default {
       this.getAllItems();
     },
     async getAllItems() {
-      await this.$http
-        .get("api/items", {
-          headers: { Authorization: "Bearer " + this.$auth.getToken() },
-        })
+      await this.$http.get("api/items", { headers: { Authorization: "Bearer " + this.$auth.getToken() }})
         .then((res) => {
           this.inventoryItems = res.data.data;
         })
@@ -612,49 +621,45 @@ export default {
       this.editmode = "edit";
       this.editForm = item;
       this.index = this.inventoryItems.indexOf(item);
-      // console.log(item)
       this.$http.get('api/editSpecs/' + item.item_id, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
       .then((res) => {
         this.editSpecsForm = res.data.data
         this.dialog = true;
-
-        // console.log(this.editSpecsForm)
       })
     },
     async updateItem() {
-      await this.$http.put("api/updateItem/" + this.editForm.item_id, this.editForm, {
-          headers: {
-            Authorization: "Bearer " + this.$auth.getToken(),
-          },
-        })
+      this.dialog = false
+      this.loading_dialog = true
+      console.log('clicked')
+      await this.$http.put("api/updateItem/" + this.editForm.item_id, this.editForm, { headers: { Authorization: "Bearer " + this.$auth.getToken()}})
         .then((res) => {
           if(res.status == 200){
             this.lastId = res.data.data['item_id']
-            var toPush = res.data.data
+            var toPush_editedData = res.data.data
+            Object.assign(this.inventoryItems[this.index], toPush_editedData)
             var addRows = _.map(this.additionalSpecs, (num) => {
               return _.pick(num, 'edit_spec_name');
             })
-
-            // console.log(addRows)
             this.$http.post('api/updateSpecs/' + this.lastId, {specs: addRows}, { headers: { Authorization: 'Bearer ' + this.$auth.getToken()}})
             .then((res) => {
-              this.dialog = false
-              this.snackbar = true
               this.additionalSpecs = []
               this.message = res.data.message
-              // this.inventoryItems.push(toPush)
-              Object.assign(this.inventoryItems[this.index], this.toPush);
               })
           }
           else{
             this.snackbar = true
-            this.dialog = false
             this.message = 'Something went wrong'
+            this.loading_dialog = false
+            
           }
-          // this.snackbar = true;
-          // this.message = res.data.message;
-          // this.dialog = false;
-        });
+        })
+        .finally(() => {
+          setTimeout(() => { 
+            this.loading_dialog = false
+            this.getColor()
+            this.snackbar = true
+          }, 1000)
+        })
     },
     getUser() {
       var user = JSON.parse(localStorage.getItem("user"));

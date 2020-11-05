@@ -368,7 +368,7 @@ class ApiController extends Controller
 
     public function updateItem($id, Request $req){
 
-        if($req->item_quantity < 0){
+        if($req->item_quantity <= 0){
             $item = Item::find($id);
             $item->item_name = $req->item_name;
             $item->category = $req->category;
@@ -382,17 +382,19 @@ class ApiController extends Controller
                 'data' => $item,
             ]);
         }
-        $item = Item::find($id);
-        $item->item_name = $req->item_name;
-        $item->category = $req->category;
-        $item->item_price = $req->item_price;
-        $item->item_quantity = $req->item_quantity;
-        $item->item_status = 'available';
-        $item->save();
-        return response()->json([
-            'message' => 'Item updated successfully',
-            'data' => $item,
-        ]);
+        else{
+            $item = Item::find($id);
+            $item->item_name = $req->item_name;
+            $item->category = $req->category;
+            $item->item_price = $req->item_price;
+            $item->item_quantity = $req->item_quantity;
+            $item->item_status = 'available';
+            $item->save();
+            return response()->json([
+                'message' => 'Item updated successfully',
+                'data' => $item,
+            ]);
+        }
     }
 
     public function dismissAd(){
