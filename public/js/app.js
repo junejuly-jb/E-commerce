@@ -4965,9 +4965,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      beforeDataFetch: false,
       loading_dialog: false,
       img_selector: '',
       additionalSpecs: [],
@@ -5202,7 +5210,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
+                _this5.beforeDataFetch = true;
+                _context2.next = 3;
                 return _this5.$http.get("api/items", {
                   headers: {
                     Authorization: "Bearer " + _this5.$auth.getToken()
@@ -5210,10 +5219,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }).then(function (res) {
                   _this5.inventoryItems = res.data.data;
                 })["finally"](function () {
-                  _this5.btnLoadIsPressed = false;
+                  setTimeout(function () {
+                    _this5.beforeDataFetch = false;
+                    _this5.btnLoadIsPressed = false;
+                  }, 1000);
                 });
 
-              case 2:
+              case 3:
               case "end":
                 return _context2.stop();
             }
@@ -39428,109 +39440,131 @@ var render = function() {
                         1
                       ),
                       _vm._v(" "),
-                      _c("v-data-table", {
-                        attrs: {
-                          headers: _vm.headers,
-                          items: _vm.inventoryItems,
-                          search: _vm.search
-                        },
-                        scopedSlots: _vm._u(
-                          [
-                            {
-                              key: "item.actions",
-                              fn: function(ref) {
-                                var item = ref.item
-                                return [
-                                  _c(
-                                    "v-btn",
+                      _vm.beforeDataFetch == true
+                        ? _c(
+                            "div",
+                            [
+                              _c("v-skeleton-loader", {
+                                attrs: { type: "article" }
+                              })
+                            ],
+                            1
+                          )
+                        : _c(
+                            "div",
+                            [
+                              _c("v-data-table", {
+                                attrs: {
+                                  headers: _vm.headers,
+                                  items: _vm.inventoryItems,
+                                  search: _vm.search
+                                },
+                                scopedSlots: _vm._u(
+                                  [
                                     {
-                                      attrs: {
-                                        icon: "",
-                                        color: "blue lighten-2"
-                                      },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.btnShow(item)
-                                        }
+                                      key: "item.actions",
+                                      fn: function(ref) {
+                                        var item = ref.item
+                                        return [
+                                          _c(
+                                            "v-btn",
+                                            {
+                                              attrs: {
+                                                icon: "",
+                                                color: "blue lighten-2"
+                                              },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.btnShow(item)
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c("v-icon", [
+                                                _vm._v("mdi-eye-outline")
+                                              ])
+                                            ],
+                                            1
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "v-btn",
+                                            {
+                                              attrs: {
+                                                icon: "",
+                                                color: "green lighten-2"
+                                              },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.btnEdit(item)
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c("v-icon", [
+                                                _vm._v("mdi-pencil-outline")
+                                              ])
+                                            ],
+                                            1
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "v-btn",
+                                            {
+                                              attrs: {
+                                                icon: "",
+                                                color: "red lighten-2"
+                                              },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.btnDelete(item)
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c("v-icon", [
+                                                _vm._v("mdi-trash-can-outline")
+                                              ])
+                                            ],
+                                            1
+                                          )
+                                        ]
                                       }
                                     },
-                                    [_c("v-icon", [_vm._v("mdi-eye-outline")])],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-btn",
                                     {
-                                      attrs: {
-                                        icon: "",
-                                        color: "green lighten-2"
-                                      },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.btnEdit(item)
-                                        }
+                                      key: "item.item_status",
+                                      fn: function(ref) {
+                                        var item = ref.item
+                                        return [
+                                          _c(
+                                            "v-chip",
+                                            {
+                                              attrs: {
+                                                color: _vm.getColor(
+                                                  item.item_status
+                                                ),
+                                                dark: ""
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                  " +
+                                                  _vm._s(item.item_status) +
+                                                  "\n                "
+                                              )
+                                            ]
+                                          )
+                                        ]
                                       }
-                                    },
-                                    [
-                                      _c("v-icon", [
-                                        _vm._v("mdi-pencil-outline")
-                                      ])
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "v-btn",
-                                    {
-                                      attrs: {
-                                        icon: "",
-                                        color: "red lighten-2"
-                                      },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.btnDelete(item)
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _c("v-icon", [
-                                        _vm._v("mdi-trash-can-outline")
-                                      ])
-                                    ],
-                                    1
-                                  )
-                                ]
-                              }
-                            },
-                            {
-                              key: "item.item_status",
-                              fn: function(ref) {
-                                var item = ref.item
-                                return [
-                                  _c(
-                                    "v-chip",
-                                    {
-                                      attrs: {
-                                        color: _vm.getColor(item.item_status),
-                                        dark: ""
-                                      }
-                                    },
-                                    [
-                                      _vm._v(
-                                        "\n                " +
-                                          _vm._s(item.item_status) +
-                                          "\n              "
-                                      )
-                                    ]
-                                  )
-                                ]
-                              }
-                            }
-                          ],
-                          null,
-                          true
-                        )
-                      })
+                                    }
+                                  ],
+                                  null,
+                                  true
+                                )
+                              })
+                            ],
+                            1
+                          )
                     ],
                     1
                   )
