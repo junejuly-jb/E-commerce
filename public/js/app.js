@@ -4944,9 +4944,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      loading_dialog: false,
       img_selector: '',
       additionalSpecs: [],
       specs: [],
@@ -5107,14 +5129,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     editAdditionalSpecs: function editAdditionalSpecs() {
-      // if( this.specsCount <= 4 ){
-      //   this.additionalSpecs.push({
-      //     spec_name: ''
-      //   })
-      // }
-      // else{
-      //   console.log('Out of bounds')
-      // }
       this.additionalSpecs.push({
         edit_spec_name: ''
       });
@@ -5279,15 +5293,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       this.editmode = "edit";
       this.editForm = item;
-      this.index = this.inventoryItems.indexOf(item); // console.log(item)
-
+      this.index = this.inventoryItems.indexOf(item);
       this.$http.get('api/editSpecs/' + item.item_id, {
         headers: {
           Authorization: 'Bearer ' + this.$auth.getToken()
         }
       }).then(function (res) {
         _this8.editSpecsForm = res.data.data;
-        _this8.dialog = true; // console.log(this.editSpecsForm)
+        _this8.dialog = true;
       });
     },
     updateItem: function updateItem() {
@@ -5298,7 +5311,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                _context5.next = 2;
+                _this9.dialog = false;
+                _this9.loading_dialog = true;
+                console.log('clicked');
+                _context5.next = 5;
                 return _this9.$http.put("api/updateItem/" + _this9.editForm.item_id, _this9.editForm, {
                   headers: {
                     Authorization: "Bearer " + _this9.$auth.getToken()
@@ -5306,12 +5322,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }).then(function (res) {
                   if (res.status == 200) {
                     _this9.lastId = res.data.data['item_id'];
-                    var toPush = res.data.data;
+                    var toPush_editedData = res.data.data;
+                    Object.assign(_this9.inventoryItems[_this9.index], toPush_editedData);
 
                     var addRows = _.map(_this9.additionalSpecs, function (num) {
                       return _.pick(num, 'edit_spec_name');
-                    }); // console.log(addRows)
-
+                    });
 
                     _this9.$http.post('api/updateSpecs/' + _this9.lastId, {
                       specs: addRows
@@ -5320,24 +5336,25 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                         Authorization: 'Bearer ' + _this9.$auth.getToken()
                       }
                     }).then(function (res) {
-                      _this9.dialog = false;
-                      _this9.snackbar = true;
                       _this9.additionalSpecs = [];
-                      _this9.message = res.data.message; // this.inventoryItems.push(toPush)
-
-                      Object.assign(_this9.inventoryItems[_this9.index], _this9.toPush);
+                      _this9.message = res.data.message;
                     });
                   } else {
                     _this9.snackbar = true;
-                    _this9.dialog = false;
                     _this9.message = 'Something went wrong';
-                  } // this.snackbar = true;
-                  // this.message = res.data.message;
-                  // this.dialog = false;
+                    _this9.loading_dialog = false;
+                  }
+                })["finally"](function () {
+                  setTimeout(function () {
+                    _this9.loading_dialog = false;
 
+                    _this9.getColor();
+
+                    _this9.snackbar = true;
+                  }, 1000);
                 });
 
-              case 2:
+              case 5:
               case "end":
                 return _context5.stop();
             }
@@ -40402,6 +40419,42 @@ var render = function() {
           }
         },
         [_vm._v("\n    " + _vm._s(_vm.message) + "\n\n    ")]
+      ),
+      _vm._v(" "),
+      _c(
+        "v-dialog",
+        {
+          attrs: { persistent: "", "max-width": "290" },
+          model: {
+            value: _vm.loading_dialog,
+            callback: function($$v) {
+              _vm.loading_dialog = $$v
+            },
+            expression: "loading_dialog"
+          }
+        },
+        [
+          _c("v-card", [
+            _c(
+              "div",
+              { staticClass: "py-5 text-center" },
+              [
+                _c("v-progress-circular", {
+                  attrs: {
+                    size: 70,
+                    width: 7,
+                    color: "purple",
+                    indeterminate: ""
+                  }
+                }),
+                _vm._v(" "),
+                _c("span", [_vm._v(" Updating...")])
+              ],
+              1
+            )
+          ])
+        ],
+        1
       )
     ],
     1
