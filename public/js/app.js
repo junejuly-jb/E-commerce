@@ -4972,6 +4972,36 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -5061,6 +5091,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     saveAll: function saveAll() {
       var _this = this;
 
+      this.dialogAdd = false;
+      this.loading_dialog = true;
+
       if (this.addForm.item_quantity <= 0) {
         this.addForm.item_quantity = '0';
         this.addForm.item_status = 'out of stock';
@@ -5086,8 +5119,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               Authorization: 'Bearer ' + _this.$auth.getToken()
             }
           }).then(function (res) {
-            _this.dialogAdd = false;
-            _this.snackbar = true;
             _this.specs = [];
             _this.stepper = 1;
             _this.message = res.data.message;
@@ -5099,6 +5130,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           _this.snackbar = true;
           _this.message = 'Something went wrong';
         }
+      })["finally"](function () {
+        setTimeout(function () {
+          _this.loading_dialog = false;
+          _this.snackbar = true; // console.log(toPush)
+        }, 1000);
       });
     },
     selectPhoto: function selectPhoto(e) {
@@ -39430,7 +39466,7 @@ var render = function() {
                             [
                               _vm.btnLoadIsPressed == true
                                 ? _c("v-progress-circular", {
-                                    attrs: { indeterminate: "", color: "amber" }
+                                    attrs: { indeterminate: "", color: "white" }
                                   })
                                 : _c("v-icon", [_vm._v(" mdi-refresh ")])
                             ],
@@ -39467,64 +39503,159 @@ var render = function() {
                                         var item = ref.item
                                         return [
                                           _c(
-                                            "v-btn",
+                                            "v-menu",
                                             {
                                               attrs: {
-                                                icon: "",
-                                                color: "blue lighten-2"
+                                                "offset-y": "",
+                                                transition:
+                                                  "slide-y-transition",
+                                                left: ""
                                               },
-                                              on: {
-                                                click: function($event) {
-                                                  return _vm.btnShow(item)
-                                                }
-                                              }
+                                              scopedSlots: _vm._u(
+                                                [
+                                                  {
+                                                    key: "activator",
+                                                    fn: function(ref) {
+                                                      var on = ref.on
+                                                      var attrs = ref.attrs
+                                                      return [
+                                                        _c(
+                                                          "v-btn",
+                                                          _vm._g(
+                                                            _vm._b(
+                                                              {
+                                                                attrs: {
+                                                                  icon: "",
+                                                                  color:
+                                                                    "blue darken-2",
+                                                                  small: "",
+                                                                  fab: ""
+                                                                }
+                                                              },
+                                                              "v-btn",
+                                                              attrs,
+                                                              false
+                                                            ),
+                                                            on
+                                                          ),
+                                                          [
+                                                            _c("v-icon", [
+                                                              _vm._v(
+                                                                "mdi-dots-vertical"
+                                                              )
+                                                            ])
+                                                          ],
+                                                          1
+                                                        )
+                                                      ]
+                                                    }
+                                                  }
+                                                ],
+                                                null,
+                                                true
+                                              )
                                             },
                                             [
-                                              _c("v-icon", [
-                                                _vm._v("mdi-eye-outline")
-                                              ])
-                                            ],
-                                            1
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "v-btn",
-                                            {
-                                              attrs: {
-                                                icon: "",
-                                                color: "green lighten-2"
-                                              },
-                                              on: {
-                                                click: function($event) {
-                                                  return _vm.btnEdit(item)
-                                                }
-                                              }
-                                            },
-                                            [
-                                              _c("v-icon", [
-                                                _vm._v("mdi-pencil-outline")
-                                              ])
-                                            ],
-                                            1
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "v-btn",
-                                            {
-                                              attrs: {
-                                                icon: "",
-                                                color: "red lighten-2"
-                                              },
-                                              on: {
-                                                click: function($event) {
-                                                  return _vm.btnDelete(item)
-                                                }
-                                              }
-                                            },
-                                            [
-                                              _c("v-icon", [
-                                                _vm._v("mdi-trash-can-outline")
-                                              ])
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-list",
+                                                {
+                                                  attrs: { "max-width": "400" }
+                                                },
+                                                [
+                                                  _c(
+                                                    "v-list-item",
+                                                    { attrs: { link: "" } },
+                                                    [
+                                                      _c(
+                                                        "v-list-item-title",
+                                                        {
+                                                          on: {
+                                                            click: function(
+                                                              $event
+                                                            ) {
+                                                              return _vm.btnShow(
+                                                                item
+                                                              )
+                                                            }
+                                                          }
+                                                        },
+                                                        [
+                                                          _vm._v(
+                                                            "Product Details"
+                                                          )
+                                                        ]
+                                                      )
+                                                    ],
+                                                    1
+                                                  )
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-list",
+                                                {
+                                                  attrs: { "max-width": "400" }
+                                                },
+                                                [
+                                                  _c(
+                                                    "v-list-item",
+                                                    { attrs: { link: "" } },
+                                                    [
+                                                      _c(
+                                                        "v-list-item-title",
+                                                        {
+                                                          on: {
+                                                            click: function(
+                                                              $event
+                                                            ) {
+                                                              return _vm.btnDelete(
+                                                                item
+                                                              )
+                                                            }
+                                                          }
+                                                        },
+                                                        [_vm._v("Delete")]
+                                                      )
+                                                    ],
+                                                    1
+                                                  )
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-list",
+                                                {
+                                                  attrs: { "max-width": "400" }
+                                                },
+                                                [
+                                                  _c(
+                                                    "v-list-item",
+                                                    { attrs: { link: "" } },
+                                                    [
+                                                      _c(
+                                                        "v-list-item-title",
+                                                        {
+                                                          on: {
+                                                            click: function(
+                                                              $event
+                                                            ) {
+                                                              return _vm.btnEdit(
+                                                                item
+                                                              )
+                                                            }
+                                                          }
+                                                        },
+                                                        [_vm._v("Edit Item")]
+                                                      )
+                                                    ],
+                                                    1
+                                                  )
+                                                ],
+                                                1
+                                              )
                                             ],
                                             1
                                           )

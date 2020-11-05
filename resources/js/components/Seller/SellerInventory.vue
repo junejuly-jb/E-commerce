@@ -37,7 +37,7 @@
                 <v-progress-circular
                   v-if="btnLoadIsPressed == true"
                   indeterminate
-                  color="amber"
+                  color="white"
                 ></v-progress-circular>
                 <v-icon v-else> mdi-refresh </v-icon>
               </v-btn>
@@ -54,15 +54,45 @@
                 :search="search"
               >
                 <template v-slot:[`item.actions`]="{ item }">
-                  <v-btn icon color="blue lighten-2" @click="btnShow(item)">
+                  <!-- <v-btn icon color="blue lighten-2" @click="btnShow(item)">
                     <v-icon>mdi-eye-outline</v-icon>
-                  </v-btn>
-                  <v-btn icon color="green lighten-2" @click="btnEdit(item)">
+                  </v-btn> -->
+                  <!-- <v-btn icon color="green lighten-2" @click="btnEdit(item)">
                     <v-icon>mdi-pencil-outline</v-icon>
                   </v-btn>
                   <v-btn icon color="red lighten-2" @click="btnDelete(item)">
                     <v-icon>mdi-trash-can-outline</v-icon>
-                  </v-btn>
+                  </v-btn> -->
+                  <v-menu offset-y transition="slide-y-transition" left>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        icon
+                        v-bind="attrs"
+                        color="blue darken-2"
+                        v-on="on"
+                        small
+                        fab
+                      >
+                        <v-icon>mdi-dots-vertical</v-icon>
+                      </v-btn>
+                    </template>
+                    <v-list max-width="400">
+                      <v-list-item link>
+                        <v-list-item-title @click="btnShow(item)">Product Details</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                    <v-list max-width="400">
+                      <v-list-item link>
+                        <v-list-item-title @click="btnDelete(item)">Delete</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                    <v-list max-width="400">
+                      <v-list-item link>
+                        <v-list-item-title @click="btnEdit(item)">Edit Item</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+
+                  </v-menu>
                 </template>
                 <template v-slot:[`item.item_status`]="{ item }">
                   <v-chip :color="getColor(item.item_status)" dark>
@@ -471,6 +501,8 @@ export default {
   }),
   methods: {
     saveAll(){
+      this.dialogAdd = false
+      this.loading_dialog = true
       if(this.addForm.item_quantity <= 0){
         this.addForm.item_quantity = '0'
         this.addForm.item_status = 'out of stock'
@@ -489,8 +521,6 @@ export default {
           })
           this.$http.post('api/setSpecs/' + this.lastId , { specs: addRows }, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
           .then((res) => {
-            this.dialogAdd = false
-            this.snackbar = true
             this.specs = []
             this.stepper = 1
             this.message = res.data.message
@@ -502,6 +532,13 @@ export default {
           this.snackbar = true
           this.message = 'Something went wrong'
         }
+      })
+      .finally(() => {
+        setTimeout(() => {
+          this.loading_dialog = false
+          this.snackbar = true
+          // console.log(toPush)
+        }, 1000)
       })
     },
     selectPhoto(e){
