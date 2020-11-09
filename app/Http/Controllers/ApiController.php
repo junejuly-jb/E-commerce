@@ -311,7 +311,7 @@ class ApiController extends Controller
         $storeId = Store::where('store_owner', '=', auth()->user()->id)->first();
 
         $name = time().'.' . explode('/', explode(':', substr($request->item_image, 0, strpos($request->item_image, ';')))[1])[1];
-        Image::make($request->item_image)->fit(900, 900)->save(public_path('uploads/').$name);
+        Image::make($request->item_image)->fit(1280, 1080)->save(public_path('uploads/').$name);
 
         $item = new Item([
             'item_photo' => $name,
@@ -465,7 +465,7 @@ class ApiController extends Controller
 
         if($request->photo != $currentPhoto || $item->item_photo == null || $item->item_photo == ''){
             $name = time().'.' . explode('/', explode(':', substr($request->photo, 0, strpos($request->photo, ';')))[1])[1];
-            Image::make($request->photo)->fit(900, 900)->save(public_path('uploads/').$name);
+            Image::make($request->photo)->fit(1280, 1080)->save(public_path('uploads/').$name);
             
             $item->item_photo = $name;
             $item->save();
