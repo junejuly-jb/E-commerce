@@ -10,6 +10,7 @@ use App\Models\Logs;
 use App\Models\Item;
 use App\Models\Setting;
 use App\Models\Specification;
+use Intervention\Image\Facades\Image as Image;
 use Illuminate\Support\Facades\DB;
 
 class ApiController extends Controller
@@ -308,7 +309,12 @@ class ApiController extends Controller
 
     public function saveItem(Request $request) {
         $storeId = Store::where('store_owner', '=', auth()->user()->id)->first();
+
+        $name = time().'.' . explode('/', explode(':', substr($request->item_image, 0, strpos($request->item_image, ';')))[1])[1];
+        Image::make($request->item_image)->fit(900, 900)->save(public_path('uploads/').$name);
+
         $item = new Item([
+            'item_photo' => $name,
             'item_name' => $request->item_name,
             'store_id' => $storeId->store_id,
             'category' => $request->category,
@@ -320,6 +326,7 @@ class ApiController extends Controller
         return response()->json([
             'message' => 'Item Added successfully',
             'data' => $item,
+            'img' => $name
         ]);
 
     }

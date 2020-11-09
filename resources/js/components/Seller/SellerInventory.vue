@@ -63,12 +63,11 @@
                   <v-btn icon color="red lighten-2" @click="btnDelete(item)">
                     <v-icon>mdi-trash-can-outline</v-icon>
                   </v-btn> -->
-                  <v-menu offset-y transition="slide-y-transition" left>
+                  <v-menu offset-y transition="slide-y-transition" left dark>
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
                         icon
                         v-bind="attrs"
-                        color="blue darken-2"
                         v-on="on"
                         small
                         fab
@@ -77,18 +76,18 @@
                       </v-btn>
                     </template>
                     <v-list max-width="400">
-                      <v-list-item link>
-                        <v-list-item-title @click="btnShow(item)">Product Details</v-list-item-title>
+                      <v-list-item link @click="btnShow(item)">
+                        <v-list-item-title> Product Details</v-list-item-title>
                       </v-list-item>
                     </v-list>
                     <v-list max-width="400">
-                      <v-list-item link>
-                        <v-list-item-title @click="btnDelete(item)">Delete</v-list-item-title>
+                      <v-list-item link @click="btnDelete(item)">
+                        <v-list-item-title>Delete</v-list-item-title>
                       </v-list-item>
                     </v-list>
                     <v-list max-width="400">
-                      <v-list-item link>
-                        <v-list-item-title @click="btnEdit(item)">Edit Item</v-list-item-title>
+                      <v-list-item link @click="btnEdit(item)">
+                        <v-list-item-title>Edit Item</v-list-item-title>
                       </v-list-item>
                     </v-list>
 
@@ -507,12 +506,15 @@ export default {
         this.addForm.item_quantity = '0'
         this.addForm.item_status = 'out of stock'
       }
+      console.log('hey!')
+      console.log(this.addForm)
       this.$http.post('api/saveItem', this.addForm, {
         headers: {
           Authorization: 'Bearer ' + this.$auth.getToken()
         }
       })
       .then((res) => {
+        console.log(res.data.img)
         if(res.status == 200){
           this.lastId = res.data.data['item_id']
           var toPush = res.data.data
