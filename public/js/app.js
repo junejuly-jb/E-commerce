@@ -5001,7 +5001,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -5099,11 +5098,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         this.addForm.item_status = 'out of stock';
       }
 
+      console.log('hey!');
+      console.log(this.addForm);
       this.$http.post('api/saveItem', this.addForm, {
         headers: {
           Authorization: 'Bearer ' + this.$auth.getToken()
         }
       }).then(function (res) {
+        console.log(res.data.img);
+
         if (res.status == 200) {
           _this.lastId = res.data.data['item_id'];
           var toPush = res.data.data;
@@ -39509,7 +39512,8 @@ var render = function() {
                                                 "offset-y": "",
                                                 transition:
                                                   "slide-y-transition",
-                                                left: ""
+                                                left: "",
+                                                dark: ""
                                               },
                                               scopedSlots: _vm._u(
                                                 [
@@ -39526,8 +39530,6 @@ var render = function() {
                                                               {
                                                                 attrs: {
                                                                   icon: "",
-                                                                  color:
-                                                                    "blue darken-2",
                                                                   small: "",
                                                                   fab: ""
                                                                 }
@@ -39565,27 +39567,24 @@ var render = function() {
                                                 [
                                                   _c(
                                                     "v-list-item",
-                                                    { attrs: { link: "" } },
-                                                    [
-                                                      _c(
-                                                        "v-list-item-title",
-                                                        {
-                                                          on: {
-                                                            click: function(
-                                                              $event
-                                                            ) {
-                                                              return _vm.btnShow(
-                                                                item
-                                                              )
-                                                            }
-                                                          }
-                                                        },
-                                                        [
-                                                          _vm._v(
-                                                            "Product Details"
+                                                    {
+                                                      attrs: { link: "" },
+                                                      on: {
+                                                        click: function(
+                                                          $event
+                                                        ) {
+                                                          return _vm.btnShow(
+                                                            item
                                                           )
-                                                        ]
-                                                      )
+                                                        }
+                                                      }
+                                                    },
+                                                    [
+                                                      _c("v-list-item-title", [
+                                                        _vm._v(
+                                                          " Product Details"
+                                                        )
+                                                      ])
                                                     ],
                                                     1
                                                   )
@@ -39601,23 +39600,22 @@ var render = function() {
                                                 [
                                                   _c(
                                                     "v-list-item",
-                                                    { attrs: { link: "" } },
+                                                    {
+                                                      attrs: { link: "" },
+                                                      on: {
+                                                        click: function(
+                                                          $event
+                                                        ) {
+                                                          return _vm.btnDelete(
+                                                            item
+                                                          )
+                                                        }
+                                                      }
+                                                    },
                                                     [
-                                                      _c(
-                                                        "v-list-item-title",
-                                                        {
-                                                          on: {
-                                                            click: function(
-                                                              $event
-                                                            ) {
-                                                              return _vm.btnDelete(
-                                                                item
-                                                              )
-                                                            }
-                                                          }
-                                                        },
-                                                        [_vm._v("Delete")]
-                                                      )
+                                                      _c("v-list-item-title", [
+                                                        _vm._v("Delete")
+                                                      ])
                                                     ],
                                                     1
                                                   )
@@ -39633,23 +39631,22 @@ var render = function() {
                                                 [
                                                   _c(
                                                     "v-list-item",
-                                                    { attrs: { link: "" } },
+                                                    {
+                                                      attrs: { link: "" },
+                                                      on: {
+                                                        click: function(
+                                                          $event
+                                                        ) {
+                                                          return _vm.btnEdit(
+                                                            item
+                                                          )
+                                                        }
+                                                      }
+                                                    },
                                                     [
-                                                      _c(
-                                                        "v-list-item-title",
-                                                        {
-                                                          on: {
-                                                            click: function(
-                                                              $event
-                                                            ) {
-                                                              return _vm.btnEdit(
-                                                                item
-                                                              )
-                                                            }
-                                                          }
-                                                        },
-                                                        [_vm._v("Edit Item")]
-                                                      )
+                                                      _c("v-list-item-title", [
+                                                        _vm._v("Edit Item")
+                                                      ])
                                                     ],
                                                     1
                                                   )
