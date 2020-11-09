@@ -330,6 +330,7 @@ class ApiController extends Controller
         ]);
 
     }
+    
     // public function setSpecs(Request $req, $id){
     //     for($count = 0;  $count < count($req->spec_name); $count++){
     //         $data = array(
@@ -454,6 +455,30 @@ class ApiController extends Controller
         }
         return response()->json([
             'message' => 'Success'
+        ]);
+    }
+
+    public function updateItemPhoto(Request $request, $id){
+        $item = Item::where('item_id', '=', $id)->first();
+
+        $currentPhoto = $item->item_photo;
+
+        if($request->photo != $currentPhoto || $item->item_photo == null || $item->item_photo == ''){
+            $name = time().'.' . explode('/', explode(':', substr($request->photo, 0, strpos($request->photo, ';')))[1])[1];
+            Image::make($request->photo)->fit(900, 900)->save(public_path('uploads/').$name);
+            
+            $item->item_photo = $name;
+            $item->save();
+
+            $itemPhoto = public_path('uploads/').$currentPhoto;
+            if(file_exists($itemPhoto)){
+                @unlink($itemPhoto);
+            }
+
+        }
+        return response()->json([
+            'message' => 'Photo updated',
+            'data' => $item
         ]);
     }
 }

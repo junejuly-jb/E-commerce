@@ -5001,10 +5001,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       beforeDataFetch: false,
+      toUpdatePhoto: '',
+      toUpdateItemId: '',
       loading_dialog: false,
       img_selector: '',
       additionalSpecs: [],
@@ -5087,8 +5114,45 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   methods: {
-    saveAll: function saveAll() {
+    updatePhoto: function updatePhoto() {
       var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return _this.$http.post('api/updateItemPhoto/' + _this.toUpdateItemId, {
+                  photo: _this.toUpdatePhoto
+                }, {
+                  headers: {
+                    Authorization: 'Bearer ' + _this.$auth.getToken()
+                  }
+                }).then(function (res) {
+                  _this.snackbar = true;
+                  _this.message = res.data.message;
+                  Object.assign(_this.inventoryItems[_this.index], res.data.data);
+                })["finally"](function () {
+                  _this.dialog = false;
+                });
+
+              case 2:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    updateItemPhoto: function updateItemPhoto(item) {
+      this.editmode = 'update photo';
+      this.dialog = true;
+      this.toUpdateItemId = item.item_id;
+      this.index = this.inventoryItems.indexOf(item);
+    },
+    saveAll: function saveAll() {
+      var _this2 = this;
 
       this.dialogAdd = false;
       this.loading_dialog = true;
@@ -5108,40 +5172,40 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         console.log(res.data.img);
 
         if (res.status == 200) {
-          _this.lastId = res.data.data['item_id'];
+          _this2.lastId = res.data.data['item_id'];
           var toPush = res.data.data;
 
-          var addRows = _.map(_this.specs, function (num) {
+          var addRows = _.map(_this2.specs, function (num) {
             return _.pick(num, 'spec_name');
           });
 
-          _this.$http.post('api/setSpecs/' + _this.lastId, {
+          _this2.$http.post('api/setSpecs/' + _this2.lastId, {
             specs: addRows
           }, {
             headers: {
-              Authorization: 'Bearer ' + _this.$auth.getToken()
+              Authorization: 'Bearer ' + _this2.$auth.getToken()
             }
           }).then(function (res) {
-            _this.specs = [];
-            _this.stepper = 1;
-            _this.message = res.data.message;
+            _this2.specs = [];
+            _this2.stepper = 1;
+            _this2.message = res.data.message;
 
-            _this.inventoryItems.push(toPush);
+            _this2.inventoryItems.push(toPush);
           });
         } else {
-          _this.dialogAdd = false;
-          _this.snackbar = true;
-          _this.message = 'Something went wrong';
+          _this2.dialogAdd = false;
+          _this2.snackbar = true;
+          _this2.message = 'Something went wrong';
         }
       })["finally"](function () {
         setTimeout(function () {
-          _this.loading_dialog = false;
-          _this.snackbar = true; // console.log(toPush)
+          _this2.loading_dialog = false;
+          _this2.snackbar = true; // console.log(toPush)
         }, 1000);
       });
     },
-    selectPhoto: function selectPhoto(e) {
-      var _this2 = this;
+    updateOnSelectPhoto: function updateOnSelectPhoto(e) {
+      var _this3 = this;
 
       var file = e.target.files[0];
       var reader = new FileReader();
@@ -5150,11 +5214,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         this.err_message = 'File too large';
         this.error = true;
         setTimeout(function () {
-          _this2.error = false;
+          _this3.error = false;
         }, 3000);
       } else {
         reader.onload = function (file) {
-          _this2.addForm.item_image = reader.result;
+          _this3.toUpdatePhoto = reader.result;
+        };
+
+        reader.readAsDataURL(file);
+      }
+    },
+    selectPhoto: function selectPhoto(e) {
+      var _this4 = this;
+
+      var file = e.target.files[0];
+      var reader = new FileReader();
+
+      if (file['size'] > 4194304) {
+        this.err_message = 'File too large';
+        this.error = true;
+        setTimeout(function () {
+          _this4.error = false;
+        }, 3000);
+      } else {
+        reader.onload = function (file) {
+          _this4.addForm.item_image = reader.result;
         };
 
         reader.readAsDataURL(file);
@@ -5187,50 +5271,50 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.additionalSpecs.splice(i, 1);
     },
     removeSpecs: function removeSpecs(index, specs) {
-      var _this3 = this;
+      var _this5 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context.next = 2;
-                return _this3.$http["delete"]('api/delSpecs/' + specs, {
+                _context2.next = 2;
+                return _this5.$http["delete"]('api/delSpecs/' + specs, {
                   headers: {
-                    Authorization: 'Bearer ' + _this3.$auth.getToken()
+                    Authorization: 'Bearer ' + _this5.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this3.snackbar = true;
-                  _this3.message = res.data.message;
+                  _this5.snackbar = true;
+                  _this5.message = res.data.message;
 
-                  _this3.editSpecsForm.splice(index, 1);
+                  _this5.editSpecsForm.splice(index, 1);
                 });
 
               case 2:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee);
+        }, _callee2);
       }))();
     },
     getColor: function getColor(item_status) {
       if (item_status == "available") return "green";else return "red";
     },
     saveItem: function saveItem() {
-      var _this4 = this;
+      var _this6 = this;
 
       if (this.addForm.item_name == '' || this.addForm.category == '' || this.addForm.item_quantity == '' || this.addForm.item_price == '') {
         this.error = true;
         this.err_message = 'Pls input fields';
         setTimeout(function () {
-          _this4.error = false;
+          _this6.error = false;
         }, 2000);
       } else if (this.addForm.item_image == '') {
         this.error = true;
         this.err_message = 'Please select a new file';
         setTimeout(function () {
-          _this4.error = false;
+          _this6.error = false;
         }, 2000);
       } else {
         this.stepper = 2;
@@ -5242,34 +5326,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.getAllItems();
     },
     getAllItems: function getAllItems() {
-      var _this5 = this;
+      var _this7 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
-                _this5.beforeDataFetch = true;
-                _context2.next = 3;
-                return _this5.$http.get("api/items", {
+                _this7.beforeDataFetch = true;
+                _context3.next = 3;
+                return _this7.$http.get("api/items", {
                   headers: {
-                    Authorization: "Bearer " + _this5.$auth.getToken()
+                    Authorization: "Bearer " + _this7.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this5.inventoryItems = res.data.data;
+                  _this7.inventoryItems = res.data.data;
                 })["finally"](function () {
                   setTimeout(function () {
-                    _this5.beforeDataFetch = false;
-                    _this5.btnLoadIsPressed = false;
+                    _this7.beforeDataFetch = false;
+                    _this7.btnLoadIsPressed = false;
                   }, 1000);
                 });
 
               case 3:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2);
+        }, _callee3);
       }))();
     },
     btnAddItem: function btnAddItem() {
@@ -5283,55 +5367,27 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.index = this.inventoryItems.indexOf(item);
     },
     confirmDelete: function confirmDelete() {
-      var _this6 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                _context3.next = 2;
-                return _this6.$http["delete"]("api/deleteItem/" + _this6.toDelete.item_id, {
-                  headers: {
-                    Authorization: "Bearer " + _this6.$auth.getToken()
-                  }
-                }).then(function (res) {
-                  _this6.dialog = false;
-                  _this6.snackbar = true;
-                  _this6.message = res.data.message;
-
-                  _this6.inventoryItems.splice(_this6.index, 1);
-                });
-
-              case 2:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }))();
-    },
-    btnShow: function btnShow(item) {
-      var _this7 = this;
+      var _this8 = this;
 
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _this7.editmode = "show";
-                _this7.showItemDetails = item;
-                _context4.next = 4;
-                return _this7.$http.post('api/getSpecs', item, {
+                _context4.next = 2;
+                return _this8.$http["delete"]("api/deleteItem/" + _this8.toDelete.item_id, {
                   headers: {
-                    Authorization: 'Bearer ' + _this7.$auth.getToken()
+                    Authorization: "Bearer " + _this8.$auth.getToken()
                   }
                 }).then(function (res) {
-                  _this7.showSpecDetails = res.data.data;
-                  _this7.dialog = true;
+                  _this8.dialog = false;
+                  _this8.snackbar = true;
+                  _this8.message = res.data.message;
+
+                  _this8.inventoryItems.splice(_this8.index, 1);
                 });
 
-              case 4:
+              case 2:
               case "end":
                 return _context4.stop();
             }
@@ -5339,8 +5395,36 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee4);
       }))();
     },
+    btnShow: function btnShow(item) {
+      var _this9 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _this9.editmode = "show";
+                _this9.showItemDetails = item;
+                _context5.next = 4;
+                return _this9.$http.post('api/getSpecs', item, {
+                  headers: {
+                    Authorization: 'Bearer ' + _this9.$auth.getToken()
+                  }
+                }).then(function (res) {
+                  _this9.showSpecDetails = res.data.data;
+                  _this9.dialog = true;
+                });
+
+              case 4:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5);
+      }))();
+    },
     btnEdit: function btnEdit(item) {
-      var _this8 = this;
+      var _this10 = this;
 
       this.editmode = "edit";
       this.editForm = item;
@@ -5350,67 +5434,67 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           Authorization: 'Bearer ' + this.$auth.getToken()
         }
       }).then(function (res) {
-        _this8.editSpecsForm = res.data.data;
-        _this8.dialog = true;
+        _this10.editSpecsForm = res.data.data;
+        _this10.dialog = true;
       });
     },
     updateItem: function updateItem() {
-      var _this9 = this;
+      var _this11 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
-                _this9.dialog = false;
-                _this9.loading_dialog = true;
+                _this11.dialog = false;
+                _this11.loading_dialog = true;
                 console.log('clicked');
-                _context5.next = 5;
-                return _this9.$http.put("api/updateItem/" + _this9.editForm.item_id, _this9.editForm, {
+                _context6.next = 5;
+                return _this11.$http.put("api/updateItem/" + _this11.editForm.item_id, _this11.editForm, {
                   headers: {
-                    Authorization: "Bearer " + _this9.$auth.getToken()
+                    Authorization: "Bearer " + _this11.$auth.getToken()
                   }
                 }).then(function (res) {
                   if (res.status == 200) {
-                    _this9.lastId = res.data.data['item_id'];
+                    _this11.lastId = res.data.data['item_id'];
                     var toPush_editedData = res.data.data;
-                    Object.assign(_this9.inventoryItems[_this9.index], toPush_editedData);
+                    Object.assign(_this11.inventoryItems[_this11.index], toPush_editedData);
 
-                    var addRows = _.map(_this9.additionalSpecs, function (num) {
+                    var addRows = _.map(_this11.additionalSpecs, function (num) {
                       return _.pick(num, 'edit_spec_name');
                     });
 
-                    _this9.$http.post('api/updateSpecs/' + _this9.lastId, {
+                    _this11.$http.post('api/updateSpecs/' + _this11.lastId, {
                       specs: addRows
                     }, {
                       headers: {
-                        Authorization: 'Bearer ' + _this9.$auth.getToken()
+                        Authorization: 'Bearer ' + _this11.$auth.getToken()
                       }
                     }).then(function (res) {
-                      _this9.additionalSpecs = [];
-                      _this9.message = res.data.message;
+                      _this11.additionalSpecs = [];
+                      _this11.message = res.data.message;
                     });
                   } else {
-                    _this9.snackbar = true;
-                    _this9.message = 'Something went wrong';
-                    _this9.loading_dialog = false;
+                    _this11.snackbar = true;
+                    _this11.message = 'Something went wrong';
+                    _this11.loading_dialog = false;
                   }
                 })["finally"](function () {
                   setTimeout(function () {
-                    _this9.loading_dialog = false;
+                    _this11.loading_dialog = false;
 
-                    _this9.getColor();
+                    _this11.getColor();
 
-                    _this9.snackbar = true;
+                    _this11.snackbar = true;
                   }, 1000);
                 });
 
               case 5:
               case "end":
-                return _context5.stop();
+                return _context6.stop();
             }
           }
-        }, _callee5);
+        }, _callee6);
       }))();
     },
     getUser: function getUser() {
@@ -39573,6 +39657,39 @@ var render = function() {
                                                         click: function(
                                                           $event
                                                         ) {
+                                                          return _vm.updateItemPhoto(
+                                                            item
+                                                          )
+                                                        }
+                                                      }
+                                                    },
+                                                    [
+                                                      _c("v-list-item-title", [
+                                                        _vm._v(
+                                                          " Update Item Image"
+                                                        )
+                                                      ])
+                                                    ],
+                                                    1
+                                                  )
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "v-list",
+                                                {
+                                                  attrs: { "max-width": "400" }
+                                                },
+                                                [
+                                                  _c(
+                                                    "v-list-item",
+                                                    {
+                                                      attrs: { link: "" },
+                                                      on: {
+                                                        click: function(
+                                                          $event
+                                                        ) {
                                                           return _vm.btnShow(
                                                             item
                                                           )
@@ -40135,7 +40252,13 @@ var render = function() {
           _c(
             "v-card",
             [
-              _vm.editmode == "add"
+              _vm.editmode == "update photo"
+                ? _c("v-card-title", { staticClass: "headline" }, [
+                    _c("span", { staticClass: "text-primary" }, [
+                      _vm._v(" Update item image ")
+                    ])
+                  ])
+                : _vm.editmode == "add"
                 ? _c("v-card-title", { staticClass: "headline" }, [
                     _c("span", { staticClass: "text-primary" }, [
                       _vm._v(" Add item ")
@@ -40169,10 +40292,33 @@ var render = function() {
                     ],
                     1
                   )
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.editmode == "update photo"
+                ? _c(
+                    "v-container",
+                    [
+                      _c("v-card-text", [
+                        _c("input", {
+                          staticClass: "form-control",
+                          attrs: { type: "file" },
+                          on: { change: _vm.updateOnSelectPhoto }
+                        })
+                      ])
+                    ],
+                    1
+                  )
                 : _vm.editmode == "show"
                 ? _c(
                     "v-container",
                     [
+                      _c("v-img", {
+                        attrs: {
+                          height: "300",
+                          src: "./uploads/" + _vm.showItemDetails.item_photo
+                        }
+                      }),
+                      _vm._v(" "),
                       _c("v-card-text", [
                         _c("div", { staticClass: "row" }, [
                           _c("div", { staticClass: "col" }, [
@@ -40510,6 +40656,15 @@ var render = function() {
                           on: { click: _vm.confirmDelete }
                         },
                         [_vm._v("\n          Delete\n        ")]
+                      )
+                    : _vm.editmode == "update photo"
+                    ? _c(
+                        "v-btn",
+                        {
+                          attrs: { color: "green darken-1", text: "" },
+                          on: { click: _vm.updatePhoto }
+                        },
+                        [_vm._v("\n          Update Photo\n        ")]
                       )
                     : _vm.editmode == "edit"
                     ? _c(
