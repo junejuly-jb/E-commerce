@@ -76,6 +76,11 @@
                       </v-btn>
                     </template>
                     <v-list max-width="400">
+                      <v-list-item link @click="updateItemPhoto(item)">
+                        <v-list-item-title> Update Item Image</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                    <v-list max-width="400">
                       <v-list-item link @click="btnShow(item)">
                         <v-list-item-title> Product Details</v-list-item-title>
                       </v-list-item>
@@ -255,7 +260,10 @@
     <!-- dialog -->
     <v-dialog v-model="dialog" persistent max-width="600">
       <v-card>
-        <v-card-title class="headline" v-if="editmode == 'add'">
+        <v-card-title class="headline" v-if="editmode == 'update photo'">
+          <span class="text-primary"> Update item image </span>
+        </v-card-title>
+        <v-card-title class="headline" v-else-if="editmode == 'add'">
           <span class="text-primary"> Add item </span>
         </v-card-title>
         <v-card-title class="headline" v-else-if="editmode == 'delete'">
@@ -271,7 +279,16 @@
         <v-container v-if="editmode == 'delete'">
           <v-card-text> do you want to delete this item? </v-card-text>
         </v-container>
+         <v-container v-if="editmode == 'update photo'">
+          <v-card-text>
+            <input type="file" class="form-control" @change="updateOnSelectPhoto"/>
+          </v-card-text>
+        </v-container>
         <v-container v-else-if="editmode == 'show'">
+          <v-img
+            height="300"
+            :src="'./uploads/' + showItemDetails.item_photo"
+          ></v-img>
           <v-card-text>
             <div class="row">
               <div class="col">
@@ -374,6 +391,14 @@
             Delete
           </v-btn>
           <v-btn
+            v-else-if="editmode == 'update photo'"
+            color="green darken-1"
+            text
+            @click="updatePhoto"
+          >
+            Update Photo
+          </v-btn>
+          <v-btn
             v-else-if="editmode == 'edit'"
             color="green darken-1"
             text
@@ -425,6 +450,8 @@
 export default {
   data: () => ({
     beforeDataFetch: false,
+    toUpdatePhoto: '',
+    toUpdateItemId: '',
     loading_dialog: false,
     img_selector: '',
     additionalSpecs: [],
@@ -499,6 +526,24 @@ export default {
     addRows: []
   }),
   methods: {
+    async updatePhoto(){
+      await this.$http.post('api/updateItemPhoto/' + this.toUpdateItemId, { photo: this.toUpdatePhoto }, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
+      .then((res) => {
+        this.snackbar = true
+        this.message = res.data.message
+        Object.assign(this.inventoryItems[this.index], res.data.data)
+      })
+      .finally(() => { this.dialog = false})
+      // console.log(
+      // this.toUpdatePhoto  
+      // )
+    },
+    updateItemPhoto(item){
+      this.editmode = 'update photo'
+      this.dialog = true
+      this.toUpdateItemId = item.item_id
+      this.index = this.inventoryItems.indexOf(item);
+    },
     saveAll(){
       this.dialogAdd = false
       this.loading_dialog = true
@@ -542,6 +587,21 @@ export default {
           // console.log(toPush)
         }, 1000)
       })
+    },
+    updateOnSelectPhoto(e){
+      let file = e.target.files[0]
+        let reader = new FileReader();
+        if(file['size'] > 4194304){
+          this.err_message = 'File too large'
+          this.error = true
+          setTimeout(() => { this.error = false }, 3000)
+        }
+        else{
+             reader.onload = (file) => {
+                this.toUpdatePhoto = reader.result
+            }
+            reader.readAsDataURL(file)
+        }
     },
     selectPhoto(e){
         let file = e.target.files[0]
