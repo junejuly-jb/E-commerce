@@ -213,19 +213,24 @@ export default {
         message: 'Hello',
         products: []
     }),
+
+
     computed: {
         productChunks(){
             return _.chunk(this.products, 2);
         }
     },
+
+
     methods: {
         async getAllProducts(){
             await this.$http.get('api/allProducts', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
             .then((res) => {
                 this.products = res.data.data
             })
-
         },
+
+
         checkIfActive(){
             this.$http.get('api/profile', { headers: { Authorization: 'Bearer ' + this.$auth.getToken()}})
             .then((res) => {
@@ -239,14 +244,20 @@ export default {
                 }
             })
         },
+
+
         getUser(){
             var user = JSON.parse(localStorage.getItem('user'))
             this.user = user
         },
+
+
         logout(){
             this.$auth.destroyToken()
             this.$router.push('/login')
         },
+
+
         getSetting(){
             var setting = JSON.parse(localStorage.getItem('setting'))
             if(setting.adBanner == true){
@@ -256,6 +267,8 @@ export default {
                 this.toShowBanner = false
             }
         },
+
+
         sample(){
             this.$http.post('api/updateAd', this.user,{
                 headers: {
@@ -269,14 +282,15 @@ export default {
             })
             .finally(() => this.getSetting())
         }
+
+        
     },
+
     mounted(){
         this.getUser()
         this.getSetting()
         this.checkIfActive()
         this.getAllProducts()
-        // console.log(this.chunkedItems)
-        // console.log(this.$auth.getToken())
     }
 }
 </script>
