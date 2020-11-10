@@ -107,7 +107,6 @@
                 <div class="row">
                     <div class="col" v-for="chunk in productChunks" :key="chunk.id">
                         <div v-for="product in chunk" :key="product.item_id">
-                            
                             <v-card
                                 class="mx-auto my-12"
                                 max-width="350"
@@ -154,9 +153,9 @@
                                 <v-btn
                                     color="blue darken-1"
                                     text
-                                    @click="reserve"
+                                    :to="'/user_productDetails/' + product.item_id"
                                 >
-                                    Add to cart
+                                    View Product
                                 </v-btn>
                                 </v-card-actions>
                             </v-card>
@@ -200,6 +199,7 @@
 <script>
 export default {
     data: () => ({
+        productState: 'not-loading',
         dialog: false,
         user: {
             id: '',
