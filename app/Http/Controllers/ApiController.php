@@ -481,4 +481,12 @@ class ApiController extends Controller
             'data' => $item
         ]);
     }
+
+    public function allProducts(){
+        $items = Item::where('item_quantity', '!=', '0')->get();
+        // $items = Item::all();
+        return response()->json([
+            'data' => $items
+        ]);
+    }
 }
