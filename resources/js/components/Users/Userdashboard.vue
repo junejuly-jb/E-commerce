@@ -107,7 +107,6 @@
                 <div class="row">
                     <div class="col" v-for="chunk in productChunks" :key="chunk.id">
                         <div v-for="product in chunk" :key="product.item_id">
-                            
                             <v-card
                                 class="mx-auto my-12"
                                 max-width="350"
@@ -154,9 +153,9 @@
                                 <v-btn
                                     color="blue darken-1"
                                     text
-                                    @click="reserve"
+                                    :to="'/user_productDetails/' + product.item_id"
                                 >
-                                    Add to cart
+                                    View Product
                                 </v-btn>
                                 </v-card-actions>
                             </v-card>
@@ -200,6 +199,7 @@
 <script>
 export default {
     data: () => ({
+        productState: 'not-loading',
         dialog: false,
         user: {
             id: '',
@@ -213,19 +213,24 @@ export default {
         message: 'Hello',
         products: []
     }),
+
+
     computed: {
         productChunks(){
             return _.chunk(this.products, 2);
         }
     },
+
+
     methods: {
         async getAllProducts(){
             await this.$http.get('api/allProducts', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
             .then((res) => {
                 this.products = res.data.data
             })
-
         },
+
+
         checkIfActive(){
             this.$http.get('api/profile', { headers: { Authorization: 'Bearer ' + this.$auth.getToken()}})
             .then((res) => {
@@ -239,14 +244,20 @@ export default {
                 }
             })
         },
+
+
         getUser(){
             var user = JSON.parse(localStorage.getItem('user'))
             this.user = user
         },
+
+
         logout(){
             this.$auth.destroyToken()
             this.$router.push('/login')
         },
+
+
         getSetting(){
             var setting = JSON.parse(localStorage.getItem('setting'))
             if(setting.adBanner == true){
@@ -256,6 +267,8 @@ export default {
                 this.toShowBanner = false
             }
         },
+
+
         sample(){
             this.$http.post('api/updateAd', this.user,{
                 headers: {
@@ -269,14 +282,15 @@ export default {
             })
             .finally(() => this.getSetting())
         }
+
+        
     },
+
     mounted(){
         this.getUser()
         this.getSetting()
         this.checkIfActive()
         this.getAllProducts()
-        // console.log(this.chunkedItems)
-        // console.log(this.$auth.getToken())
     }
 }
 </script>

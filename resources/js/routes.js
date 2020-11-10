@@ -18,6 +18,7 @@ import SellerAnnouncements from './components/Seller/SellerAnnouncements.vue'
 import SellerTransactionLogs from './components/Seller/SellerTransactionLogs.vue'
 import SellerProductReviews from './components/Seller/SellerProductReviews.vue'
 import Userdashboard from './components/Users/Userdashboard.vue'
+import UserProductDetails from './components/Users/UserProductDetails.vue'
 import StoreRegistration from './components/Users/StoreRegistration.vue'
 
 Vue.use(VueRouter)
@@ -52,6 +53,14 @@ const router = new VueRouter({
             component: Userdashboard,
             meta: {
                 requiresAuth: true, adminAuth: false, userAuth: true, sellerAuth:false
+            }
+        },
+        {
+            path: '/user_productDetails/:id',
+            component: UserProductDetails,
+            name: 'product_details',
+            meta: {
+                requiresAuth: true, adminAuth: false, userAuth: true, sellerAuth: false
             }
         },
         {
