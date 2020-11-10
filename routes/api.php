@@ -38,8 +38,7 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::delete('/delSpecs/{id}', 'App\Http\Controllers\ApiController@delSpecs');
     Route::post('/updateSpecs/{id}', 'App\Http\Controllers\ApiController@updateSpecs');
     Route::post('/updateItemPhoto/{id}', 'App\Http\Controllers\ApiController@updateItemPhoto');
-
-    
+    Route::get('/allProducts', 'App\Http\Controllers\ApiController@allProducts');
 });
 
 Route::post('/register', 'App\Http\Controllers\ApiController@register');

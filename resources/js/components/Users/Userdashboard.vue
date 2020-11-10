@@ -103,6 +103,73 @@
                     </div>
                 </div>
             </div>
+            <v-container>
+                <div class="row">
+                    <div class="col" v-for="chunk in productChunks" :key="chunk.id">
+                        <div v-for="product in chunk" :key="product.item_id">
+                            
+                            <v-card
+                                class="mx-auto my-12"
+                                max-width="350"
+                            >
+                                <v-img
+                                height="220"
+                                :src="'/uploads/' + product.item_photo"
+                                ></v-img>
+
+                                <v-card-title>{{product.item_name}}</v-card-title>
+
+                                <v-card-text>
+                                <v-row
+                                    align="center"
+                                    class="mx-0"
+                                >
+                                    <v-rating
+                                    :value="4.5"
+                                    color="amber"
+                                    dense
+                                    half-increments
+                                    readonly
+                                    size="14"
+                                    ></v-rating>
+
+                                    <div class="grey--text ml-4">
+                                    4.5 (413)
+                                    </div>
+                                </v-row>
+
+                                <div class="my-4 subtitle-1">
+                                    <div>
+                                        ₱ {{product.item_price}}
+                                    </div>
+                                    <div>
+                                        {{product.item_quantity}} stock(s)
+                                    </div>
+                                </div>
+
+                                </v-card-text>
+
+                                <v-divider class="mx-4"></v-divider>
+                                <v-card-actions>
+                                <v-btn
+                                    color="blue darken-1"
+                                    text
+                                    @click="reserve"
+                                >
+                                    Add to cart
+                                </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </div>
+                    </div>
+                </div>
+                
+            </v-container>
+            <!-- <v-container>
+                <div v-for="product in products" :key="product.item_id">
+                    <div>{{product.item_id}}</div>
+                </div>
+            </v-container> -->
         </v-container>
 
         <v-dialog
@@ -143,9 +210,22 @@ export default {
         },
         toShow: '',
         toShowBanner: false,
-        message: 'Hello'
+        message: 'Hello',
+        products: []
     }),
+    computed: {
+        productChunks(){
+            return _.chunk(this.products, 2);
+        }
+    },
     methods: {
+        async getAllProducts(){
+            await this.$http.get('api/allProducts', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
+            .then((res) => {
+                this.products = res.data.data
+            })
+
+        },
         checkIfActive(){
             this.$http.get('api/profile', { headers: { Authorization: 'Bearer ' + this.$auth.getToken()}})
             .then((res) => {
@@ -169,7 +249,6 @@ export default {
         },
         getSetting(){
             var setting = JSON.parse(localStorage.getItem('setting'))
-            // console.log(setting)
             if(setting.adBanner == true){
                 this.toShowBanner = true
             }
@@ -184,7 +263,6 @@ export default {
                 }
             })
             .then((res) => {
-                console.log(res)
                 this.toShowBanner = false
                 localStorage.removeItem('setting')
                 localStorage.setItem('setting', JSON.stringify(res.data.data))
@@ -196,7 +274,8 @@ export default {
         this.getUser()
         this.getSetting()
         this.checkIfActive()
-        console.log(this.toShowBanner)
+        this.getAllProducts()
+        // console.log(this.chunkedItems)
         // console.log(this.$auth.getToken())
     }
 }

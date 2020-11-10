@@ -1,10 +1,7 @@
 #wrapper {
   overflow-x: hidden;
 }
-.router-link-active{
-  background-color: dodgerblue !important;
-  color: white !important;
-}
+
 
 a:hover{
   text-decoration: none !important;
