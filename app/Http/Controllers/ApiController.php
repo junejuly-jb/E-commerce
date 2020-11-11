@@ -483,9 +483,25 @@ class ApiController extends Controller
     }
 
     public function allProducts(){
-        $items = Item::where('item_quantity', '!=', '0')->get();
+        $items = Item::where('item_quantity', '!=', '0')->paginate(10);
         return response()->json([
             'data' => $items
+        ]);
+    }
+
+    public function productDetails($id){
+        
+        $sql = "SELECT * FROM items
+                JOIN stores ON items.store_id = stores.store_id
+                WHERE item_id = ".$id;
+        $items = DB::select($sql);
+
+        $sql2 = "SELECT * FROM specifications WHERE item_id = ".$id;
+        $specs = DB::select($sql2);
+
+        return response()->json([
+            'items' => $items,
+            'specs' => $specs
         ]);
     }
 }

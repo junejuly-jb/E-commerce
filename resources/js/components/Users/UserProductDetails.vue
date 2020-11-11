@@ -5,8 +5,32 @@
             <div class="to-margin">
 
             </div>
-            <div class="dashHeader">
-                <span class="discover">Product </span><span class="daily">details</span>
+                <v-btn to="/userdashboard"><v-icon>mdi-arrow-left</v-icon></v-btn>
+            <div class="row">
+                <div class="col-sm-4 d-flex align-items-center">
+                    <div class="dashHeader">
+                        <span class="discover">Product </span><span class="daily">details</span>
+                    </div>
+                </div>
+                <div class="col">
+                    <v-card>
+                        <div class="row">
+                            <div class="col-md-3 d-flex justify-content-center align-items-center">
+                                <v-avatar
+                                color="primary"
+                                size="104"
+                                >KS</v-avatar>
+                            </div>
+                            <div class="col">
+                                <div class="pb-2"><h5>{{ productDetail.store_name }} <v-icon color="blue">mdi-check-circle</v-icon></h5></div>
+                                <div><p>{{ productDetail.store_description }}</p></div>
+                                <div>
+                                    <v-btn outlined color="blue">Visit Store</v-btn>
+                                </div>
+                            </div>
+                        </div>
+                    </v-card>
+                </div>
             </div>
             <v-card>
                 <v-container>
@@ -15,13 +39,13 @@
                             <v-card>
                                 <v-img
                                 height="400"
-                                src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+                                :src="'uploads/' + productDetail.item_photo"
                                 ></v-img>
                             </v-card>
                         </div>
                         <div class="col">
                             <div class="py-4">
-                                <h5>Product Name</h5>
+                                <h5>{{ productDetail.item_name }}</h5>
                                 <v-row
                                     align="center"
                                     class="mx-0"
@@ -41,19 +65,19 @@
                                 
                                 <div class="py-3">
                                     <div class="py-2">
-                                        ₱ 1299
+                                        ₱ {{productDetail.item_price}}
                                     </div>
                                     <div class="py-2">
                                         <v-chip color="green darken-1">
-                                            available
+                                            {{productDetail.item_status}}
                                         </v-chip>
                                     </div>
                                     <div class="to-bottom">
-                                        <div>10 piece available</div>
+                                        <div>{{productDetail.item_quantity}} piece available</div>
                                         <div class="wrapper_number_input py-2 d-flex align-items-center">
-                                            <v-btn depressed tile><v-icon small>mdi-minus</v-icon></v-btn>
-                                            <input type="number" class="numInput" v-model="quantity">
-                                            <v-btn depressed tile><v-icon small>mdi-plus</v-icon></v-btn>
+                                            <v-btn depressed tile @click="dec"><v-icon small>mdi-minus</v-icon></v-btn>
+                                            <input type="number" class="numInput" v-model="addToCart.quantity">
+                                            <v-btn depressed tile @click="inc"><v-icon small>mdi-plus</v-icon></v-btn>
                                         </div>
                                         <div class="mt-2">
                                             <v-btn x-large color="blue"><v-icon>mdi-cart-outline</v-icon> Add to cart</v-btn>
@@ -67,22 +91,13 @@
                             <div class="py-4">
                                 <h5>Specifications</h5>
                                 <div>
-                                    <ul>
-                                        <li>asd</li>
-                                        <li>as</li>
-                                        <li>asd</li>
-                                        <li>asd</li>
-                                        <li>asd</li>
-                                    </ul>
+                                    <div v-for="spec in specs" :key="spec.id">
+                                        <div class="py-1">{{spec.spec}}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </v-container>
-            </v-card>
-            <v-card class="mt-3">
-                <v-container>
-                    asd
                 </v-container>
             </v-card>
         </v-container>
@@ -93,6 +108,7 @@ export default {
     data(){
         return{
             id: this.$route.params.id,
+            productStat: false,
             user: {
                 id: '',
                 name: '',
@@ -100,7 +116,12 @@ export default {
                 address: '',
                 contact: '',
             },
-            quantity: '1'
+            addToCart: {
+                item_id: '',
+                quantity: 1,
+            },
+            productDetail: '',
+            specs: [],
         }
     },
 
@@ -115,10 +136,34 @@ export default {
             var user = JSON.parse(localStorage.getItem('user'))
             this.user = user
         },
+
+        inc(){
+            this.addToCart.quantity = this.addToCart.quantity + 1;
+        },
+
+        dec(){
+            if(this.addToCart.quantity <= 1){
+                this.addToCart.quantity = 1
+            }
+            else{
+                this.addToCart.quantity = this.addToCart.quantity - 1;
+            }
+        },
+
+        async getProductDetail(){
+            this.productStat = true
+            await this.$http.get('api/productDetails/' + this.id, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } } )
+            .then((res) => {
+                this.productDetail = res.data.items[0]
+                this.specs = res.data.specs
+            })
+            .finally(() => this.productStat = false)
+        }
     },
 
     mounted(){
         this.getUser()
+        this.getProductDetail()
     }
 }
 </script>
