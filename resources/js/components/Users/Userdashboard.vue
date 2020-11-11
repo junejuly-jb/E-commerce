@@ -109,10 +109,10 @@
                         <div v-for="product in chunk" :key="product.item_id">
                             <v-card
                                 class="mx-auto my-12"
-                                max-width="350"
+                                max-width="300"
                             >
                                 <v-img
-                                height="220"
+                                height="180"
                                 :src="'/uploads/' + product.item_photo"
                                 ></v-img>
 
@@ -162,7 +162,9 @@
                         </div>
                     </div>
                 </div>
-                
+                <div class="text-center">
+                    <v-btn v-show="loadMore" @click="nextPage">Load More ...</v-btn>
+                </div>
             </v-container>
             <!-- <v-container>
                 <div v-for="product in products" :key="product.item_id">
@@ -211,7 +213,9 @@ export default {
         toShow: '',
         toShowBanner: false,
         message: 'Hello',
-        products: []
+        products: [],
+        loadMore: false,
+        page: 0
     }),
 
 
@@ -223,10 +227,21 @@ export default {
 
 
     methods: {
+
+        
         async getAllProducts(){
             await this.$http.get('api/allProducts', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
             .then((res) => {
-                this.products = res.data.data
+                // console.log(res.body.data)
+                this.products = res.body.data.data
+
+                if(res.body.data.current_page < res.body.data.last_page){
+                    this.loadMore = true
+                    this.page = res.body.data.current_page + 1
+                }
+                else{
+                    this.loadMore = false
+                }
             })
         },
 
@@ -281,9 +296,27 @@ export default {
                 localStorage.setItem('setting', JSON.stringify(res.data.data))
             })
             .finally(() => this.getSetting())
-        }
+        },
 
-        
+        async nextPage(){
+            await this.$http.get(`api/allProducts?page=${this.page}`, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
+            .then((res) => {
+                // console.log(res.body.data)
+                res.body.data.data.forEach(data => {
+
+                    if(res.body.data.current_page < res.body.data.last_page){
+                        this.loadMore = true
+                        this.page = res.body.data.current_page + 1
+                    }
+                    else{
+                        this.loadMore = false
+                    }
+
+                    this.products.push(data)
+                });
+                // this.products.push(res.body.data)
+            })
+        }
     },
 
     mounted(){

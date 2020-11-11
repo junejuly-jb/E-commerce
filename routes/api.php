@@ -39,6 +39,7 @@ Route::group(['middleware' => ['auth:api']], function(){
     Route::post('/updateSpecs/{id}', 'App\Http\Controllers\ApiController@updateSpecs');
     Route::post('/updateItemPhoto/{id}', 'App\Http\Controllers\ApiController@updateItemPhoto');
     Route::get('/allProducts', 'App\Http\Controllers\ApiController@allProducts');
+    Route::get('/productDetails/{id}', 'App\Http\Controllers\ApiController@productDetails');    
 });
 
 Route::post('/register', 'App\Http\Controllers\ApiController@register');
