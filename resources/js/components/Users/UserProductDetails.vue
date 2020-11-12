@@ -1,10 +1,6 @@
 <template>
     <v-app>
-        <usernav v-bind:user="user"></usernav>
         <v-container>
-            <div class="to-margin">
-
-            </div>
                 <v-btn to="/userdashboard"><v-icon>mdi-arrow-left</v-icon></v-btn>
             <div class="row">
                 <div class="col-sm-4 d-flex align-items-center">

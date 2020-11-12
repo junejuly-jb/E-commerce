@@ -200,6 +200,7 @@
 </template>
 <script>
 export default {
+    
     data: () => ({
         productState: 'not-loading',
         dialog: false,
@@ -218,6 +219,12 @@ export default {
         page: 0
     }),
 
+    beforeRouteEnter(to, from, next){
+        Vue.$http.get('api/allProducts', {headers:{Authorization:'Bearer ' + Vue.$auth.getToken()}})
+        .then(() => {
+            console.log('hey')
+        })
+    },
 
     computed: {
         productChunks(){
