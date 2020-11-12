@@ -39,7 +39,7 @@
                             <v-card>
                                 <v-img
                                 height="400"
-                                :src="'uploads/' + productDetail.item_photo"
+                                :src="'/uploads/' + productDetail.item_photo"
                                 ></v-img>
                             </v-card>
                         </div>
@@ -80,7 +80,8 @@
                                             <v-btn depressed tile @click="inc"><v-icon small>mdi-plus</v-icon></v-btn>
                                         </div>
                                         <div class="mt-2">
-                                            <v-btn x-large color="blue"><v-icon>mdi-cart-outline</v-icon> Add to cart</v-btn>
+                                            <v-btn v-if="cartStatus" x-large color="blue" disabled><v-icon>mdi-cart-outline</v-icon> Add to cart</v-btn>
+                                            <v-btn v-else x-large color="blue" @click="btnAddToCart"><v-icon>mdi-cart-outline</v-icon> Add to cart</v-btn>
                                         </div>
                                     </div>
                                     
@@ -101,6 +102,16 @@
                 </v-container>
             </v-card>
         </v-container>
+
+
+        <v-snackbar v-model="snackbar">
+            {{ message }}
+            <template v-slot:action="{ attrs }">
+                <v-btn color="pink" text v-bind="attrs" @click="snackbar = false">
+                Close
+                </v-btn>
+            </template>
+        </v-snackbar>
     </v-app>
 </template>
 <script>
@@ -122,6 +133,9 @@ export default {
             },
             productDetail: '',
             specs: [],
+            cartStatus: false,
+            message: '',
+            snackbar: false,
         }
     },
 
@@ -130,7 +144,6 @@ export default {
         back(){
             this.$router.back()
         },
-
 
         getUser(){
             var user = JSON.parse(localStorage.getItem('user'))
@@ -158,6 +171,16 @@ export default {
                 this.specs = res.data.specs
             })
             .finally(() => this.productStat = false)
+        },
+
+        async btnAddToCart(){
+            this.addToCart.item_id = this.id
+            await this.$http.post('api/addToCart', this.addToCart, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
+            .then((res) => {
+                this.cartStatus = true
+                this.snackbar = true
+                this.message = res.data.message
+            })
         }
     },
 
@@ -169,9 +192,11 @@ export default {
 </script>
 
 <style scoped>
+
     .to-margin{
         margin-top: 100px;
     }
+
     .numInput{
         width: 70px;
         background: #121212;
@@ -179,15 +204,19 @@ export default {
         text-align: center;
         height: 35px;
     }
+
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+        -webkit-appearance: none;
+        margin: 0;
     }
+
     input:focus{
         outline: none;
     }
+
     .to-bottom{
         margin-top: 80px;
     }
+
 </style>

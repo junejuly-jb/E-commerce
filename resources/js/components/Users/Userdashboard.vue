@@ -221,7 +221,7 @@ export default {
 
     computed: {
         productChunks(){
-            return _.chunk(this.products, 2);
+            return _.chunk(this.products, 1);
         }
     },
 
