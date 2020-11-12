@@ -8,6 +8,8 @@ import Auth from './auth.js'
 import VueNumber from 'vue-number-animation'
 import { Form, HasError, AlertError } from 'vform'
 import _ from 'lodash'
+import Vuex from 'vuex'
+
 
 window.Form = Form;
 // export const bus = new Vue();

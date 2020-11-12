@@ -132,7 +132,7 @@
 
           <v-stepper-content step="1">
             <v-container>
-            <v-form ref="form" v-model="valid" lazy-validation>
+            <v-form ref="formItem">
               <input
                 class="form-control"
                 type="file"
@@ -201,7 +201,7 @@
             >
               Proceed
             </v-btn>
-            <v-btn text @click="dialogAdd = false">
+            <v-btn text @click="stepOneCancellation">
               Cancel
             </v-btn>
           </v-stepper-content>
@@ -279,7 +279,7 @@
         <v-container v-if="editmode == 'delete'">
           <v-card-text> do you want to delete this item? </v-card-text>
         </v-container>
-         <v-container v-if="editmode == 'update photo'">
+        <v-container v-else-if="editmode == 'update photo'">
           <v-card-text>
             <input type="file" class="form-control" @change="updateOnSelectPhoto"/>
           </v-card-text>
@@ -459,7 +459,6 @@ export default {
     stepper: 1,
     dialogAdd: false,
     btnLoadIsPressed: false,
-    valid: true,
     menu: false,
     editmode: "",
     search: "",
@@ -526,6 +525,7 @@ export default {
     addRows: []
   }),
   methods: {
+
     async updatePhoto(){
       await this.$http.post('api/updateItemPhoto/' + this.toUpdateItemId, { photo: this.toUpdatePhoto }, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
       .then((res) => {
@@ -534,25 +534,26 @@ export default {
         Object.assign(this.inventoryItems[this.index], res.data.data)
       })
       .finally(() => { this.dialog = false})
-      // console.log(
-      // this.toUpdatePhoto  
-      // )
     },
+
+
     updateItemPhoto(item){
       this.editmode = 'update photo'
       this.dialog = true
       this.toUpdateItemId = item.item_id
       this.index = this.inventoryItems.indexOf(item);
     },
+
+
     saveAll(){
       this.dialogAdd = false
       this.loading_dialog = true
+
       if(this.addForm.item_quantity <= 0){
         this.addForm.item_quantity = '0'
         this.addForm.item_status = 'out of stock'
       }
-      console.log('hey!')
-      console.log(this.addForm)
+
       this.$http.post('api/saveItem', this.addForm, {
         headers: {
           Authorization: 'Bearer ' + this.$auth.getToken()
@@ -584,10 +585,13 @@ export default {
         setTimeout(() => {
           this.loading_dialog = false
           this.snackbar = true
-          // console.log(toPush)
+          this.$refs.formItem.reset();
+          this.$refs.formItem.resetValidation();
         }, 1000)
       })
     },
+
+
     updateOnSelectPhoto(e){
       let file = e.target.files[0]
         let reader = new FileReader();
@@ -603,6 +607,8 @@ export default {
             reader.readAsDataURL(file)
         }
     },
+
+
     selectPhoto(e){
         let file = e.target.files[0]
         let reader = new FileReader();
@@ -618,12 +624,17 @@ export default {
             reader.readAsDataURL(file)
         }
     },
+
+
     discardAdd(){
       this.specs = []
       this.stepper = 1
       this.dialogAdd = false
       this.formReset()
+      this.$refs.formItem.resetValidation()
     },
+
+
     add() {
       if( _.size(this.specs) <= 4 ){
         this.specs.push({
@@ -634,17 +645,25 @@ export default {
         console.log('Out of bounds')
       }
     },
+
+
     editAdditionalSpecs(){
       this.additionalSpecs.push({
         edit_spec_name: ''
       })
     },
+
+
     remove(index) {
       this.specs.splice(index, 1);
     },
+
+
     removeAdditionalSpecs(i) {
       this.additionalSpecs.splice(i, 1);
     },
+
+
     async removeSpecs(index, specs){
       await this.$http.delete('api/delSpecs/' + specs, { headers: { Authorization: 'Bearer ' + this.$auth.getToken() }})
       .then((res) => {
@@ -653,10 +672,14 @@ export default {
         this.editSpecsForm.splice(index, 1)
       })
     },
+
+
     getColor(item_status) {
       if (item_status == "available") return "green";
       else return "red";
     },
+
+
     saveItem() {
       if(this.addForm.item_name == '' || this.addForm.category == '' || this.addForm.item_quantity == '' || this.addForm.item_price == ''){
         this.error = true
@@ -676,12 +699,15 @@ export default {
         this.stepper = 2
         this.error = false
       }
-
     },
+
+
     btnLoad() {
       this.btnLoadIsPressed = true;
       this.getAllItems();
     },
+
+
     async getAllItems() {
       this.beforeDataFetch = true
       await this.$http.get("api/items", { headers: { Authorization: "Bearer " + this.$auth.getToken() }})
@@ -695,16 +721,21 @@ export default {
           }, 1000)
         });
     },
+
+
     btnAddItem() {
-      this.formReset();
       this.dialogAdd = true;
     },
+
+
     btnDelete(item) {
       this.editmode = "delete";
       this.dialog = true;
       this.toDelete = item;
       this.index = this.inventoryItems.indexOf(item);
     },
+
+
     async confirmDelete() {
       await this.$http
         .delete("api/deleteItem/" + this.toDelete.item_id, {
@@ -719,6 +750,8 @@ export default {
           this.inventoryItems.splice(this.index, 1);
         });
     },
+
+
     async btnShow(item) {
       this.editmode = "show";
       this.showItemDetails = item;
@@ -728,6 +761,8 @@ export default {
         this.dialog = true;
       })
     },
+
+
     btnEdit(item) {
       this.editmode = "edit";
       this.editForm = item;
@@ -738,6 +773,8 @@ export default {
         this.dialog = true;
       })
     },
+
+
     async updateItem() {
       this.dialog = false
       this.loading_dialog = true
@@ -772,6 +809,8 @@ export default {
           }, 1000)
         })
     },
+
+
     getUser() {
       var user = JSON.parse(localStorage.getItem("user"));
       this.user = user;
@@ -790,6 +829,8 @@ export default {
       };
       this.user.default_profile = getInitials(name);
     },
+
+
     formReset() { 
       this.addForm.item_image = ""
       this.addForm.item_name = ""
@@ -798,15 +839,28 @@ export default {
       this.addForm.item_quantity = ""
       this.valid = true
     },
+
+    stepOneCancellation(){
+      this.formReset()
+      this.$refs.formItem.resetValidation();
+      this.dialogAdd = false
+    }
+
   },
+
+
   computed: {
     specsCount(){
       return Object.keys(this.editSpecsForm).length  
     }
   },
+
+
   mounted() {
     this.getAllItems();
     this.getUser();
   },
+
+
 };
 </script>

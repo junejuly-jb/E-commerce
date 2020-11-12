@@ -10,6 +10,7 @@ use App\Models\Logs;
 use App\Models\Item;
 use App\Models\Setting;
 use App\Models\Specification;
+use App\Models\Cart;
 use Intervention\Image\Facades\Image as Image;
 use Illuminate\Support\Facades\DB;
 
@@ -502,6 +503,21 @@ class ApiController extends Controller
         return response()->json([
             'items' => $items,
             'specs' => $specs
+        ]);
+    }
+
+    public function addToCart(Request $req){
+        $cart = new Cart([
+            'item_id' => $req->item_id,
+            'user_id' => auth()->user()->id,
+            'cart_quantity' => $req->quantity
+        ]);
+
+        $cart->save();
+
+        return response()->json([
+            'message' => 'Added to cart',
+            'data' => $cart
         ]);
     }
 }
