@@ -219,19 +219,17 @@ export default {
         page: 0
     }),
 
-    beforeRouteEnter(to, from, next){
-        Vue.$http.get('api/allProducts', {headers:{Authorization:'Bearer ' + Vue.$auth.getToken()}})
-        .then(() => {
-            console.log('hey')
-        })
-    },
-
     computed: {
         productChunks(){
             return _.chunk(this.products, 1);
         }
     },
 
+    beforeRouteEnter(to, from, next){
+        next( vm => {
+            vm.getAllProducts()
+        })
+    },
 
     methods: {
 
@@ -239,7 +237,7 @@ export default {
         async getAllProducts(){
             await this.$http.get('api/allProducts', { headers: { Authorization: 'Bearer ' + this.$auth.getToken() } })
             .then((res) => {
-                // console.log(res.body.data)
+                
                 this.products = res.body.data.data
 
                 if(res.body.data.current_page < res.body.data.last_page){
@@ -330,7 +328,7 @@ export default {
         this.getUser()
         this.getSetting()
         this.checkIfActive()
-        this.getAllProducts()
+        // this.getAllProducts()
     }
 }
 </script>
